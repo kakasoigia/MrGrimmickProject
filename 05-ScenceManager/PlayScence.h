@@ -4,7 +4,7 @@
 #include "Scence.h"
 #include "GameObject.h"
 #include "Brick.h"
-#include "Grimmick.h"
+#include "Gimmick.h"
 #include "Goomba.h"
 #include "Koopas.h"
 #include "Map.h"
@@ -14,7 +14,7 @@ class CPlayScene: public CScene
 {
 protected: 
 	Map* map;
-	CGrimmick* player;					// A play scene has to have player, right? 
+	CGimmick* player;					// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
 
@@ -35,7 +35,7 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
-	CGrimmick* GetPlayer() { return player; }
+	CGimmick* GetPlayer() { return player; }
 
 	//friend class CPlayScenceKeyHandler;
 };
@@ -45,7 +45,7 @@ class CPlayScenceKeyHandler : public CScenceKeyHandler
 public: 
 	virtual void KeyState(BYTE *states);
 	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode) {};
+	virtual void OnKeyUp(int KeyCode) ;
 	CPlayScenceKeyHandler(CScene *s) :CScenceKeyHandler(s) {};
 };
 

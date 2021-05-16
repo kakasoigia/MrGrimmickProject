@@ -1,17 +1,17 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 
-#include "Grimmick.h"
+#include "Gimmick.h"
 #include "Game.h"
 
 #include "Goomba.h"
 #include "Portal.h"
 
-CGrimmick::CGrimmick(float x, float y) : CGameObject()
+CGimmick::CGimmick(float x, float y) : CGameObject()
 {
 	untouchable = 0;
-	SetState(GRIMMICK_STATE_IDLE);
+	SetState(GIMMICK_STATE_IDLE);
 
 	start_x = x; 
 	start_y = y; 
@@ -19,25 +19,46 @@ CGrimmick::CGrimmick(float x, float y) : CGameObject()
 	this->y = y; 
 }
 
-void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy += GRIMMICK_GRAVITY*dt;
+	vy += GIMMICK_GRAVITY*dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
+	if (jump == true && doubleJump_start != 0)
+	{
+		if (GetTickCount() - doubleJump_start > 100)
+		{
+			vy = -GIMMICK_DOUBLE_JUMP_SPEED;
+			doubleJump_start = 0;
+		}
+	}
 
+	if (maxjumping == 1)
+	{
+		if (GetTickCount() - time_maxjumping >= 200)
+		{
+			maxjumping = 0;
+			time_maxjumping = 0;
+		}
+	}
+	else
+	{
+		maxjumping = 0;
+		time_maxjumping = 0;
+	}
 	// turn off collision when die 
-	if (state!= GRIMMICK_STATE_DIE)
+	if (state!= GIMMICK_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if ( GetTickCount() - untouchable_start > GRIMMICK_UNTOUCHABLE_TIME)
+	if ( GetTickCount() - untouchable_start > GIMMICK_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
@@ -63,12 +84,24 @@ void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		//	x += nx*abs(rdx); 
 		
 		// block every object first!
+	
 		x += min_tx*dx + nx*0.4f;
 		y += min_ty*dy + ny*0.4f;
 
 		if (nx!=0) vx = 0;
 		if (ny!=0) vy = 0;
 
+		if (ny != 0 && nx == 0)
+		{
+			if (GetJumping() == 1)
+			{
+				jump = 0;
+				doubleJump_start = 0;
+
+			}
+
+			
+		}
 
 		//
 		// Collision logic with other objects
@@ -76,7 +109,7 @@ void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
+			
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
@@ -87,7 +120,7 @@ void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (goomba->GetState()!= GOOMBA_STATE_DIE)
 					{
 						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -GRIMMICK_JUMP_DEFLECT_SPEED;
+						vy = -GIMMICK_JUMP_DEFLECT_SPEED;
 					}
 				}
 				else if (e->nx != 0)
@@ -96,7 +129,7 @@ void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					{
 						if (goomba->GetState()!=GOOMBA_STATE_DIE)
 						{
-								SetState(GRIMMICK_STATE_DIE);
+								SetState(GIMMICK_STATE_DIE);
 						}
 					}
 				}
@@ -113,20 +146,34 @@ void CGrimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
-void CGrimmick::Render()
+void CGimmick::Render()
 {
 	int ani = -1;
-	
-		if (vx == 0)
-		{
-			if (nx>0) ani = GRIMMICK_ANI_BIG_IDLE_RIGHT;
-			else ani = GRIMMICK_ANI_BIG_IDLE_LEFT;
-		}
-		else if (vx > 0) 
-			ani = GRIMMICK_ANI_BIG_WALKING_RIGHT;
-		else ani = GRIMMICK_ANI_BIG_WALKING_LEFT;
-	
+	if (jump == 1)
+	{
+		if (nx > 0)
+			ani = GIMMICK_ANI_JUMPING_RIGHT;
+		else
+			ani = GIMMICK_ANI_JUMPING_LEFT;
+	}
+	else if (state == GIMMICK_STATE_WALKING_RIGHT)
+	{
+		ani = GIMMICK_ANI_WALKING_RIGHT;
 
+	}
+	else if (state == GIMMICK_STATE_WALKING_LEFT)
+	{
+		ani = GIMMICK_ANI_WALKING_LEFT;
+	}
+	else //if (state == GIMMICK_STATE_IDLE)
+	{
+		if (nx > 0)
+		{
+			ani = GIMMICK_ANI_IDLE_RIGHT;
+		}
+		else
+			ani = GIMMICK_ANI_IDLE_LEFT;
+	}
 	int alpha = 255;
 	if (untouchable) alpha = 128;
 
@@ -135,47 +182,50 @@ void CGrimmick::Render()
 	RenderBoundingBox();
 }
 
-void CGrimmick::SetState(int state)
+void CGimmick::SetState(int state)
 {
 	CGameObject::SetState(state);
 
 	switch (state)
 	{
-	case GRIMMICK_STATE_WALKING_RIGHT:
-		vx = GRIMMICK_WALKING_SPEED;
+	case GIMMICK_STATE_WALKING_RIGHT:
+		vx = GIMMICK_WALKING_SPEED;
 		nx = 1;
 		break;
-	case GRIMMICK_STATE_WALKING_LEFT:
-		vx = -GRIMMICK_WALKING_SPEED;
+	case GIMMICK_STATE_WALKING_LEFT:
+		vx = -GIMMICK_WALKING_SPEED;
 		nx = -1;
 		break;
-	case GRIMMICK_STATE_JUMP:
+	case GIMMICK_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		vy = -GRIMMICK_JUMP_SPEED_Y;
+		vy = -GIMMICK_JUMP_SPEED_Y;
 		break; 
-	case GRIMMICK_STATE_IDLE:
+	case GIMMICK_STATE_IDLE:
 		vx = 0;
 		break;
-	case GRIMMICK_STATE_DIE:
-		vy = -GRIMMICK_DIE_DEFLECT_SPEED;
+	case GIMMICK_STATE_DIE:
+		vy = -GIMMICK_DIE_DEFLECT_SPEED;
+		break;
+	case GIMMICK_STATE_JUMP_HIGH_SPEED:
+		vy = -GIMMICK_JUMP_HIGHT_SPEED_Y;
 		break;
 	}
 }
 
-void CGrimmick::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+void CGimmick::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
 	top = y; 
-	right = x + GRIMMICK_BIG_BBOX_WIDTH;
-	bottom = y + GRIMMICK_BIG_BBOX_HEIGHT;
+	right = x + GIMMICK_BIG_BBOX_WIDTH;
+	bottom = y + GIMMICK_BIG_BBOX_HEIGHT;
 }
 
 /*
 	Reset Mario status to the beginning state of a scene
 */
-void CGrimmick::Reset()
+void CGimmick::Reset()
 {
-	SetState(GRIMMICK_STATE_IDLE);
+	SetState(GIMMICK_STATE_IDLE);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }

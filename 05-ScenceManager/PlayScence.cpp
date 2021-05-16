@@ -149,8 +149,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CGrimmick(x,y);
-		player = (CGrimmick*)obj;  
+		obj = new CGimmick(x,y);
+		player = (CGimmick*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -312,29 +312,58 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	CGrimmick *grimmick = ((CPlayScene*)scence)->GetPlayer();
+	CGimmick *gimmick = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
-		grimmick->SetState(GRIMMICK_STATE_JUMP);
+	case DIK_S:
+		if (gimmick->GetJumping() == 0)
+		{
+			gimmick->SetState(GIMMICK_STATE_JUMP);
+			gimmick->SetJumping(1);
+
+			if (gimmick->GetDoubleJumpStart() == 0)
+			{
+				//gimmick->SetState(MARIO_STATE_JUMP_HIGH_SPEED);
+				gimmick->SetDoubleJumpStart();
+
+			}
+		}
 		break;
 	case DIK_A: 
-		grimmick->Reset();
+		gimmick->Reset();
 		break;
 	}
 }
 
+
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
-	CGrimmick *grimmick = ((CPlayScene*)scence)->GetPlayer();
+	CGimmick *grimmick = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (grimmick->GetState() == GRIMMICK_STATE_DIE) return;
+	if (grimmick->GetState() == GIMMICK_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
-		grimmick->SetState(GRIMMICK_STATE_WALKING_RIGHT);
+		grimmick->SetState(GIMMICK_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
-		grimmick->SetState(GRIMMICK_STATE_WALKING_LEFT);
+		grimmick->SetState(GIMMICK_STATE_WALKING_LEFT);
 	else
-		grimmick->SetState(GRIMMICK_STATE_IDLE);
+		grimmick->SetState(GIMMICK_STATE_IDLE);
+}
+void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
+{
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+
+	CGimmick* gimmick = ((CPlayScene*)scence)->GetPlayer();
+	float x, y;
+	gimmick->GetPosition(x, y);
+	switch (KeyCode)
+	{
+	case DIK_S:
+		gimmick->ResetDoubleJumpStart();
+		break;
+
+
+	}
+
 }

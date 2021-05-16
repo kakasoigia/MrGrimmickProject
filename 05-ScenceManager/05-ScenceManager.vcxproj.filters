@@ -57,7 +57,7 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Grimmick.cpp">
+    <ClCompile Include="Gimmick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,7 +104,7 @@
     <ClInclude Include="Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Grimmick.h">
+    <ClInclude Include="Gimmick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
