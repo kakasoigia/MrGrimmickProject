@@ -154,7 +154,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					{
 						SetOnTopBlackEnemy(true);
 						x = blackenemy->x ;
-						y = blackenemy->y- GIMMICK_BIG_BBOX_HEIGHT-2;
+						y = blackenemy->y - GIMMICK_BIG_BBOX_HEIGHT - 2;
 						vy = 0;
 
 					}
