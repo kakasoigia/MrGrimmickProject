@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "BlackEnemy.h"
 #define GIMMICK_JUMP_HIGHT_SPEED_Y 0.1
 #define GIMMICK_WALKING_SPEED 0.15f 
 #define GIMMICK_JUMP_SPEED_Y 0.24f
@@ -41,6 +42,7 @@ class CGimmick : public CGameObject
 	int jump = 0;
 	int maxjumping = 0;
 	bool isMaxJumping = false;
+	bool isOnTopBlackEnemy = false;
 public: 
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
@@ -61,4 +63,7 @@ public:
 	void SetDoubleJumpStart() { doubleJump_start = GetTickCount(); }
 
 	DWORD GetDoubleJumpStart() { return doubleJump_start; }
+
+	void SetOnTopBlackEnemy(bool isOnTopBlackEnemy) { this->isOnTopBlackEnemy = isOnTopBlackEnemy; };
+	bool GetOnTopBlackEnemy() { return isOnTopBlackEnemy; };
 };

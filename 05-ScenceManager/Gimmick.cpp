@@ -25,6 +25,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
+	if(!isOnTopBlackEnemy)
 	vy += GIMMICK_GRAVITY*dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -63,12 +64,19 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-
+	
 	// No collision occured, proceed normally
 	if (coEvents.size()==0)
 	{
-		x += dx; 
-		y += dy;
+		
+		SetOnTopBlackEnemy(false);
+		{
+			x += dx;
+			y += dy;
+		}
+		
+		
+		
 	}
 	else
 	{
@@ -109,7 +117,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			
+			if(!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
+
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
@@ -133,6 +142,37 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 					}
 				}
+			} // if Goomba
+			else if (dynamic_cast<BlackEnemy*>(e->obj)) // if e->obj is Goomba 
+			{
+				BlackEnemy* blackenemy = dynamic_cast<BlackEnemy*>(e->obj);
+
+				// jump on top >> kill Goomba and deflect a bit 
+				if (e->ny < 0)
+				{
+					if (blackenemy->GetState() != BLACKENEMY_STATE_DIE)
+					{
+						SetOnTopBlackEnemy(true);
+						x = blackenemy->x ;
+						y = blackenemy->y- GIMMICK_BIG_BBOX_HEIGHT-2;
+						vy = 0;
+
+					}
+				}
+				else
+				{
+					SetOnTopBlackEnemy(false);
+				}
+				/*else if (e->nx != 0)
+				{
+					if (untouchable == 0)
+					{
+						if (blackenemy->GetState() != GOOMBA_STATE_DIE)
+						{
+							SetState(GIMMICK_STATE_DIE);
+						}
+					}
+				}*/
 			} // if Goomba
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
