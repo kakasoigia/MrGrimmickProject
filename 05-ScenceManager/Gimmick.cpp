@@ -44,7 +44,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (maxjumping == 1)
 	{
 		if (GetTickCount() - time_maxjumping >= 200)
-		{
+		{     
 			maxjumping = 0;
 			time_maxjumping = 0;
 		}

@@ -275,8 +275,12 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 
-	if (cx < 760 + game->GetScreenWidth() / 2)
-	cx -= game->GetScreenWidth() / 2;
+	if (cx < 760 + game->GetScreenWidth() / 2 )
+		cx -= game->GetScreenWidth() / 2;
+	else if (cx < game->GetScreenWidth() / 2)
+	{
+		cx = 0;
+	}
 	else
 	{
 		cx = 760;
