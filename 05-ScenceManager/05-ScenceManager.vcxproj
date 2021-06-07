@@ -126,10 +126,21 @@
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
+    <ClCompile Include="Boom.cpp" />
+    <ClCompile Include="BoomBoss.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Bulet.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Cannon.cpp" />
+    <ClCompile Include="ElectricBoom.cpp" />
+    <ClCompile Include="FloatBox.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="Rocket.cpp" />
+    <ClCompile Include="Slide.cpp" />
+    <ClCompile Include="SuspensionBridge.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -140,14 +151,27 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Worm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BlackEnemy.h" />
+    <ClInclude Include="Boom.h" />
+    <ClInclude Include="BoomBoss.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Bulet.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Cannon.h" />
+    <ClInclude Include="ElectricBoom.h" />
+    <ClInclude Include="FloatBox.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="Rocket.h" />
+    <ClInclude Include="Slide.h" />
+    <ClInclude Include="SuspensionBridge.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -158,6 +182,8 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="Worm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

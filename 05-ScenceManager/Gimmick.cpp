@@ -122,7 +122,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-
+				
 				// jump on top >> kill Goomba and deflect a bit 
 				if (e->ny < 0)
 				{

@@ -59,7 +59,7 @@ public:
 	int state;
 
 	DWORD dt; 
-
+	
 	LPANIMATION_SET animation_set;
 
 public: 
@@ -92,6 +92,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
+
 
 
 	~CGameObject();
