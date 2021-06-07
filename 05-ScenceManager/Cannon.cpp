@@ -76,7 +76,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Cannon::Render()
 {
-	int ani = CANNON_ANI_GREEN_LEFT;
+	/*int ani = CANNON_ANI_GREEN_LEFT;
 	if (state == CANNON_STATE_GREEN)
 	{
 		if (nx > 0)
@@ -90,8 +90,17 @@ void Cannon::Render()
 			ani = CANNON_ANI_RED_RIGHT;
 		else
 			ani = CANNON_ANI_RED_LEFT;
+	}*/
+	int ani = CANNON_ANI_GREEN_RIGHT;
+	if (state == CANNON_STATE_GREEN)
+	{
+			ani = CANNON_ANI_GREEN_RIGHT;
 	}
-
+	else if (state == CANNON_STATE_RED)
+	{
+			ani = CANNON_ANI_RED_RIGHT;
+	
+	}
 	animation_set->at(ani)->Render(x, y);
 
 	//RenderBoundingBox();

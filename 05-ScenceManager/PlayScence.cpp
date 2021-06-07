@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 
 #include "PlayScence.h"
@@ -30,11 +30,35 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define OBJECT_TYPE_GRIMMICK	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_WORM	2
+#define OBJECT_TYPE_ELECTRICBOOM	3
 #define OBJECT_TYPE_BLACKENEMY 4
+#define OBJECT_TYPE_BOOMBOSS 5
 
+#define OBJECT_TYPE_CANNON 7
+#define OBJECT_TYPE_WINDOW 8
+#define OBJECT_TYPE_SUSPENSIONBRIDGE 9
+#define OBJECT_TYPE_ROCKET 10
+#define OBJECT_TYPE_FLOATBOX 11
+
+#define	OBJECT_TYPE_MEDICINE_PINK 12
+#define	OBJECT_TYPE_MEDICINE_ORANGE 13
+#define	OBJECT_TYPE_MEDICINE_PINK_BOMB 14
+#define	OBJECT_TYPE_MEDICINE_BLACK_BOMB 15
+#define OBJECT_TYPE_FLOWER 16
+
+#define OBJECT_TYPE_BULLET 20
+#define OBJECT_TYPE_NOCOLLISIONOBJECT 30
 #define OBJECT_TYPE_PORTAL	50
+
+#define OBJECT_TYPE_SLIDE_RIGHT 51
+#define OBJECT_TYPE_SLIDE_LEFT	52
+
+#define OBJECT_TYPE_FISH_RED 60
+#define OBJECT_TYPE_FISH_BLACK	61
+#define OBJECT_TYPE_FISH_YELLOW	62
+
+
 
 #define MAX_SCENE_LINE 1024
 
@@ -155,10 +179,38 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_BLACKENEMY: obj = new BlackEnemy(); break;
+	case OBJECT_TYPE_WORM: obj = new Worm(); break;
+	case OBJECT_TYPE_ELECTRICBOOM: obj = new ElectricBoom(); break;
+	case OBJECT_TYPE_BOOMBOSS: obj = new BoomBoss(); break;
+	case OBJECT_TYPE_SLIDE_LEFT: obj = new Slide(SLIDE_TYPE_LEFT); break;
+	case OBJECT_TYPE_SLIDE_RIGHT: obj = new Slide(SLIDE_TYPE_RIGHT); break;
+	case OBJECT_TYPE_CANNON: obj = new Cannon(); break;
+	case OBJECT_TYPE_WINDOW: obj = new Window(); break;
+	case OBJECT_TYPE_SUSPENSIONBRIDGE: obj = new SuspensionBridge(); break;
+	case OBJECT_TYPE_ROCKET: obj = new Rocket(); break;
+	case OBJECT_TYPE_FLOATBOX: obj = new FloatBox(); break;
+	case OBJECT_TYPE_MEDICINE_PINK: obj = new Item(ITEM_TYPE_MEDICINE_PINK); break;
+	case OBJECT_TYPE_MEDICINE_ORANGE: obj = new Item(ITEM_TYPE_MEDICINE_ORANGE); break;
+	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
+	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
+	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
+
+
+#define OBJECT_TYPE_FISH_RED 60
+#define OBJECT_TYPE_FISH_BLACK	61
+#define OBJECT_TYPE_FISH_YELLOW	62
+
+	case OBJECT_TYPE_FISH_RED: obj = new Fish(FISH_TYPE_RED); break;
+	case OBJECT_TYPE_FISH_BLACK: obj = new Fish(FISH_TYPE_BLACK); break;
+	case OBJECT_TYPE_FISH_YELLOW: obj = new Fish(FISH_TYPE_YELLOW); break;
+// nhiều loại item
+	case OBJECT_TYPE_BULLET: obj = new Bullet(); break;
+	case OBJECT_TYPE_NOCOLLISIONOBJECT: obj = new NoCollisionObject(); break;
+
+
 	case OBJECT_TYPE_PORTAL:
 		{	
 			float r = atof(tokens[4].c_str());

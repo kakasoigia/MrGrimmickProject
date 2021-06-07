@@ -11,11 +11,11 @@
 
 #define BRIDGE_STATE_IDLING 200
 
-#define BRIDGE_ANI_MOVING_LEFT 0
-#define BRIDGE_ANI_MOVING_RIGHT 1
 
-#define BRIDGE_ANI_CLOSING	3
-#define BRIDGE_ANI_OPENING 4
+#define BRIDGE_ANI_MOVING_RIGHT 0
+
+#define BRIDGE_ANI_CLOSING	1
+#define BRIDGE_ANI_OPENING 2
 class SuspensionBridge :
 	public CGameObject
 {

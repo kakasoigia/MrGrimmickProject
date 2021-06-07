@@ -5,6 +5,10 @@ Item::Item()
 	SetState(ITEM_STATE_IDLING);
 	nx = 1;
 }
+Item::Item(int Type)
+{
+	this->Type = Type;
+}
 
 void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -75,7 +79,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Item::Render()
 {
-	int ani = ITEM_TYPE_BOTTLE_ORANGE ;
+	/*int ani = ITEM_TYPE_BOTTLE_ORANGE ;
 	if (state == ITEM_STATE_IDLING)
 	{
 		if (isAppear)
@@ -96,9 +100,9 @@ void Item::Render()
 				break;
 			}
 		}
-	}
+	}*/
 	
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(0)->Render(x, y);
 
 	//RenderBoundingBox();
 }

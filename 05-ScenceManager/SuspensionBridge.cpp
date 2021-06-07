@@ -4,6 +4,7 @@ SuspensionBridge::SuspensionBridge()
 {
 	SetState(BRIDGE_STATE_IDLING);
 	nx = 1;
+	isOpening = false;
 }
 
 void SuspensionBridge::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -79,10 +80,9 @@ void SuspensionBridge::Render()
 	int ani = BRIDGE_ANI_CLOSING;
 	if (state == BRIDGE_STATE_MOVING)
 	{
-		if (nx > 0)
+		
 			ani = BRIDGE_ANI_MOVING_RIGHT;
-		else
-			ani = BRIDGE_ANI_MOVING_LEFT;
+		
 	}
 	if (state == BRIDGE_STATE_IDLING)
 	{

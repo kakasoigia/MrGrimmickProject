@@ -76,19 +76,19 @@ void FloatBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void FloatBox::Render()
 {
-	int ani = FLOATBOX_ANI_FLYING_UP;
-	if (state == FLOATBOX_STATE_FLYING_UP)
-	{
-		
-			ani = FLOATBOX_ANI_FLYING_UP;
-	}
-	else if (state == FLOATBOX_STATE_FLYING_DOWN)
-	{
+	//int ani = FLOATBOX_ANI_FLYING_UP;
+	//if (state == FLOATBOX_STATE_FLYING_UP)
+	//{
+	//	
+	//		ani = FLOATBOX_ANI_FLYING_UP;
+	//}
+	//else if (state == FLOATBOX_STATE_FLYING_DOWN)
+	//{
 
-		ani = FLOATBOX_ANI_FLYING_DOWN;
-	}
+	//	ani = FLOATBOX_ANI_FLYING_DOWN;
+	//}
 
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(0)->Render(x, y);
 
 	//RenderBoundingBox();
 }

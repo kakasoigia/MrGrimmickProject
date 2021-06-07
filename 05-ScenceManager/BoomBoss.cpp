@@ -80,20 +80,18 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void BoomBoss::Render()
 {
-	int ani = BOOMBOSS_ANI_WALK_RIGHT;
+	int ani = BOOMBOSS_ANI_WALKING;
 	if (state == BOOMBOSS_STATE_WALKING)
 	{
-		if (nx > 0)
-			ani = BOOMBOSS_ANI_WALK_RIGHT;
-		else
-			ani = BOOMBOSS_ANI_WALK_LEFT;
+			ani = BOOMBOSS_ANI_WALKING;
 	}
-	else if (state == BOOMBOSS_STATE_FLYING)
+	else if (state == BOOMBOSS_STATE_BEING_ATTACKED)
 	{
-		if (nx > 0)
-			ani = BOOMBOSS_ANI_FLY_RIGHT;
-		else
-			ani = BOOMBOSS_ANI_FLY_LEFT;
+			ani = BOOMBOSS_ANI_BEING_ATTACKED;
+	}
+	else if (state == BOOMBOSS_STATE_ATTACKING)
+	{
+		ani = BOOMBOSS_ANI_ATTACKING;
 	}
 
 	animation_set->at(ani)->Render(x, y);

@@ -2,7 +2,7 @@
 #include "Bullet.h"
 Bullet::Bullet()
 {
-	SetState(BULLET_STATE_IDLING);
+	SetState(BULLET_STATE_FALLING);
 	nx = 1;
 }
 
@@ -77,20 +77,21 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Bullet::Render()
 {
-	int ani = BULLET_ANI_FALLING_RIGHT;
-	if (state == BULLET_STATE_IDLING)
-	{
-		ani = BULLET_ANI_IDLING;
-	}
-	else if (state == BULLET_STATE_FALLING)
-	{
-		if (nx > 0)
-			ani = BULLET_ANI_FALLING_RIGHT;
-		else
-			ani = BULLET_ANI_FALLING_LEFT;
-	}
+	/*int ani = BULLET_ANI_FALLING_RIGHT;*/
+	//if (state == BULLET_STATE_IDLING)
+	//{
+	//	ani = BULLET_ANI_IDLING;
+	//}
+	//else if (state == BULLET_STATE_FALLING)
+	//{
+	//	/*if (nx > 0)
+	//		ani = BULLET_ANI_FALLING_RIGHT;
+	//	else
+	//		ani = BULLET_ANI_FALLING_LEFT;*/
+	//	
+	//}
 
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(0)->Render(x, y);
 
 	//RenderBoundingBox();
 }

@@ -133,10 +133,12 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="ElectricBoom.cpp" />
+    <ClCompile Include="Fish.cpp" />
     <ClCompile Include="FloatBox.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="NoCollisionObject.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Slide.cpp" />
@@ -164,10 +166,12 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="ElectricBoom.h" />
+    <ClInclude Include="Fish.h" />
     <ClInclude Include="FloatBox.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="NoCollisionObject.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Slide.h" />

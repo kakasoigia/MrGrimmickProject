@@ -9,6 +9,19 @@
 #include "Koopas.h"
 #include "Map.h"
 #include "BlackEnemy.h"
+#include "BoomBoss.h"
+#include "Electricboom.h"
+#include "Worm.h"
+#include "Slide.h"
+#include "Cannon.h"
+#include "Window.h"
+#include "SuspensionBridge.h"
+#include "Rocket.h"
+#include "FloatBox.h"
+#include "Item.h"
+#include "Bullet.h"
+#include "NoCollisionObject.h"
+#include "Fish.h"
 
 
 

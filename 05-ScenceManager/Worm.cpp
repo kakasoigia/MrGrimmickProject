@@ -2,8 +2,9 @@
 #include "Worm.h"
 Worm::Worm()
 {
-	SetState(WORM_STATE_WALKING);
 	nx = 1;
+	SetState(WORM_STATE_WALKING);
+	
 }
 
 void Worm::GetBoundingBox(float& left, float& top, float& right, float& bottom)

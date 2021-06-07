@@ -13,10 +13,9 @@
 
 #define WORM_STATE_DIE 500
 
-#define WORM_ANI_WALK_RIGHT 0
-#define WORM_ANI_WALK_LEFT 1
-#define WORM_ANI_FLY_RIGHT 2
-#define WORM_ANI_FLY_LEFT 3
+#define WORM_ANI_WALK_RIGHT 1
+#define WORM_ANI_WALK_LEFT 0
+
 
 class Worm :
 	public CGameObject

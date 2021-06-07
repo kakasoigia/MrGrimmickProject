@@ -2,7 +2,13 @@
 #include "Slide.h"
 Slide::Slide()
 {
-	SetState(SLIDE_STATE_SLIDING_LEFT);
+	SetState(SLIDE_STATE_MOVING);
+	nx = 1;
+}
+Slide::Slide(int Type)
+{
+	this->Type = Type; 
+	SetState(SLIDE_STATE_MOVING);
 	nx = 1;
 }
 
@@ -74,19 +80,8 @@ void Slide::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Slide::Render()
 {
-	int ani = SLIDE_ANI_SLIDING_RIGHT;
-	if (state == SLIDE_STATE_SLIDING_RIGHT)
-	{
-		ani = SLIDE_ANI_SLIDING_RIGHT;
-		
-	}
-	else
-	{
-		ani = SLIDE_ANI_SLIDING_LEFT;
-	}
 
-
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(0)->Render(x, y);
 
 	//RenderBoundingBox();
 }
