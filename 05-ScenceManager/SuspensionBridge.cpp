@@ -12,7 +12,7 @@ void SuspensionBridge::GetBoundingBox(float& left, float& top, float& right, flo
 	left = x;
 	top = y;
 	right = x + BRIDGE_BBOX_WIDTH;
-	bottom = y + BRIDGE_BBOX_HEIGHT;
+	bottom = y - BRIDGE_BBOX_HEIGHT;
 }
 
 void SuspensionBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

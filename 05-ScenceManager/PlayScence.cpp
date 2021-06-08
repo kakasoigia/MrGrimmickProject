@@ -48,7 +48,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FLOWER 16
 
 #define OBJECT_TYPE_BULLET 20
-#define OBJECT_TYPE_NOCOLLISIONOBJECT 30
+#define OBJECT_TYPE_NOCOLLISIONOBJECT 49
 #define OBJECT_TYPE_PORTAL	50
 
 #define OBJECT_TYPE_SLIDE_RIGHT 51
@@ -322,26 +322,123 @@ void CPlayScene::Update(DWORD dt)
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
+	SetCamPos();
+	//// Update camera to follow mario
+	//float cx, cy;
+	//player->GetPosition(cx, cy);
 
-	// Update camera to follow mario
+	//
+
+	//if (cx < 760 + game->GetScreenWidth() / 2 )
+	//	cx -= game->GetScreenWidth() / 2;
+	//else if (cx < game->GetScreenWidth() / 2)
+	//{
+	//	cx = 0;
+	//}
+	//else
+	//{
+	//	cx = 760;
+	//}
+	//cy -= game->GetScreenHeight() / 2;
+
+	//CGame::GetInstance()->SetCamPos((int)cx, (int)0);
+}
+void CPlayScene::SetCamPos() {
+
+	int ids = CGame::GetInstance()->GetCurrentScene()->GetId();
+
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
-	
+	CGame* game = CGame::GetInstance();
+	/*cx -= game->GetScreenWidth() / 2;
+	cy += game->GetScreenHeight() / 2;*/
 
-	if (cx < 760 + game->GetScreenWidth() / 2 )
-		cx -= game->GetScreenWidth() / 2;
-	else if (cx < game->GetScreenWidth() / 2)
-	{
-		cx = 0;
-	}
-	else
-	{
-		cx = 760;
-	}
-	cy -= game->GetScreenHeight() / 2;
 
-	CGame::GetInstance()->SetCamPos((int)cx, (int)0);
+	switch (ids)
+	{
+	case 1:
+	{
+		if (cx < game->GetScreenWidth() / 2)
+		{
+			cx = 0;
+		}
+		else
+		{
+			if (cx > 1024 - (game->GetScreenWidth() / 2))
+			{
+				cx = 759;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+
+			}
+		}
+		if (cy > 193)
+		{
+			cy = 384;
+		}
+		else
+		{
+			cy = 192;
+		}
+		break;
+	}
+	case 2:
+	{
+		if ((cx < game->GetScreenWidth() / 2))
+		{
+			cx = 0;
+		}
+		else
+		{
+			if (cx > 512 - (game->GetScreenWidth() / 2) && cy > 172)
+			{
+				cx = 247;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		if (cy > 193)
+		{
+			cy = 384;
+		}
+		else
+		{
+			cy = 192;
+		}
+		/*cx -= game->GetScreenWidth() / 2;
+		cy += game->GetScreenHeight() / 2;*/
+		break;
+	}
+	case 3:
+	{
+		if (cx < game->GetScreenWidth() / 2)
+		{
+			cx = 0;
+		}
+		else
+		{
+			if (cx > 1024 - (game->GetScreenWidth() / 2))
+			{
+				cx = 759;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		cy = 192;
+		break;
+	}
+	default:
+		break;
+	}
+	// Update camera to follow mario
+	CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
 }
 
 void CPlayScene::Render()

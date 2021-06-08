@@ -11,14 +11,14 @@ void ElectricBoom::GetBoundingBox(float& left, float& top, float& right, float& 
 	left = x;
 	top = y;
 	right = x + ELECTRICBOOM_BBOX_WIDTH;
-	bottom = y + ELECTRICBOOM_BBOX_HEIGHT;
+	bottom = y - ELECTRICBOOM_BBOX_HEIGHT;
 }
 
 void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	vy += ELECTRICBOOM_GRAVITY * dt;
+	vy -= ELECTRICBOOM_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

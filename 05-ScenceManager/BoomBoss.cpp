@@ -13,16 +13,16 @@ void BoomBoss::GetBoundingBox(float& left, float& top, float& right, float& bott
 	right = x + BOOMBOSS_BBOX_WIDTH;
 
 	if (state == BOOMBOSS_STATE_DIE)
-		bottom = y + BOOMBOSS_BBOX_HEIGHT_DIE;
+		bottom = y - BOOMBOSS_BBOX_HEIGHT_DIE;
 	else
-		bottom = y + BOOMBOSS_BBOX_HEIGHT;
+		bottom = y - BOOMBOSS_BBOX_HEIGHT;
 }
 
 void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	vy += BOOMBOSS_GRAVITY * dt;
+	vy -= BOOMBOSS_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

@@ -8,10 +8,10 @@ Window::Window()
 
 void Window::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + WINDOW_BBOX_WIDTH;
-	bottom = y + WINDOW_BBOX_HEIGHT;
+	left = 0;
+	top = 0;
+	right = 0;
+	bottom = 0;
 }
 
 void Window::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

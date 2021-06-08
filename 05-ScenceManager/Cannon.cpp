@@ -11,14 +11,14 @@ void Cannon::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 	right = x + CANNON_BBOX_WIDTH;
-	bottom = y + CANNON_BBOX_HEIGHT;
+	bottom = y - CANNON_BBOX_HEIGHT;
 }
 
 void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	vy += CANNON_GRAVITY * dt;
+	vy -= CANNON_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

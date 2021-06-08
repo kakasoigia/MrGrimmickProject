@@ -48,16 +48,16 @@ void BlackEnemy::GetBoundingBox(float& left, float& top, float& right, float& bo
 	right = x + BLACKENEMY_BBOX_WIDTH;
 
 	if (state == BLACKENEMY_STATE_DIE)
-		bottom = y + BLACKENEMY_BBOX_HEIGHT_DIE;
+		bottom = y - BLACKENEMY_BBOX_HEIGHT_DIE;
 	else
-		bottom = y + BLACKENEMY_BBOX_HEIGHT;
+		bottom = y - BLACKENEMY_BBOX_HEIGHT;
 }
 
 void BlackEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	vy += BLACKENEMY_GRAVITY * dt;
+	vy -= BLACKENEMY_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

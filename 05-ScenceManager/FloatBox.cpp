@@ -11,7 +11,7 @@ void FloatBox::GetBoundingBox(float& left, float& top, float& right, float& bott
 	left = x;
 	top = y;
 	right = x + FLOATBOX_BBOX_WIDTH;
-	bottom = y + FLOATBOX_BBOX_HEIGHT;
+	bottom = y - FLOATBOX_BBOX_HEIGHT;
 }
 
 void FloatBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

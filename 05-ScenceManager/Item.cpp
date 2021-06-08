@@ -15,7 +15,7 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	left = x;
 	top = y;
 	right = x + ITEM_BBOX_WIDTH;
-	bottom = y + ITEM_BBOX_HEIGHT;
+	bottom = y - ITEM_BBOX_HEIGHT;
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

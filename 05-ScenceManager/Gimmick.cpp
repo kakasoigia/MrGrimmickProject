@@ -26,7 +26,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	// Simple fall down
 	if(!isOnTopBlackEnemy)
-	vy += GIMMICK_GRAVITY*dt;
+	vy -= GIMMICK_GRAVITY*dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -238,16 +238,16 @@ void CGimmick::SetState(int state)
 		break;
 	case GIMMICK_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		vy = -GIMMICK_JUMP_SPEED_Y;
+		vy = GIMMICK_JUMP_SPEED_Y;
 		break; 
 	case GIMMICK_STATE_IDLE:
 		vx = 0;
 		break;
 	case GIMMICK_STATE_DIE:
-		vy = -GIMMICK_DIE_DEFLECT_SPEED;
+		vy = GIMMICK_DIE_DEFLECT_SPEED;
 		break;
 	case GIMMICK_STATE_JUMP_HIGH_SPEED:
-		vy = -GIMMICK_JUMP_HIGHT_SPEED_Y;
+		vy = GIMMICK_JUMP_HIGHT_SPEED_Y;
 		break;
 	}
 }
@@ -257,7 +257,7 @@ void CGimmick::GetBoundingBox(float &left, float &top, float &right, float &bott
 	left = x;
 	top = y; 
 	right = x + GIMMICK_BIG_BBOX_WIDTH;
-	bottom = y + GIMMICK_BIG_BBOX_HEIGHT;
+	bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
 }
 
 /*

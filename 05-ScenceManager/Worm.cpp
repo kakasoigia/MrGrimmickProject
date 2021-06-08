@@ -12,14 +12,14 @@ void Worm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	left = x;
 	top = y;
 	right = x + WORM_BBOX_WIDTH;
-	bottom = y + WORM_BBOX_HEIGHT;
+	bottom = y - WORM_BBOX_HEIGHT;
 }
 
 void Worm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	vy += WORM_GRAVITY * dt;
+	vy -= WORM_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;

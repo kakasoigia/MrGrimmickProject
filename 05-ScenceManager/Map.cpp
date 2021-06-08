@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Textures.h"
 #include "Utils.h"
+#include "Game.h"
 
 Map::Map(int _idTileSet, int _totalRowsTileSet, int _totalColumnsTileSet, int _totalRowsMap, int _totalColumnsMap, int _totalTiles)
 {
@@ -29,12 +30,31 @@ Map::~Map()
 
 void Map::Render()
 {
-
-	for (int r = 0; r < TotalRowsOfMap; r++)
-		for (int c = 0; c < TotalColumnsOfMap; c++)
-		{
-			Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, r * TILE_HEIGHT, 255); //(x,y,alpha)
-		}
+	int ids = CGame::GetInstance()->GetCurrentScene()->GetId();
+	if (ids == 1)
+	{
+		for (int r = 0; r < TotalRowsOfMap; r++)
+			for (int c = 0; c < TotalColumnsOfMap; c++)
+			{
+				Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, 384 - r * TILE_HEIGHT, 255); //(x,y,alpha)
+			}
+	}
+	else if (ids == 2)
+	{
+		for (int r = 0; r < TotalRowsOfMap; r++)
+			for (int c = 0; c < TotalColumnsOfMap; c++)
+			{
+				Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, 560 - r * TILE_HEIGHT, 255); //(x,y,alpha)
+			}
+	}
+	else if (ids == 3)
+	{
+		for (int r = 0; r < TotalRowsOfMap; r++)
+			for (int c = 0; c < TotalColumnsOfMap; c++)
+			{
+				Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, 192 - r * TILE_HEIGHT, 255); //(x,y,alpha)
+			}
+	}
 }
 
 void Map::ExtractTileFromTileSet()

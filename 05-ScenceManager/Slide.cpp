@@ -17,7 +17,7 @@ void Slide::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	left = x;
 	top = y;
 	right = x + SLIDE_BBOX_WIDTH;
-	bottom = y + SLIDE_BBOX_HEIGHT;
+	bottom = y - SLIDE_BBOX_HEIGHT;
 }
 
 void Slide::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

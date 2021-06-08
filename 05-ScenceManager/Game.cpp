@@ -65,7 +65,9 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
-	D3DXVECTOR3 p(x - cam_x, y - cam_y, 0);
+	float _x = round(x);
+	float _y = round(y);
+	D3DXVECTOR3 p(round(_x - cam_x), -(round(_y - cam_y)), 0);
 	RECT r; 
 	r.left = left;
 	r.top = top;
@@ -209,17 +211,17 @@ CGame::~CGame()
 	Source: GameDev.net
 */
 void CGame::SweptAABB(
-	float ml, float mt,	float mr, float mb,			
-	float dx, float dy,			
+	float ml, float mt, float mr, float mb,
+	float dx, float dy,
 	float sl, float st, float sr, float sb,
-	float &t, float &nx, float &ny)
+	float& t, float& nx, float& ny)
 {
 
 	float dx_entry, dx_exit, tx_entry, tx_exit;
 	float dy_entry, dy_exit, ty_entry, ty_exit;
 
-	float t_entry; 
-	float t_exit; 
+	float t_entry;
+	float t_exit;
 
 	t = -1.0f;			// no collision
 	nx = ny = 0;
@@ -229,36 +231,36 @@ void CGame::SweptAABB(
 	//
 
 	float bl = dx > 0 ? ml : ml + dx;
-	float bt = dy > 0 ? mt : mt + dy;
+	float bt = dy > 0 ? mt + dy : mt;
 	float br = dx > 0 ? mr + dx : mr;
-	float bb = dy > 0 ? mb + dy : mb;
+	float bb = dy > 0 ? mb : mb + dy;
 
-	if (br < sl || bl > sr || bb < st || bt > sb) return;
+	if (br < sl || bl > sr || bb > st || bt < sb) return;
 
 
 	if (dx == 0 && dy == 0) return;		// moving object is not moving > obvious no collision
 
 	if (dx > 0)
 	{
-		dx_entry = sl - mr; 
+		dx_entry = sl - mr;
 		dx_exit = sr - ml;
 	}
 	else if (dx < 0)
 	{
 		dx_entry = sr - ml;
-		dx_exit = sl- mr;
+		dx_exit = sl - mr;
 	}
 
 
 	if (dy > 0)
 	{
-		dy_entry = st - mb;
-		dy_exit = sb - mt;
+		dy_entry = sb - mt;
+		dy_exit = st - mb;
 	}
 	else if (dy < 0)
 	{
-		dy_entry = sb - mt;
-		dy_exit = st - mb;
+		dy_entry = st - mb;
+		dy_exit = sb - mt;
 	}
 
 	if (dx == 0)
@@ -271,7 +273,7 @@ void CGame::SweptAABB(
 		tx_entry = dx_entry / dx;
 		tx_exit = dx_exit / dx;
 	}
-	
+
 	if (dy == 0)
 	{
 		ty_entry = -99999.0f;
@@ -282,30 +284,28 @@ void CGame::SweptAABB(
 		ty_entry = dy_entry / dy;
 		ty_exit = dy_exit / dy;
 	}
-	
 
-	if (  (tx_entry < 0.0f && ty_entry < 0.0f) || tx_entry > 1.0f || ty_entry > 1.0f) return;
+
+	if ((tx_entry < 0.0f && ty_entry < 0.0f) || tx_entry > 1.0f || ty_entry > 1.0f) return;
 
 	t_entry = max(tx_entry, ty_entry);
 	t_exit = min(tx_exit, ty_exit);
-	
-	if (t_entry > t_exit) return; 
 
-	t = t_entry; 
+	if (t_entry > t_exit) return;
+
+	t = t_entry;
 
 	if (tx_entry > ty_entry)
 	{
 		ny = 0.0f;
 		dx > 0 ? nx = -1.0f : nx = 1.0f;
 	}
-	else 
+	else
 	{
 		nx = 0.0f;
-		dy > 0?ny = -1.0f:ny = 1.0f;
+		dy > 0 ? ny = -1.0f : ny = 1.0f;
 	}
-
 }
-
 CGame *CGame::GetInstance()
 {
 	if (__instance == NULL) __instance = new CGame();

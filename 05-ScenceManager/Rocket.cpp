@@ -11,7 +11,7 @@ void Rocket::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	left = x;
 	top = y;
 	right = x + ROCKET_BBOX_WIDTH;
-	bottom = y + ROCKET_BBOX_HEIGHT;
+	bottom = y - ROCKET_BBOX_HEIGHT;
 }
 
 void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -19,7 +19,7 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
 	if (state == ROCKET_STATE_FALLING )
-	vy += ROCKET_GRAVITY * dt;
+	vy -= ROCKET_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
