@@ -7,7 +7,8 @@
 
 #include "Goomba.h"
 #include "Portal.h"
-
+#include "BlackEnemy.h"
+#include "Rocket.h"
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
 	untouchable = 0;
@@ -36,7 +37,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		if (GetTickCount() - doubleJump_start > 100)
 		{
-			vy = -GIMMICK_DOUBLE_JUMP_SPEED;
+			vy = GIMMICK_DOUBLE_JUMP_SPEED;
 			doubleJump_start = 0;
 		}
 	}
@@ -174,6 +175,23 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}*/
 			} // if Goomba
+			//else if (dynamic_cast<Rocket*>(e->obj))
+			//{
+			//	if (untouchable == 0)
+			//	{
+			//		/*if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//		{
+			//			SetState(GIMMICK_STATE_DIE);
+			//		}*/
+			//	}
+			//	else
+			//	{
+			//		StartUntouchable();
+			//	}
+			//	
+			//	
+			//}
+		
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);

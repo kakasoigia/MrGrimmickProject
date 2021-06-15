@@ -11,10 +11,12 @@
 
 #define CANNON_STATE_RED 200
 
-#define CANNON_ANI_GREEN_LEFT 10
+
+
 #define CANNON_ANI_GREEN_RIGHT 0
-#define CANNON_ANI_RED_LEFT 10
+
 #define CANNON_ANI_RED_RIGHT 1
+
 
 class Cannon :
 	public CGameObject

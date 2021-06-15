@@ -6,7 +6,13 @@
 20	textures\enemy.png	57	189	255
 30	textures\enemy2.png	57	189	255
 40	textures\item.png	215	121	214
-
+50	textures\enemy4.png	203	102	185
+60	textures\HUB.png	0	0	255
+70	textures\enemy3.png	0	0	255
+80	textures\Cai-Long.png	203	102	185
+90	textures\Window.png	215	121	214
+100	textures\treasures.png	60	188	252
+120	textures\item2.png	60	188	252
 #ID	TRTileSet	TCTileSet	TRMap	TCMap	TotalTiles	Matrix_Path
 [MAP]
 500	5	11	12	64	51	map\map1c_map.txt
@@ -114,6 +120,47 @@
 40007	120	18	136	34	40
 40008	137	18	153	34	40
 
+#====moving-brick====
+40010	137	103	153	119	40
+40011	154	103	170	119	40
+
+#====black electric enemy
+#walk right
+50000	2	39	18	61	20
+50001	20	40	36	61	20
+50002	38	39	54	61	20
+
+#sit right
+50003	56	46	72	61	20
+
+#walk left
+50004	678	39	694	61	30
+50005	660	40	676	61	30
+50006	642	39	658	61	30
+
+#sit lelt
+50007	624	46	640	61	30
+
+#===MEDICINE===
+#Pink-medicine
+60000	1	2	15	16	60
+#Orange-medicine
+60001	17	0	31	16	60
+#Boom-pink-medicine
+60002	33	1	47	16	60
+#Boom-black-medicine
+60003	49	1	63	16	60
+
+#flower
+70000	1	1	23	44	100
+
+#bomb
+#lăn
+70100	85	22	101	38	50
+70101	102	22	118	38	50
+
+
+
 #=====Thac do
 #Thac do 1
 80200	222	137	238	153	40
@@ -136,6 +183,12 @@
 80214	205	120	221	136	40
 80215	171	154	187	170	40
 
+#====Cua-mo
+#dong
+80300	71	35	119	66	90
+#mo
+80310	71	80	119	112	90
+
 #====Chan-thac
 #chan-thac-1
 80400	205	273	221	289	40
@@ -157,6 +210,29 @@
 80413	154	256	170	272	40
 80414	188	256	204	272	40
 80415	154	290	170	306	40
+
+#====HUB
+80710	0	32	256	64	60
+
+#====BOSS
+#BOSS-attack
+80800	5	102	37	146	70
+80801	41	101	73	146	70
+80802	77	99	111	146	70
+#B0SS-walk-right
+80810	5	65	37	97	70
+80811	42	66	74	97	70
+80812	78	65	110	97	70
+80813	114	66	146	97	70
+#BOSS-Be-Attacked
+80820	78	23	110	62	70
+80821	41	31	73	62	70
+80822	5	31	37	62	70
+#BOSS-râu
+80830	3	3	27	16	70
+80831	30	3	54	16	70
+80832	57	3	81	16	70
+80833	84	3	108	16	70
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -200,6 +276,29 @@
 407	40007	100
 408	40008	100
 
+#====black-eneny-electric
+#walk left
+500	50004	100	50005	100	50006	100
+#sit left
+501	50007	100
+#walk right
+502	50000	100	50001	100	50002	100
+#sit right
+503	50003	100
+
+#Medicine
+#pink
+600	60000	100
+#orange
+601	60001	100
+#bomb-pink
+602	60002	100
+#bomb-black
+603	60003	100
+
+#bomb
+#lăn
+701	70100	100	70101	100
 #===Thac-do
 #Thac-do-1
 820	80200	100	80201	100	80202	100	80203	100
@@ -210,6 +309,11 @@
 #Thac-do-4
 823	80212	100	80213	100	80214	100	80215	100
 
+#====Cua-dong-mo
+#close
+830	80300	100
+#open
+831	80310	100
 #====Chan-thac
 #Chan-thac-1
 840	80400	100	80401	100	80402	100	80403	100
@@ -217,6 +321,18 @@
 842	80408	100	80409	100	80410	100	80411	100
 843	80412	100	80413	100	80414	100	80415	100
 
+#====HUB
+873	80710	100
+
+#====BOSS
+#Boss-attack
+880	80800	100	80801	100	80802	100
+#Boss-walk-right
+881	80810	100	80811	100	80812	100	80813	100
+#Boss-be-attack
+882	80820	100	80821	100	80822	100
+#Boss-râu
+883	80830	100	80831	100	80832	100	80833	100
 #
 # id	ani1	ani2	ani3
 #
@@ -225,9 +341,18 @@
 #idle (l,r), walk (l,r), jump (l,r), colision (l,r)
 1	101	100	103	102	104	105	106	107
 
+#black electric enemy
+#walk(l,r), sit(l,r)
+6	500	502	501	503
+
+#=====BOSS
+#attack, walk-right, be attack
+5	880	881	882
+#=====Boss-râu
+55	883
+
 #black enemy
 3	300	301	302	303
-
 #brick
 4	400
 401	401
@@ -258,6 +383,20 @@
 23	842
 #Chan-thac-4
 24	843
+
+#medicine
+#pink medicine
+60	600
+#orange medicine
+61	601
+#pink-bomb medicine
+62	602
+#black-bomb medicine
+63	603
+
+#window
+83	830	831
+
 
 [OBJECTS]
 #block
@@ -934,7 +1073,14 @@
 49	608	16	24
 49	624	16	23
 
+#black-bomb-medicine
+15	984	144	63
+#window
+8	768	128	83
+8	864	128	83
 
+#Boss
+5	54	108	5
 # Gimmick
 0	944	192	1
 # Black Enemy

@@ -60,13 +60,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (e->nx != 0 && ny == 0)
-			{
-				this->vx = -this->vx;
-				this->nx = -this->nx;
-
-			}
+			
 		}
 	}
 

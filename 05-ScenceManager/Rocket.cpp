@@ -1,4 +1,4 @@
-
+﻿
 #include "Rocket.h"
 Rocket::Rocket()
 {
@@ -8,6 +8,12 @@ Rocket::Rocket()
 
 void Rocket::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == ROCKET_STATE_DISAPPEAR)
+	{
+		left = top = right = bottom = 0;
+		return;
+	}
+		
 	left = x;
 	top = y;
 	right = x + ROCKET_BBOX_WIDTH;
@@ -20,12 +26,25 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down
 	if (state == ROCKET_STATE_FALLING )
 	vy -= ROCKET_GRAVITY * dt;
+	// nếu gimmick tới gần thì rớt 
+	if (state == ROCKET_STATE_IDLING)
+	{
+		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300) this->SetState(ROCKET_STATE_FALLING);
+	}
+	
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-
+	// thời gian hiện animation nổ
+	if (GetTickCount() - booming_start > ROCKET_BOOMING_TIME && state== ROCKET_STATE_BOOM)
+	{
+		SetState(ROCKET_STATE_DISAPPEAR);
+		booming_start = 0;
+		
+	}
 
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
@@ -61,13 +80,8 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (e->nx != 0 && ny == 0)
-			{
-				this->vx = -this->vx;
-				this->nx = -this->nx;
-
-			}
+			// chạy hiệu ứng nổ
+			SetState(ROCKET_STATE_BOOM);
 		}
 	}
 
@@ -86,6 +100,14 @@ void Rocket::Render()
 	{
 		ani = ROCKET_ANI_RED;
 	}
+	else if (state == ROCKET_STATE_DISAPPEAR)
+	{
+		return;
+	}
+	else if (state == ROCKET_STATE_BOOM)
+	{
+		ani = ROCKET_ANI_BOOM;
+	}
 
 	animation_set->at(ani)->Render(x, y);
 
@@ -97,8 +119,8 @@ void Rocket::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ROCKET_STATE_IDLING:
-
+	case ROCKET_STATE_BOOM:
+		StartBooming();
 		break;
 	case ROCKET_STATE_FALLING:
 		break;
