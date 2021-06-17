@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "BlackEnemy.h"
 #include "Rocket.h"
+#include "SuspensionBridge.h"
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
 	untouchable = 0;
@@ -175,23 +176,35 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}*/
 			} // if Goomba
-			//else if (dynamic_cast<Rocket*>(e->obj))
-			//{
-			//	if (untouchable == 0)
-			//	{
-			//		/*if (goomba->GetState() != GOOMBA_STATE_DIE)
-			//		{
-			//			SetState(GIMMICK_STATE_DIE);
-			//		}*/
-			//	}
-			//	else
-			//	{
-			//		StartUntouchable();
-			//	}
-			//	
-			//	
-			//}
-		
+			else if (dynamic_cast<Rocket*>(e->obj))
+			{
+				if (untouchable == 0)
+				{
+					/*if (goomba->GetState() != GOOMBA_STATE_DIE)
+					{
+						SetState(GIMMICK_STATE_DIE);
+					}*/
+				}
+				else
+				{
+					StartUntouchable();
+				}
+				
+				
+			}
+			else if (dynamic_cast<SuspensionBridge*>(e->obj))
+			{
+
+				SuspensionBridge* bridge = dynamic_cast<SuspensionBridge*>(e->obj);
+				if (bridge->GetState() != BRIDGE_STATE_MOVING && !bridge->GetIsOpening())
+				{
+					bridge->SetState(BRIDGE_STATE_MOVING);
+					isOnBridge = true;
+					//DebugOut(L"[INFO] Vô đây hoài: \n");
+				}
+				/*this->x += bridge->dt * BRIDGE_MOVING_SPEED;*/
+
+			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
@@ -199,7 +212,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-
+	// di chuyển theo cầu
+	if (isOnBridge && !jump) this->x += this->dt * BRIDGE_MOVING_SPEED;
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -238,6 +252,7 @@ void CGimmick::Render()
 	animation_set->at(ani)->Render(x, y, alpha);
 
 	RenderBoundingBox();
+
 }
 
 void CGimmick::SetState(int state)

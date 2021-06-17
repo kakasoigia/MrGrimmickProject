@@ -44,6 +44,7 @@ class CGimmick : public CGameObject
 	int maxjumping = 0;
 	bool isMaxJumping = false;
 	bool isOnTopBlackEnemy = false;
+	bool isOnBridge = false;
 public: 
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
@@ -67,4 +68,6 @@ public:
 
 	void SetOnTopBlackEnemy(bool isOnTopBlackEnemy) { this->isOnTopBlackEnemy = isOnTopBlackEnemy; };
 	bool GetOnTopBlackEnemy() { return isOnTopBlackEnemy; };
+	void SetOnBridge(bool isOnBridge) { this->isOnBridge = isOnBridge; };
+	bool GetOnBridge() { return isOnBridge; };
 };
