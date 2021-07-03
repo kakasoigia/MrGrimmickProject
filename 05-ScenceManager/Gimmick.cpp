@@ -10,6 +10,7 @@
 #include "BlackEnemy.h"
 #include "Rocket.h"
 #include "SuspensionBridge.h"
+#include "Star.h"
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
 	untouchable = 0;
@@ -302,4 +303,24 @@ void CGimmick::Reset()
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }
-
+void CGimmick::Fire()
+{
+	// call star 
+	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
+	for (UINT i = 0; i < objects.size(); i++)
+	{
+		if (dynamic_cast<Star*>(objects[i]))
+		{
+			Star* star = dynamic_cast<Star*>(objects[i]);
+			if (star->GetIsUsed() == false)
+			{
+				// get fired
+				star->SetState(STAR_STATE_FLYING);
+				star->SetPosition(this->x, this->y + 30);
+				star->nx = this->nx;
+				return;
+			}
+		}
+		
+	}
+}

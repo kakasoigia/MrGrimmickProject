@@ -142,6 +142,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Slide.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="SuspensionBridge.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Slide.h" />
+    <ClInclude Include="Star.h" />
     <ClInclude Include="SuspensionBridge.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />

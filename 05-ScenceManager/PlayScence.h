@@ -22,6 +22,7 @@
 #include "Bullet.h"
 #include "NoCollisionObject.h"
 #include "Fish.h"
+#include "Star.h"
 
 
 
@@ -49,6 +50,8 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	vector<LPGAMEOBJECT> get_objects() { return objects; };
+
 
 	CGimmick* GetPlayer() { return player; }
 

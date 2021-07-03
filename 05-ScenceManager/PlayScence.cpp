@@ -57,7 +57,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FISH_RED 60
 #define OBJECT_TYPE_FISH_BLACK	61
 #define OBJECT_TYPE_FISH_YELLOW	62
-
+#define OBJECT_TYPE_STAR	21
 
 
 #define MAX_SCENE_LINE 1024
@@ -197,20 +197,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
-
-
-#define OBJECT_TYPE_FISH_RED 60
-#define OBJECT_TYPE_FISH_BLACK	61
-#define OBJECT_TYPE_FISH_YELLOW	62
-
+	case OBJECT_TYPE_STAR: obj = new Star(); break;
 	case OBJECT_TYPE_FISH_RED: obj = new Fish(FISH_TYPE_RED); break;
 	case OBJECT_TYPE_FISH_BLACK: obj = new Fish(FISH_TYPE_BLACK); break;
 	case OBJECT_TYPE_FISH_YELLOW: obj = new Fish(FISH_TYPE_YELLOW); break;
-// nhiều loại item
 	case OBJECT_TYPE_BULLET: obj = new Bullet(); break;
 	case OBJECT_TYPE_NOCOLLISIONOBJECT: obj = new NoCollisionObject(); break;
-
-
 	case OBJECT_TYPE_PORTAL:
 		{	
 			float r = atof(tokens[4].c_str());
@@ -231,6 +223,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	obj->SetAnimationSet(ani_set);
 	objects.push_back(obj);
+
 }
 
 void CPlayScene::_ParseSection_MAP(string line)
@@ -304,6 +297,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+	
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	CGame* game = CGame::GetInstance();
@@ -488,6 +482,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_A: 
 		gimmick->Reset();
+		break;
+	case DIK_V:
+		gimmick->Fire();
 		break;
 	}
 }

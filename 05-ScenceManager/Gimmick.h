@@ -70,4 +70,5 @@ public:
 	bool GetOnTopBlackEnemy() { return isOnTopBlackEnemy; };
 	void SetOnBridge(bool isOnBridge) { this->isOnBridge = isOnBridge; };
 	bool GetOnBridge() { return isOnBridge; };
+	void Fire();
 };
