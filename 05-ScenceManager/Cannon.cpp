@@ -1,6 +1,5 @@
 
 #include "Cannon.h"
-#include "Bullet.h"
 Cannon::Cannon()
 {
 	SetState(CANNON_STATE_GREEN);
@@ -66,31 +65,6 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// clean up collision events
-	
-	if (getTimeFire == -1)
-	{
-		getTimeFire = GetTickCount();
-	}
-	else
-	{
-		if (GetTickCount()- getTimeFire > 2000)
-		{
-			for (UINT i = 0; i < coObjects->size(); i++)
-			{
-				LPGAMEOBJECT obj = coObjects->at(i);
-				/*if (dynamic_cast<Bullet*>(obj))
-				{
-					Bullet* bullet = dynamic_cast<Bullet*>(obj);
-					if (bullet->GetState() == BULLET_STATE_FALLING)
-					{
-						bullet->SetPosition(x + 16, y);
-						break;
-					}
-				}*/
-			}
-			getTimeFire = GetTickCount();
-		}
-	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 

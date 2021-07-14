@@ -23,7 +23,8 @@
 #include "NoCollisionObject.h"
 #include "Fish.h"
 #include "Star.h"
-#include "Thunder.h"
+
+
 
 class CPlayScene: public CScene
 {

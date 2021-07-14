@@ -2,6 +2,9 @@
 #include "Star.h"
 #include "Utils.h"
 #include "Brick.h"
+#include "BlackEnemy.h"
+#include "BoomBoss.h"
+#include "Worm.h"
 Star::Star()
 {
 	SetState(STAR_STATE_IDLING);
@@ -11,6 +14,11 @@ Star::Star()
 
 void Star::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (isUsed == false)
+	{
+		left = top = right = bottom = 0;
+		return;
+	 }
 	left = x;
 	top = y;
 	right = x + STAR_BBOX_WIDTH;
@@ -24,7 +32,17 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down
 	/*if (state != STAR_STATE_IDLING)
 		vy -= STAR_GRAVITY * dt;*/
+	if (GetTickCount() - smoke_start > STAR_SMOKE_TIME && state == STAR_STATE_SMOKE)
+	{
+		isUsed = false;
+		smoke_start = 0;
 
+	}
+	if (LimitY <=0 && LimitX <= 0 && state != STAR_STATE_SMOKE)
+	{
+		vx = vy = 0;
+		SetState(STAR_STATE_SMOKE);
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -81,30 +99,50 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// phương
 				if (e->ny > 0)
 				{
-					LimitY -= 0.005f;
+					LimitY -= STAR_DECREASE_SPEED_Y;
 					vy = LimitY;
 				}
-				else if (e->nx > 0)
+				else if (e->ny > 0)
 				{
-					LimitY -= 0.005f;
+					LimitY -= STAR_DECREASE_SPEED_Y;
 					vy = -LimitY;
 				}
 				// phương dọc
 				if (e->nx > 0)
 				{
-					LimitX -= 0.005f;
+					LimitX -= STAR_DECREASE_SPEED_X;
 					vx = LimitY;
 				}
 				else if(e->nx < 0)
 				{
-					LimitX -= 0.005f;
+					LimitX -= STAR_DECREASE_SPEED_X;
 					vx = -LimitY;
 				}
 				// phương chéo ???
 				
 				// chỉnh lại V cho phù hợp
-				// va chạm với mấy thằng lz Quái
+				// va chạm với mấy bạn Quái
 			}
+			// chạm quái 
+			else if (dynamic_cast<BlackEnemy*>(e->obj))
+			{
+				BlackEnemy* black = dynamic_cast<BlackEnemy*>(e->obj);
+				black->SetState(BLACKENEMY_STATE_DIE);
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			else if (dynamic_cast<BoomBoss*>(e->obj))
+			{
+				BoomBoss* boomBoss = dynamic_cast<BoomBoss*>(e->obj);
+				boomBoss->SetState(BOOMBOSS_STATE_DIE);
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			else if (dynamic_cast<Worm*>(e->obj))
+			{
+				Worm* worm = dynamic_cast<Worm*>(e->obj);
+				worm->SetState(WORM_STATE_DIE);
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			// set time nổ khói 
 		}
 	}
 
@@ -130,7 +168,7 @@ void Star::Render()
 	//		ani = BULLET_ANI_FALLING_LEFT;*/
 	//	
 	//}
-	DebugOut(L"[ERR] VÔ ĐÂY \n");
+
 	animation_set->at(1)->Render(x, y);
 
 	RenderBoundingBox();
@@ -155,5 +193,10 @@ void Star::SetState(int state)
 			vx = -LimitX;
 		}
 		break;
+	case STAR_STATE_SMOKE:
+		StartSmoke();
+		break;
 	}
+	
+
 }

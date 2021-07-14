@@ -57,9 +57,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FISH_RED 60
 #define OBJECT_TYPE_FISH_BLACK	61
 #define OBJECT_TYPE_FISH_YELLOW	62
-#define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
-
 
 
 #define MAX_SCENE_LINE 1024
@@ -213,9 +211,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
-	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
-
-
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
