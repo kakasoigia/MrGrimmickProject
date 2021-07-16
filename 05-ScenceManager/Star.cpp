@@ -33,15 +33,19 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	/*if (state != STAR_STATE_IDLING)
 		vy -= STAR_GRAVITY * dt;*/
 	if (GetTickCount() - smoke_start > STAR_SMOKE_TIME && state == STAR_STATE_SMOKE)
-	{
-		isUsed = false;
+	{ 
+		isUsed = false; 
 		smoke_start = 0;
 
 	}
-	if (LimitY <=0 && LimitX <= 0 && state != STAR_STATE_SMOKE)
+	if (LimitY <=0 || LimitX <= 0) 
 	{
-		vx = vy = 0;
-		SetState(STAR_STATE_SMOKE);
+		if (state != STAR_STATE_SMOKE)
+		{
+			vx = vy = 0;
+			SetState(STAR_STATE_SMOKE);
+		}
+		
 	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -121,7 +125,12 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// phương chéo ???
 				
 				// chỉnh lại V cho phù hợp
-				// va chạm với mấy bạn Quái
+				// bay loạn
+				// giữ sao trên đầu
+				// bắn 5 sao 1 lần
+				// va chạm với mấy bạn Quái (quái điện phóng điện thủ )
+				// bay trong thời gian quy định OUT 
+				// tìm lại sprite ..Đĩ Hiếu
 			}
 			// chạm quái 
 			else if (dynamic_cast<BlackEnemy*>(e->obj))
@@ -152,24 +161,20 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Star::Render()
 {
-	
-	
 	if(isUsed == false) return;
 	/*int ani = BULLET_ANI_FALLING_RIGHT;*/
-	//if (state == BULLET_STATE_IDLING)
-	//{
-	//	ani = BULLET_ANI_IDLING;
-	//}
-	//else if (state == BULLET_STATE_FALLING)
-	//{
-	//	/*if (nx > 0)
-	//		ani = BULLET_ANI_FALLING_RIGHT;
-	//	else
-	//		ani = BULLET_ANI_FALLING_LEFT;*/
-	//	
-	//}
+	int ani = STAR_ANI_BIG_STAR;
+	if (state == STAR_STATE_FLYING)
+	{
+		ani = STAR_ANI_BIG_STAR;
+	}
+	else if (state == STAR_STATE_SMOKE)
+	{
+		ani = STAR_ANI_BOOM;
 
-	animation_set->at(1)->Render(x, y);
+	}
+
+	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
 }
@@ -185,6 +190,7 @@ void Star::SetState(int state)
 		break;
 	case STAR_STATE_FLYING:
 		isUsed = true;
+		LimitY = STAR_FLYING_SPEED_Y;	LimitX = STAR_FLYING_SPEED_X;
 		vy = LimitY;
 		if (nx > 0)
 			vx = LimitX;

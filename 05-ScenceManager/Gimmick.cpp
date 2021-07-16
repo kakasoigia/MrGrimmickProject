@@ -316,7 +316,7 @@ void CGimmick::Fire()
 			{
 				// get fired
 				
-				star->SetPosition(this->x, this->y + 30);
+				star->SetPosition(this->x, this->y + 5);
 				star->nx = this->nx;
 				star->SetState(STAR_STATE_FLYING);
 				return;
