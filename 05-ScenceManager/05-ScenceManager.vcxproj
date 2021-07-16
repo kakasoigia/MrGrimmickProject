@@ -22,19 +22,19 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{C83A385D-5992-4E1B-B783-AB1D446414D5}</ProjectGuid>
     <RootNamespace>My05ScenceManager</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -82,7 +82,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;dxerr.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -124,9 +124,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
-    <ClCompile Include="Boom.cpp" />
     <ClCompile Include="BoomBoss.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bulet.cpp" />
@@ -144,6 +144,7 @@
     <ClCompile Include="Slide.cpp" />
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="SuspensionBridge.cpp" />
+    <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -160,7 +161,6 @@
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BlackEnemy.h" />
-    <ClInclude Include="Boom.h" />
     <ClInclude Include="BoomBoss.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bulet.h" />
@@ -174,10 +174,12 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="NoCollisionObject.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Slide.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="SuspensionBridge.h" />
+    <ClInclude Include="Thunder.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

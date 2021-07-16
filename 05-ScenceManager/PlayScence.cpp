@@ -57,6 +57,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FISH_RED 60
 #define OBJECT_TYPE_FISH_BLACK	61
 #define OBJECT_TYPE_FISH_YELLOW	62
+#define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
 
 
@@ -211,6 +212,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
+	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
+
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -293,49 +296,101 @@ void CPlayScene::Load()
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+
+	int ids = CGame::GetInstance()->GetCurrentScene()->GetId();
+	if (ids == 1)
+	{
+		quadtree = new Quadtree(1, 0.0f, 384.0f, 1024.0f, 0.0f);
+	}
+	else if (ids == 2)
+	{
+		quadtree = new Quadtree(1, 0.0f, 760.0f, 1536.0f, 0.0f);
+	}
+	else if (ids == 3)
+	{
+		quadtree = new Quadtree(1, 0.0f, 192.0f, 1024.0f, 0.0f);
+	}
 }
 
 void CPlayScene::Update(DWORD dt)
 {
-	
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
-	CGame* game = CGame::GetInstance();
-	
-
-	vector<LPGAMEOBJECT> coObjects; //collision
-	for (size_t i = 1; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
+	//code Phong
+	for (size_t i = 0; i < objects.size(); i++) {
+		if (dynamic_cast<CGimmick*>(objects[i]))
+			continue;
+		if (dynamic_cast<CPortal*>(objects[i]))
+			continue;
+		quadtree->Insert(objects[i]);
 	}
 
+	// Update player
+	vector<LPGAMEOBJECT> coObjects;
+
+
+	quadtree->Retrieve(&coObjects, player);
+	player->Update(dt, &coObjects);
+
+	// Duyệt các object cần update (có code xử lý trong hàm update của object đó)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (!CGame::GetInstance()->ObjectInCamera(objects[i]))
+			continue;
+		if (dynamic_cast<CGimmick*>(objects[i]))
+			continue;
+		/*if (dynamic_cast<CBoom*>(objects[i])
+			|| dynamic_cast<CSwing*>(objects[i])
+			|| dynamic_cast<CBlueFire*>(objects[i])
+			|| dynamic_cast<CGimmickDieEffect*>(objects[i])
+			|| dynamic_cast<CWorm*>(objects[i])
+			|| dynamic_cast<CBlackEnemy*>(objects[i])
+			|| dynamic_cast<CBrickPink*>(objects[i]))
+		{*/
+		vector<LPGAMEOBJECT> coObjectsUpdate;
+		quadtree->Retrieve(&coObjectsUpdate, objects[i]);
+		objects[i]->Update(dt, &coObjectsUpdate);
+		/*}*/
 	}
-
+	// Làm trống quadtree
+	if (quadtree)
+		quadtree->Clear();
+	CGame* game = CGame::GetInstance();
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
+	// Update camera to follow mario
 	SetCamPos();
-	//// Update camera to follow mario
-	//float cx, cy;
-	//player->GetPosition(cx, cy);
 
-	//
 
-	//if (cx < 760 + game->GetScreenWidth() / 2 )
-	//	cx -= game->GetScreenWidth() / 2;
-	//else if (cx < game->GetScreenWidth() / 2)
+
+
+
+	//code Tan
+	//for (size_t i = 1; i < objects.size(); i++)
 	//{
-	//	cx = 0;
+	//	coObjects.push_back(objects[i]);
 	//}
-	//else
+	//for (size_t i = 0; i < objects.size(); i++)
 	//{
-	//	cx = 760;
+	//	objects[i]->Update(dt, &coObjects);
 	//}
-	//cy -= game->GetScreenHeight() / 2;
+	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
+	//if (player == NULL) return; 
+	//SetCamPos();
+	////// Update camera to follow mario
+	////float cx, cy;
+	////player->GetPosition(cx, cy);
+	////if (cx < 760 + game->GetScreenWidth() / 2 )
+	////	cx -= game->GetScreenWidth() / 2;
+	////else if (cx < game->GetScreenWidth() / 2)
+	////{
+	////	cx = 0;
+	////}
+	////else
+	////{
+	////	cx = 760;
+	////}
+	////cy -= game->GetScreenHeight() / 2;
 
-	//CGame::GetInstance()->SetCamPos((int)cx, (int)0);
+	////CGame::GetInstance()->SetCamPos((int)cx, (int)0);
 }
 void CPlayScene::SetCamPos() {
 
@@ -455,6 +510,11 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
+
+	if (quadtree) {
+		delete quadtree;
+		quadtree = nullptr;
+	}
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
