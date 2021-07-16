@@ -2,7 +2,7 @@
 #include "Bullet.h"
 Bullet::Bullet()
 {
-	SetState(BULLET_STATE_FALLING);
+	SetState(BULLET_STATE_IDLING);
 	nx = 1;
 }
 
@@ -20,6 +20,9 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down
 	if (state != BULLET_STATE_IDLING)
 		vy -= BULLET_GRAVITY * dt;
+
+
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -90,6 +93,8 @@ void Bullet::Render()
 	//		ani = BULLET_ANI_FALLING_LEFT;*/
 	//	
 	//}
+
+
 
 	animation_set->at(0)->Render(x, y);
 

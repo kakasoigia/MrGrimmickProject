@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Gimmick.h"
+#include "PlayScence.h"
 
 #define CANNON_GRAVITY 0.0008f
 #define CANNON_BBOX_WIDTH 16
@@ -10,8 +11,6 @@
 #define CANNON_STATE_GREEN 100
 
 #define CANNON_STATE_RED 200
-
-
 
 #define CANNON_ANI_GREEN_RIGHT 0
 
