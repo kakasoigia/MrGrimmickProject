@@ -88,6 +88,7 @@ void Bullet::Render()
 	//		ani = BULLET_ANI_FALLING_RIGHT;
 	//	else
 	//		ani = BULLET_ANI_FALLING_LEFT;*/
+	//	
 	//}
 
 	animation_set->at(0)->Render(x, y);
@@ -101,7 +102,6 @@ void Bullet::SetState(int state)
 	switch (state)
 	{
 	case BULLET_STATE_IDLING:
-		vx = 0;
 
 		break;
 	case BULLET_STATE_FALLING:
