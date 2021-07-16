@@ -211,6 +211,12 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
+			else if (dynamic_cast<CThunder*>(e->obj))
+			{
+				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
+				SetState(GIMMICK_STATE_DIE);
+			}
+
 		}
 	}
 	// di chuyển theo cầu

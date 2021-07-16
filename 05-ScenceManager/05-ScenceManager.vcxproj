@@ -125,7 +125,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Quadtree.cpp" />
-    <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
     <ClCompile Include="BoomBoss.cpp" />
@@ -145,6 +144,7 @@
     <ClCompile Include="Slide.cpp" />
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="SuspensionBridge.cpp" />
+    <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -179,6 +179,7 @@
     <ClInclude Include="Slide.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="SuspensionBridge.h" />
+    <ClInclude Include="Thunder.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -189,7 +190,6 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
-    <ClInclude Include="Thunder.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Worm.h" />
   </ItemGroup>
