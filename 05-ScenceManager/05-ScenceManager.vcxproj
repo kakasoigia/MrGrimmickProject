@@ -124,10 +124,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Thunder.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
-    <ClCompile Include="Boom.cpp" />
     <ClCompile Include="BoomBoss.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bulet.cpp" />
@@ -161,7 +161,6 @@
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BlackEnemy.h" />
-    <ClInclude Include="Boom.h" />
     <ClInclude Include="BoomBoss.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bulet.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="NoCollisionObject.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Slide.h" />
     <ClInclude Include="Star.h" />

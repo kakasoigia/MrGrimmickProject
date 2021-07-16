@@ -24,6 +24,7 @@
 #include "Fish.h"
 #include "Star.h"
 #include "Thunder.h"
+#include "Quadtree.h"
 
 class CPlayScene: public CScene
 {
@@ -42,6 +43,7 @@ protected:
 	void SetCamPos();
 	
 public: 
+	Quadtree* quadtree;
 	CPlayScene(int id, LPCWSTR filePath);
 
 

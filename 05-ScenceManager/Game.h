@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "GameObject.h"
 
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -49,6 +50,7 @@ class CGame
 
 public:
 	void InitKeyboard();
+	bool ObjectInCamera(CGameObject* object);
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);

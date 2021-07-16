@@ -78,7 +78,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			for (UINT i = 0; i < coObjects->size(); i++)
 			{
 				LPGAMEOBJECT obj = coObjects->at(i);
-				/*if (dynamic_cast<Bullet*>(obj))
+				if (dynamic_cast<Bullet*>(obj))
 				{
 					Bullet* bullet = dynamic_cast<Bullet*>(obj);
 					if (bullet->GetState() == BULLET_STATE_FALLING)
@@ -86,7 +86,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						bullet->SetPosition(x + 16, y);
 						break;
 					}
-				}*/
+				}
 			}
 			getTimeFire = GetTickCount();
 		}
