@@ -114,6 +114,9 @@
     <ClCompile Include="Thunder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Incline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Thunder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Incline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,6 +26,8 @@
 #include "Thunder.h"
 #include "Quadtree.h"
 
+#include "Incline.h"
+
 class CPlayScene: public CScene
 {
 protected: 
