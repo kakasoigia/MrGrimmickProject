@@ -263,9 +263,26 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
+			if (dynamic_cast<Slide*>(e->obj))
+			{
+				isSlide = true;
+				Slide* slide = dynamic_cast<Slide*>(e->obj);
+				if (slide->GetType() == SLIDE_TYPE_LEFT)
+				{
+					slideType = -1;
+				}
+				else if (slide->GetType() == SLIDE_TYPE_RIGHT)
+				{
+					slideType = 1;
+				}
+			}
+			else
+			{
+				isSlide = false;
+			}
 
 		}
-		if (!isIncline) {
+		if (!isIncline && !isSlide) {
 
 			x += min_tx * dx + nx * 0.4f;
 			y += min_ty * dy + ny * 0.4f;
@@ -275,7 +292,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 		else {
 			x += dx;
-			if (isIncline) {
+			if (isIncline || isSlide) {
 				y += min_ty * dy + ny * 0.4f;
 			}
 		}
@@ -319,12 +336,27 @@ void CGimmick::Render()
 		else
 			ani = GIMMICK_ANI_WALKING_LEFT;
 	}
-	else //if (state == GIMMICK_STATE_IDLE)
+	else if (state == GIMMICK_STATE_IDLE)
 	{
 		if (nx > 0)
 		{
 			ani = GIMMICK_ANI_IDLE_RIGHT;
 		}
+		else
+			ani = GIMMICK_ANI_IDLE_LEFT;
+	}
+	else if (state == GIMMICK_STATE_AUTO_GO_SLIDE_RIGHT)
+	{
+		ani = GIMMICK_ANI_WALKING_RIGHT;
+	}
+	else if (state == GIMMICK_STATE_AUTO_GO_SLIDE_LEFT)
+	{
+		ani = GIMMICK_ANI_WALKING_LEFT;
+	}
+	else //if (state == GIMMICK_STATE_AUTO_GO)
+	{
+		if (key_down == 1)
+			ani = GIMMICK_ANI_IDLE_RIGHT;
 		else
 			ani = GIMMICK_ANI_IDLE_LEFT;
 	}
@@ -492,6 +524,39 @@ void CGimmick::SetState(int state)
 			vx = incline_vx;
 			vy = incline_vy;
 		}
+		else if (isSlide)
+		{
+			if (slideType == 1)
+			{
+				vx = GIMMICK_WALKING_SPEED;
+			}
+			else
+			{
+				vx = -GIMMICK_WALKING_SPEED;
+			}
+		}
+		break;
+	case GIMMICK_STATE_AUTO_GO_SLIDE_RIGHT:
+		if (slideType == 1)
+		{
+			vx = GIMMICK_WALKING_SPEED_SLIDE_TRUE;
+		}
+		else
+		{
+			vx = GIMMICK_WALKING_SPEED_SLIDE_FALSE;
+		}
+		nx = 1;
+		break;
+	case GIMMICK_STATE_AUTO_GO_SLIDE_LEFT:
+		if (slideType == -1)
+		{
+			vx = -GIMMICK_WALKING_SPEED_SLIDE_TRUE;
+		}
+		else
+		{
+			vx = -GIMMICK_WALKING_SPEED_SLIDE_FALSE;
+		}
+		nx = -1;
 		break;
 	}
 

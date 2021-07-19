@@ -7,7 +7,7 @@ Slide::Slide()
 }
 Slide::Slide(int Type)
 {
-	this->Type = Type; 
+	this->Type = Type;
 	SetState(SLIDE_STATE_MOVING);
 	nx = 1;
 }
@@ -23,7 +23,7 @@ void Slide::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 void Slide::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-	
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -91,6 +91,6 @@ void Slide::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	
+
 	}
 }
