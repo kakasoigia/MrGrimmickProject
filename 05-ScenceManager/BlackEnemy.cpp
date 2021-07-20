@@ -33,7 +33,7 @@ void BlackEnemy::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCO
 		
 		if (dynamic_cast<CGimmick*>(c->obj))
 		{
-			ny = -0.01f;;
+			ny = -0.01f;
 
 		}
 	}
@@ -43,6 +43,12 @@ void BlackEnemy::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCO
 }
 void BlackEnemy::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == BLACKENEMY_STATE_DIE)
+
+	{
+		left = top = right = bottom = 0;
+		return;
+}
 	left = x;
 	top = y;
 	right = x + BLACKENEMY_BBOX_WIDTH;

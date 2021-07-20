@@ -198,7 +198,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
-	case OBJECT_TYPE_STAR: obj = new Star(); break;
+	case OBJECT_TYPE_STAR: 
+		if (star != NULL)
+		{
+			DebugOut(L"[ERROR] Have star already man!\n");
+			return;
+		}
+		obj = new Star();
+		this->star = (Star*)obj;
+		; break;
 	case OBJECT_TYPE_FISH_RED: obj = new Fish(FISH_TYPE_RED); break;
 	case OBJECT_TYPE_FISH_BLACK: obj = new Fish(FISH_TYPE_BLACK); break;
 	case OBJECT_TYPE_FISH_YELLOW: obj = new Fish(FISH_TYPE_YELLOW); break;
@@ -314,7 +322,7 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
-	//code Phong
+	//code 
 	for (size_t i = 0; i < objects.size(); i++) {
 		if (dynamic_cast<CGimmick*>(objects[i]))
 			continue;
@@ -329,25 +337,31 @@ void CPlayScene::Update(DWORD dt)
 
 	quadtree->Retrieve(&coObjects, player);
 	player->Update(dt, &coObjects);
+	if (player == NULL) return;
+	// update star
+	if (star->state == STAR_STATE_READY_TO_SHOT || star->state == STAR_STATE_LOADING)
+	{
+		star->SetPosition(player->x, player->y + 16);
+	}
+	// update fish
+	vector<LPGAMEOBJECT> temp_coObjects;
+	quadtree->Retrieve(&temp_coObjects, star);
+	star->Update(dt, &temp_coObjects);
 
-	// Duyệt các object cần update (có code xử lý trong hàm update của object đó)
+	// Duyệt các object cần update 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (!CGame::GetInstance()->ObjectInCamera(objects[i]))
 			continue;
 		if (dynamic_cast<CGimmick*>(objects[i]))
 			continue;
-		/*if (dynamic_cast<CBoom*>(objects[i])
-			|| dynamic_cast<CSwing*>(objects[i])
-			|| dynamic_cast<CBlueFire*>(objects[i])
-			|| dynamic_cast<CGimmickDieEffect*>(objects[i])
-			|| dynamic_cast<CWorm*>(objects[i])
-			|| dynamic_cast<CBlackEnemy*>(objects[i])
-			|| dynamic_cast<CBrickPink*>(objects[i]))
-		{*/
+		if (dynamic_cast<Star*>(objects[i]))
+			continue;
+		
 		vector<LPGAMEOBJECT> coObjectsUpdate;
 		quadtree->Retrieve(&coObjectsUpdate, objects[i]);
 		objects[i]->Update(dt, &coObjectsUpdate);
+
 		/*}*/
 	}
 	// Làm trống quadtree
@@ -355,7 +369,7 @@ void CPlayScene::Update(DWORD dt)
 		quadtree->Clear();
 	CGame* game = CGame::GetInstance();
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
+	
 	// Update camera to follow mario
 	SetCamPos();
 
@@ -524,6 +538,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CGimmick *gimmick = ((CPlayScene*)scence)->GetPlayer();
+	Star* star = ((CPlayScene*)scence)->GetStar();
+
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -544,7 +560,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		gimmick->Reset();
 		break;
 	case DIK_V:
-		gimmick->Fire();
+		if (star != nullptr) {
+			star->GetReady();
+		}
 		break;
 	}
 }
@@ -569,6 +587,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CGimmick* gimmick = ((CPlayScene*)scence)->GetPlayer();
+	Star* star = ((CPlayScene*)scence)->GetStar();
 	float x, y;
 	gimmick->GetPosition(x, y);
 	switch (KeyCode)
@@ -576,7 +595,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_S:
 		gimmick->ResetDoubleJumpStart();
 		break;
-
+	case DIK_V:
+		star->Shot();
 
 	}
 

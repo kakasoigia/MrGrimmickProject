@@ -11,6 +11,43 @@
 #include "Rocket.h"
 #include "SuspensionBridge.h"
 #include "Star.h"
+void CGimmick::FilterCollision(
+	vector<LPCOLLISIONEVENT>& coEvents,
+	vector<LPCOLLISIONEVENT>& coEventsResult,
+	float& min_tx, float& min_ty,
+	float& nx, float& ny, float& rdx, float& rdy)
+{
+	min_tx = 1.0f;
+	min_ty = 1.0f;
+	int min_ix = -1;
+	int min_iy = -1;
+
+	nx = 0.0f;
+	ny = 0.0f;
+
+	coEventsResult.clear();
+
+	for (UINT i = 0; i < coEvents.size(); i++)
+	{
+		LPCOLLISIONEVENT c = coEvents[i];
+
+		if (c->t < min_tx && c->nx != 0) {
+			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+		}
+
+		if (c->t < min_ty && c->ny != 0) {
+			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+		}
+	/*	if (dynamic_cast<Star*>(c->obj))
+		{
+			ny = 0.0f;
+		}*/
+	}
+
+	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
+	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
+}
+
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
 	untouchable = 0;
@@ -67,7 +104,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-	
+	// set sẵn - false 
+
 	// No collision occured, proceed normally
 	if (coEvents.size()==0)
 	{
@@ -119,6 +157,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
+			
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if(!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
 
@@ -165,6 +204,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else
 				{
 					SetOnTopBlackEnemy(false);
+					if (untouchable == 0) {
+						this->SetState(GIMMICK_STATE_STUN);
+						StartUntouchable();
+					}
 				}
 				/*else if (e->nx != 0)
 				{
@@ -203,6 +246,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					isOnBridge = true;
 					//DebugOut(L"[INFO] Vô đây hoài: \n");
 				}
+			/*	else
+				{
+					isOnBridge = false;
+				}*/
 				/*this->x += bridge->dt * BRIDGE_MOVING_SPEED;*/
 
 			}
@@ -284,7 +331,7 @@ void CGimmick::SetState(int state)
 		vx = 0;
 		break;
 	case GIMMICK_STATE_DIE:
-		vy = GIMMICK_DIE_DEFLECT_SPEED;
+		vy += GIMMICK_DIE_DEFLECT_SPEED;
 		break;
 	case GIMMICK_STATE_JUMP_HIGH_SPEED:
 		vy = GIMMICK_JUMP_HIGHT_SPEED_Y;
@@ -311,23 +358,23 @@ void CGimmick::Reset()
 }
 void CGimmick::Fire()
 {
-	// call star 
-	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
-	for (UINT i = 0; i < objects.size(); i++)
-	{
-		if (dynamic_cast<Star*>(objects[i]))
-		{
-			Star* star = dynamic_cast<Star*>(objects[i]);
-			if (star->GetIsUsed() == false)
-			{
-				// get fired
-				
-				star->SetPosition(this->x, this->y + 5);
-				star->nx = this->nx;
-				star->SetState(STAR_STATE_FLYING);
-				return;
-			}
-		}
-		
-	}
+	//// call star 
+	//vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
+	//for (UINT i = 0; i < objects.size(); i++)
+	//{
+	//	if (dynamic_cast<Star*>(objects[i]))
+	//	{
+	//		Star* star = dynamic_cast<Star*>(objects[i]);
+	//		if (star->GetIsUsed() == false)
+	//		{
+	//			// get fired
+	//			
+	//			star->SetPosition(this->x, this->y + 5);
+	//			star->nx = this->nx;
+	//			star->SetState(STAR_STATE_FLYING);
+	//			return;
+	//		}
+	//	}
+	//	
+	//}
 }

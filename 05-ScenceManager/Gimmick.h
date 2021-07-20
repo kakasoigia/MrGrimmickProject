@@ -8,21 +8,23 @@
 #define GIMMICK_DOUBLE_JUMP_SPEED 0.245f
 #define GIMMICK_JUMP_DEFLECT_SPEED 0.2f
 #define GIMMICK_GRAVITY 0.0008f
-#define GIMMICK_DIE_DEFLECT_SPEED 0.5f
+#define GIMMICK_DIE_DEFLECT_SPEED 0.25f
 #define GIMMICK_STATE_IDLE 0
 #define GIMMICK_STATE_WALKING_RIGHT 100
 #define GIMMICK_STATE_WALKING_LEFT 200
 #define GIMMICK_STATE_JUMP 300
 #define GIMMICK_STATE_DIE 400
+#define GIMMICK_STATE_STUN 600
 #define GIMMICK_STATE_JUMP_HIGH_SPEED	500
+
 #define GIMMICK_ANI_IDLE_RIGHT 1
 #define GIMMICK_ANI_IDLE_LEFT 0
 #define GIMMICK_ANI_WALKING_LEFT 2
 #define GIMMICK_ANI_WALKING_RIGHT 3
 #define GIMMICK_ANI_JUMPING_RIGHT 4
 #define GIMMICK_ANI_JUMPING_LEFT 5
-
-
+#define GIMMICK_ANI_COLLISION_RIGHT 6
+#define GIMMICK_ANI_COLLISION_LEFT 7
 
 
 #define GIMMICK_BIG_BBOX_WIDTH  16
@@ -49,7 +51,7 @@ public:
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
-
+	void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
 	void SetState(int state);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 

@@ -25,13 +25,13 @@
 #include "Star.h"
 #include "Thunder.h"
 #include "Quadtree.h"
-
+#include "Star.h"
 class CPlayScene: public CScene
 {
 protected: 
 	Map* map;
 	CGimmick* player;					// A play scene has to have player, right? 
-	
+	Star* star = nullptr;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);
@@ -55,7 +55,7 @@ public:
 
 
 	CGimmick* GetPlayer() { return player; }
-
+	Star* GetStar() { return star; };
 	//friend class CPlayScenceKeyHandler;
 };
 
