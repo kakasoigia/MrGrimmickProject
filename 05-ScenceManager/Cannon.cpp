@@ -42,15 +42,11 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			for (UINT i = 0; i < objects.size(); i++)
 			{
-				DebugOut(L"[INFO] cc tk Tan \n");
-
 				if (dynamic_cast<Bullet*>(objects.at(i)))
 				{
-					DebugOut(L"[INFO] cc tk Trinh \n");
-
 					Bullet* bullet = dynamic_cast<Bullet*>(objects.at(i));
 
-					if (bullet->GetState() == BULLET_STATE_IDLING)
+					if (bullet->GetState() == BULLET_STATE_DISAPPEAR)
 					{
 						bullet->SetState(BULLET_STATE_FALLING);
 						bullet->SetPosition(x + 16, y);

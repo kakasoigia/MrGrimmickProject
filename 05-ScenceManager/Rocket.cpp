@@ -43,7 +43,6 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		SetState(ROCKET_STATE_DISAPPEAR);
 		booming_start = 0;
-		
 	}
 
 	for (UINT i = 0; i < coObjects->size(); i++)
