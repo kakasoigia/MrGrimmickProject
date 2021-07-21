@@ -47,9 +47,14 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define	OBJECT_TYPE_MEDICINE_BLACK_BOMB 15
 #define OBJECT_TYPE_FLOWER 16
 
+//#define OBJECT_TYPE_CANNON_SECOND 17
+
 #define OBJECT_TYPE_BULLET 20
 
 #define OBJECT_TYPE_INCLINE	22
+
+#define OBJECT_TYPE_GRIMMICK_DIE 23
+
 
 #define OBJECT_TYPE_NOCOLLISIONOBJECT 49
 #define OBJECT_TYPE_PORTAL	50
@@ -62,6 +67,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FISH_YELLOW	62
 #define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
+
 
 
 #define MAX_SCENE_LINE 1024
@@ -227,7 +233,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
 
-
+	case 23: obj = new CThunder(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);

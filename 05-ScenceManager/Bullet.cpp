@@ -1,6 +1,8 @@
 ﻿#include "Utils.h"
 #include "Bullet.h"
 #include "Thunder.h"
+#include "Incline.h"
+
 Bullet::Bullet()
 {
 	SetState(BULLET_STATE_DISAPPEAR);
@@ -82,12 +84,19 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					SetState(BULLET_STATE_DESTROY);
 			}
 
-			//if (e->nx != 0 && ny == 0)
-			//{
-			//	this->vx = -this->vx;
-			//	this->nx = -this->nx;
+			if (dynamic_cast<Incline*>(e->obj)) 
+			{
+				Incline* incline = dynamic_cast<Incline*>(e->obj);
 
-			//}
+				if (incline->direct > 0) {
+					isInclineHeightToLow = true;
+					if (isInclineHeightToLow) {
+						this->nx = -1;
+						vx = -BULLET_WALKING_SPEED;
+					}
+				}
+			}
+			else this->nx = 1;
 		}
 	}
 
@@ -110,12 +119,6 @@ void Bullet::Render()
 	{
 		return;
 	}
-	//	/*if (nx > 0)
-	//		ani = BULLET_ANI_FALLING_RIGHT;
-	//	else
-	//		ani = BULLET_ANI_FALLING_LEFT;*/
-	//	
-	//}
 	animation_set->at(ani)->Render(x, y);
 
 	//RenderBoundingBox();

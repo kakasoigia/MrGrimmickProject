@@ -9,6 +9,12 @@ Cannon::Cannon()
 	nx = 1;
 }
 
+Cannon::Cannon(bool isRight)
+{
+	SetState(CANNON_STATE_GREEN);
+	nx = 1;
+}
+
 void Cannon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
@@ -150,8 +156,6 @@ void Cannon::SetState(int state)
 		break;
 	case CANNON_STATE_RED:
 		DebugOut(L"[INFO] cc tk hieu \n");
-
-		
 
 		break;
 	}

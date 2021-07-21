@@ -27,6 +27,7 @@ class Cannon :
 	//virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
 public:
 	Cannon();
+	Cannon(bool isRight);
 	virtual void SetState(int state);
 };
 
