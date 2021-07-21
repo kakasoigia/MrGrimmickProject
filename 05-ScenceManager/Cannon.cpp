@@ -1,7 +1,15 @@
 
 #include "Cannon.h"
 #include "Bullet.h"
+#include "Utils.h"
+
 Cannon::Cannon()
+{
+	SetState(CANNON_STATE_GREEN);
+	nx = 1;
+}
+
+Cannon::Cannon(bool isRight)
 {
 	SetState(CANNON_STATE_GREEN);
 	nx = 1;
@@ -20,6 +28,42 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
 	vy -= CANNON_GRAVITY * dt;
+
+
+	if (state == CANNON_STATE_GREEN)
+	{
+		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300) this->SetState(CANNON_STATE_RED);
+	}
+
+	if (getTimeFire == -1)
+	{
+		getTimeFire = GetTickCount();
+	}
+	else
+	{
+		if (GetTickCount() - getTimeFire > 2000 && state == CANNON_STATE_RED)
+		{
+			vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
+
+			for (UINT i = 0; i < objects.size(); i++)
+			{
+				if (dynamic_cast<Bullet*>(objects.at(i)))
+				{
+					Bullet* bullet = dynamic_cast<Bullet*>(objects.at(i));
+
+					if (bullet->GetState() == BULLET_STATE_DISAPPEAR)
+					{
+						bullet->SetState(BULLET_STATE_FALLING);
+						bullet->SetPosition(x + 16, y);
+						break;
+					}
+				}
+			}
+			getTimeFire = GetTickCount();
+		}
+	}
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -66,31 +110,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// clean up collision events
-	
-	if (getTimeFire == -1)
-	{
-		getTimeFire = GetTickCount();
-	}
-	else
-	{
-		if (GetTickCount()- getTimeFire > 2000)
-		{
-			for (UINT i = 0; i < coObjects->size(); i++)
-			{
-				LPGAMEOBJECT obj = coObjects->at(i);
-				if (dynamic_cast<Bullet*>(obj))
-				{
-					Bullet* bullet = dynamic_cast<Bullet*>(obj);
-					if (bullet->GetState() == BULLET_STATE_FALLING)
-					{
-						bullet->SetPosition(x + 16, y);
-						break;
-					}
-				}
-			}
-			getTimeFire = GetTickCount();
-		}
-	}
+
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
@@ -135,6 +155,8 @@ void Cannon::SetState(int state)
 	
 		break;
 	case CANNON_STATE_RED:
+		DebugOut(L"[INFO] cc tk hieu \n");
+
 		break;
 	}
 }

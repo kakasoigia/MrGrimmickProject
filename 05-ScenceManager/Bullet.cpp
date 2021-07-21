@@ -1,13 +1,21 @@
-
+﻿#include "Utils.h"
 #include "Bullet.h"
+#include "Thunder.h"
+#include "Incline.h"
+
 Bullet::Bullet()
 {
-	SetState(BULLET_STATE_FALLING);
+	SetState(BULLET_STATE_DISAPPEAR);
 	nx = 1;
 }
-
 void Bullet::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == BULLET_STATE_DISAPPEAR)
+	{
+		left = top = right = bottom = 0;
+		return;
+	}
+
 	left = x;
 	top = y;
 	right = x + BULLET_BBOX_WIDTH;
@@ -18,15 +26,26 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	if (state != BULLET_STATE_IDLING)
+	if (state == BULLET_STATE_FALLING)
 		vy -= BULLET_GRAVITY * dt;
+
+
+	// thời gian hiện animation nổ
+	if (state == BULLET_STATE_DESTROY)
+	{
+		if ((GetTickCount() - booming_start > 500) )
+		{
+			SetState(BULLET_STATE_DISAPPEAR);
+			booming_start = 0;
+		}
+	}
+	
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-
-
+	
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		LPGAMEOBJECT obj = coObjects->at(i);
@@ -36,14 +55,11 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-
 		x += dx;
 		y += dy;
-
 	}
 	else
 	{
-
 		// land ...fly
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
@@ -62,12 +78,25 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (e->nx != 0 && ny == 0)
+			if (dynamic_cast<CThunder*>(e->obj))
 			{
-				this->vx = -this->vx;
-				this->nx = -this->nx;
-
+				if(state != BULLET_STATE_DESTROY)
+					SetState(BULLET_STATE_DESTROY);
 			}
+
+			if (dynamic_cast<Incline*>(e->obj)) 
+			{
+				Incline* incline = dynamic_cast<Incline*>(e->obj);
+
+				if (incline->direct > 0) {
+					isInclineHeightToLow = true;
+					if (isInclineHeightToLow) {
+						this->nx = -1;
+						vx = -BULLET_WALKING_SPEED;
+					}
+				}
+			}
+			else this->nx = 1;
 		}
 	}
 
@@ -77,21 +106,20 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Bullet::Render()
 {
-	/*int ani = BULLET_ANI_FALLING_RIGHT;*/
-	//if (state == BULLET_STATE_IDLING)
-	//{
-	//	ani = BULLET_ANI_IDLING;
-	//}
-	//else if (state == BULLET_STATE_FALLING)
-	//{
-	//	/*if (nx > 0)
-	//		ani = BULLET_ANI_FALLING_RIGHT;
-	//	else
-	//		ani = BULLET_ANI_FALLING_LEFT;*/
-	//	
-	//}
-
-	animation_set->at(0)->Render(x, y);
+	int ani = BULLET_ANI_FALLING;
+	if (state == BULLET_STATE_FALLING)
+	{
+		ani = BULLET_ANI_FALLING;
+	}
+	else if (state == BULLET_STATE_DESTROY)
+	{
+		ani = BULLET_ANI_DESTROY;
+	}
+	else if (state == BULLET_STATE_DISAPPEAR)
+	{
+		return;
+	}
+	animation_set->at(ani)->Render(x, y);
 
 	//RenderBoundingBox();
 }
@@ -101,6 +129,9 @@ void Bullet::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case BULLET_STATE_DESTROY:
+		StartBooming();
+		break;
 	case BULLET_STATE_IDLING:
 
 		break;

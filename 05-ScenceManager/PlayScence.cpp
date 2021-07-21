@@ -47,7 +47,15 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define	OBJECT_TYPE_MEDICINE_BLACK_BOMB 15
 #define OBJECT_TYPE_FLOWER 16
 
+//#define OBJECT_TYPE_CANNON_SECOND 17
+
 #define OBJECT_TYPE_BULLET 20
+
+#define OBJECT_TYPE_INCLINE	22
+
+#define OBJECT_TYPE_GRIMMICK_DIE 23
+
+
 #define OBJECT_TYPE_NOCOLLISIONOBJECT 49
 #define OBJECT_TYPE_PORTAL	50
 
@@ -59,6 +67,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FISH_YELLOW	62
 #define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
+
 
 
 #define MAX_SCENE_LINE 1024
@@ -212,6 +221,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_FISH_YELLOW: obj = new Fish(FISH_TYPE_YELLOW); break;
 	case OBJECT_TYPE_BULLET: obj = new Bullet(); break;
 	case OBJECT_TYPE_NOCOLLISIONOBJECT: obj = new NoCollisionObject(); break;
+
+	case OBJECT_TYPE_INCLINE:
+	{
+		float d = atof(tokens[4].c_str());
+		float s = atof(tokens[5].c_str());
+
+		obj = new Incline(x, y, d, s);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 		{	
 			float r = atof(tokens[4].c_str());
@@ -221,6 +240,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
+
+	case 23: obj = new CThunder(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -567,21 +588,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 }
 
-
-void CPlayScenceKeyHandler::KeyState(BYTE *states)
-{
-	CGame *game = CGame::GetInstance();
-	CGimmick *grimmick = ((CPlayScene*)scence)->GetPlayer();
-
-	// disable control key when Mario die 
-	if (grimmick->GetState() == GIMMICK_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
-		grimmick->SetState(GIMMICK_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
-		grimmick->SetState(GIMMICK_STATE_WALKING_LEFT);
-	else
-		grimmick->SetState(GIMMICK_STATE_IDLE);
-}
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -599,5 +605,30 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		star->Shot();
 
 	}
+
+}
+
+void CPlayScenceKeyHandler::KeyState(BYTE *states)
+{
+	//CGame *game = CGame::GetInstance();
+	//CGimmick* grimmick = ((CPlayScene*)scence)->GetPlayer();
+
+	//// disable control key when Mario die 
+	//if (grimmick->GetState() == GIMMICK_STATE_DIE) return;
+	//if (game->IsKeyDown(DIK_RIGHT))
+	//	grimmick->SetState(GIMMICK_STATE_WALKING_RIGHT);
+	//else if (game->IsKeyDown(DIK_LEFT))
+	//	grimmick->SetState(GIMMICK_STATE_WALKING_LEFT);
+	//else 
+	//	grimmick->SetState(GIMMICK_STATE_IDLE);
+	/*if (game->IsKeyDown(DIK_SPACE))
+	{
+		grimmick->SetState(GRIMMICK_STATE_HOLD_JUMP);
+	}*/
+	CGame* game = CGame::GetInstance();
+
+	CGimmick* gimmick = ((CPlayScene*)scence)->GetPlayer();
+
+	gimmick->KeyState(states);
 
 }

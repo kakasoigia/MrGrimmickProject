@@ -25,6 +25,8 @@ class Worm :
 	virtual void Render();
 	//virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
 public:
+	float tempbacky;
+	bool back = false;
 	Worm();
 	virtual void SetState(int state);
 };

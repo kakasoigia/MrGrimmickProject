@@ -26,6 +26,9 @@
 #include "Thunder.h"
 #include "Quadtree.h"
 #include "Star.h"
+
+#include "Incline.h"
+
 class CPlayScene: public CScene
 {
 protected: 

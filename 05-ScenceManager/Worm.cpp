@@ -36,10 +36,22 @@ void Worm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-
 		x += dx;
 		y += dy;
 
+		if (back)
+		{
+			if (tempbacky - y >= 0.5f)
+			{
+				y += 5;
+				if (vx < 0)
+					x += 12;
+				else
+					x -= 12;
+				vx = -vx;
+				nx = -nx;
+			}
+		}
 	}
 	else
 	{
@@ -50,25 +62,15 @@ void Worm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+		back = true;
+
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
 		/*if (nx!=0) vx = 0;*/
 		if (ny != 0) vy = 0;
 
-		// Collision logic with other objects
-		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (e->nx != 0 && ny == 0)
-			{
-				this->vx = -this->vx;
-				this->nx = -this->nx;
-
-			}
-		}
+		tempbacky = y;
 	}
 
 	// clean up collision events
