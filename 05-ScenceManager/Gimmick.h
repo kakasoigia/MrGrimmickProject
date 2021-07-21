@@ -61,6 +61,7 @@ public:
 	int GetJumping() { return jump; };
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	DWORD time_maxjumping = 0;
+	DWORD time_stun = 0;
 	DWORD doubleJump_start = 0; // Check for double jump
 	void StartJumpingMax() { maxjumping = 1, time_maxjumping = GetTickCount(); }
 	void ResetDoubleJumpStart() { doubleJump_start = 0; }
