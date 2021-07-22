@@ -68,9 +68,9 @@ public:
 		this->score += score;
 		if (score > 99999999) score = 99999999;
 	};
-	void IncLight(int light) 
+	void IncLight(int elight) 
 	{
-		this->light += light; if (light > 4) light = 4;
+		this->light += elight; if (this->light > 4) this->light = 4;
 	};
 	void IncRest(int score) 
 	{ 
