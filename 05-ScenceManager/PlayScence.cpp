@@ -1,11 +1,7 @@
-﻿#include <iostream>
+﻿
 #include <fstream>
 
 #include "PlayScence.h"
-#include "Utils.h"
-#include "Textures.h"
-#include "Sprites.h"
-#include "Portal.h"
 
 using namespace std;
 
@@ -208,6 +204,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
+
+	case OBJECT_TYPE_GRIMMICK_DIE: 
+		if (dieEffect != NULL)
+		{
+			DebugOut(L"[ERROR] Have die already man!\n");
+			return;
+		}
+		obj = new CGimmickDieEffect();
+		this->dieEffect = (CGimmickDieEffect*)obj;
+		break;
+
+
 	case OBJECT_TYPE_STAR: 
 		if (star != NULL)
 		{
@@ -241,8 +249,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
-
-	case 23: obj = new CThunder(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -554,6 +560,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_M: 
 		gimmick->Reset();
+		gimmick->deltaTimeDie = 0;
 		break;
 	case DIK_V:
 		if (star != nullptr) {

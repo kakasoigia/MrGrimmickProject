@@ -56,7 +56,7 @@
 #define GIMMICK_STATE_AUTO_GO_SLIDE_RIGHT		1001
 #define GIMMICK_STATE_AUTO_GO_SLIDE_LEFT		1002
 
-#define GIMMICK_UNTOUCHABLE_TIME 5000
+#define GIMMICK_UNTOUCHABLE_TIME 2000
 
 
 class CGimmick : public CGameObject
@@ -79,11 +79,17 @@ public:
 	int direct_go;						// trend of slide
 	int key_down = 0;
 
+	bool isDeath = false;
+
 	// silde
 	bool isSlide = false;
 	int isDirSlide = 0;
 	int slideType = 0;
 	float incline_vx, incline_vy;
+
+	//set gimmick die
+	float positionX, positionY;
+	float deltaTimeDie = 0;
 
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
@@ -114,4 +120,5 @@ public:
 	bool GetOnBridge() { return isOnBridge; };
 	void Fire();
 	void GetItem( int type);
+	void createDieEffect();
 };

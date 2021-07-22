@@ -2,7 +2,8 @@
 #include "Game.h"
 #include "Textures.h"
 #include "Scence.h"
-#include "GameObject.h"
+#include "Sprites.h"
+
 #include "Brick.h"
 #include "Gimmick.h"
 #include "Goomba.h"
@@ -28,13 +29,19 @@
 #include "Star.h"
 #include "Hud.h"
 #include "Incline.h"
+#include "Utils.h"
 
+
+#include "Portal.h"
+
+#include "GimmickDieEffect.h"
 class CPlayScene: public CScene
 {
 protected: 
 	Map* map;
 	CGimmick* player;					// A play scene has to have player, right? 
 	Star* star = nullptr;
+	CGimmickDieEffect* dieEffect = nullptr;
 	vector<LPGAMEOBJECT> objects;
 	CHud* hud = new CHud();
 	void _ParseSection_TEXTURES(string line);
@@ -59,6 +66,7 @@ public:
 
 	CGimmick* GetPlayer() { return player; }
 	Star* GetStar() { return star; };
+	CGimmickDieEffect* GetDieEffect() { return dieEffect; }
 	//friend class CPlayScenceKeyHandler;
 };
 
