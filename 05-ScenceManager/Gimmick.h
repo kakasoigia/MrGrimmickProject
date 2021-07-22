@@ -79,11 +79,17 @@ public:
 	int direct_go;						// trend of slide
 	int key_down = 0;
 
+	bool isDeath = false;
+
 	// silde
 	bool isSlide = false;
 	int isDirSlide = 0;
 	int slideType = 0;
 	float incline_vx, incline_vy;
+
+	//set gimmick die
+	float positionX, positionY;
+	float deltaTimeDie = 0;
 
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
@@ -113,4 +119,5 @@ public:
 	void SetOnBridge(bool isOnBridge) { this->isOnBridge = isOnBridge; };
 	bool GetOnBridge() { return isOnBridge; };
 	void Fire();
+	void createDieEffect();
 };

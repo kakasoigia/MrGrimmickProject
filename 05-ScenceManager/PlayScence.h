@@ -28,6 +28,7 @@
 #include "Star.h"
 
 #include "Incline.h"
+#include "GimmickDieEffect.h"
 
 class CPlayScene: public CScene
 {
@@ -35,6 +36,7 @@ protected:
 	Map* map;
 	CGimmick* player;					// A play scene has to have player, right? 
 	Star* star = nullptr;
+	CGimmickDieEffect* dieEffect = nullptr;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);
@@ -59,6 +61,7 @@ public:
 
 	CGimmick* GetPlayer() { return player; }
 	Star* GetStar() { return star; };
+	CGimmickDieEffect* GetDieEffect() { return dieEffect; }
 	//friend class CPlayScenceKeyHandler;
 };
 

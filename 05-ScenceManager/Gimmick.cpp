@@ -13,6 +13,8 @@
 #include "Star.h"
 #include "Incline.h"
 
+#include "GimmickDieEffect.h"
+
 void CGimmick::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,
 	vector<LPCOLLISIONEVENT>& coEventsResult,
@@ -97,7 +99,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		time_maxjumping = 0;
 	}
 	// turn off collision when die 
-	if (state!= GIMMICK_STATE_DIE)
+
+	//if (state!= GIMMICK_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
@@ -180,7 +183,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					SetOnTopBlackEnemy(false);
 					if (untouchable == 0) {
-						this->SetState(GIMMICK_STATE_STUN);
+						this->SetState(GIMMICK_STATE_DIE);
 						StartUntouchable();
 					}
 				}
@@ -231,7 +234,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (dynamic_cast<CThunder*>(e->obj))
 			{
 				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
-				SetState(GIMMICK_STATE_DIE);
+				this->SetState(GIMMICK_STATE_DIE);
+				StartUntouchable();
 			}
 			if (dynamic_cast<Incline*>(e->obj)) {
 
@@ -399,6 +403,11 @@ void CGimmick::Render()
 	{
 		ani = GIMMICK_ANI_WALKING_LEFT;
 	}
+	else if (state == GIMMICK_STATE_DIE)
+	{
+		createDieEffect();
+		return;
+	}
 	else //if (state == GIMMICK_STATE_AUTO_GO)
 	{
 		if (key_down == 1)
@@ -475,11 +484,7 @@ void CGimmick::KeyState(BYTE* state)
 
 		SetState(GIMMICK_STATE_IDLE);
 	}
-
-
-
 }
-
 
 void CGimmick::SetState(int state)
 {
@@ -503,7 +508,11 @@ void CGimmick::SetState(int state)
 		vx = 0;
 		break;
 	case GIMMICK_STATE_DIE:
-		vy += GIMMICK_DIE_DEFLECT_SPEED;
+		this->isDeath = true;
+		this->vx = 0;
+		this->vy = 0;
+		positionX = this->x;
+		positionY = this->y;
 		break;
 	case GIMMICK_STATE_JUMP_HIGH_SPEED:
 		vy = GIMMICK_JUMP_HIGHT_SPEED_Y;
@@ -610,10 +619,16 @@ void CGimmick::SetState(int state)
 
 void CGimmick::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
-	top = y; 
-	right = x + GIMMICK_BIG_BBOX_WIDTH;
-	bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
+	if (state == GIMMICK_STATE_DIE) {
+		left = top = right = bottom = 0;
+	}
+	else {
+		left = x;
+		top = y;
+		right = x + GIMMICK_BIG_BBOX_WIDTH;
+		bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
+	}
+	
 }
 
 /*
@@ -625,6 +640,28 @@ void CGimmick::Reset()
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }
+
+void CGimmick::createDieEffect() {
+	deltaTimeDie += 10;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	animation_sets->Get(80)->at(0)->Render(positionX, positionY + GIMMICKDIEEFFECT_SPEED*deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED * deltaTimeDie, positionY);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX, positionY + -GIMMICKDIEEFFECT_SPEED * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED * deltaTimeDie, positionY);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY+ GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+}
+
 void CGimmick::Fire()
 {
 	//// call star 
