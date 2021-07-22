@@ -2,13 +2,13 @@
 #include "GameObject.h"
 #include "Gimmick.h"
 
-#define STAR_GRAVITY 0.001f
-#define	STAR_FLYING_SPEED_Y 0.2f
-#define	STAR_FLYING_SPEED_X 0.15f
+#define STAR_GRAVITY 0.0005f
+#define	STAR_FLYING_SPEED_Y 0.125f
+#define	STAR_FLYING_SPEED_X 0.25f
 #define STAR_BBOX_WIDTH 24
 #define STAR_BBOX_HEIGHT 24
-#define STAR_DECREASE_SPEED_X 0.01f
-#define STAR_DECREASE_SPEED_Y 0.03f
+#define STAR_DECREASE_SPEED_X 0.005f
+#define STAR_DECREASE_SPEED_Y 0.02f
 
 #define STAR_STATE_DISAPPEAR 100
 #define STAR_STATE_LOADING 400
@@ -63,6 +63,8 @@ public:
 	void Shot();
 	void StartTimeReady() { time_increase_converging = GetTickCount(); };
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-
+	void CalcPotentialCollisions(
+		vector<LPGAMEOBJECT>* coObjects,
+		vector<LPCOLLISIONEVENT>& coEvents);
 };
 

@@ -1,4 +1,5 @@
-﻿
+﻿#include <algorithm>
+#include <assert.h>
 #include "Star.h"
 #include "Utils.h"
 #include "Brick.h"
@@ -9,6 +10,7 @@
 #include "Slide.h"
 #include "Incline.h"
 #include "Thunder.h"
+#include "Item.h"
 Star::Star()
 {
 	SetState(STAR_STATE_DISAPPEAR);
@@ -44,13 +46,42 @@ void Star::FilterCollision(
 		}
 		if (dynamic_cast<CGimmick*>(c->obj))
 		{
-			ny = 0.00001f;
-			nx = 0.00001;
+			ny = 0;
+			nx = 0;
+		}
+		if (dynamic_cast<Item*>(c->obj))
+		{
+			ny = 0;
+			nx = 0;
 		}
 	}
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
+}
+void Star::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT>* coObjects,
+	vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CGimmick*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		if (dynamic_cast<Item*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
 void Star::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -83,8 +114,6 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if ((GetTickCount() - smoke_start > STAR_SMOKE_TIME))
 		{
-
-			
 			smoke_start = 0;
 			SetState(STAR_STATE_DISAPPEAR);
 			return;
@@ -297,21 +326,31 @@ void Star::SetState(int state)
 
 		break;
 	case STAR_STATE_FLYING:
-
 		LimitY = STAR_FLYING_SPEED_Y;
 		LimitX = STAR_FLYING_SPEED_X;
-		vy = LimitY /*+ gimmick ->vy*/;
-		if (nx > 0)
+		if (gimmick->GetJumping() == 1)
 		{
-			x = gimmick->x + 5;
-			vx = LimitX + gimmick->vx/3;
+			vy = -LimitY;
 		}
 		else
 		{
-			vx = -LimitX + gimmick->vx / 3;
-			x = gimmick->x - 5;
+			vy = LimitY;
 		}
-		this->y = gimmick->y + 25;
+		
+		 /*+ gimmick ->vy*/;
+		if (nx > 0)
+		{
+			x = gimmick->x + 5;
+			vx = LimitX;
+			/*vx = LimitX + gimmick->vx/3;*/
+		}
+		else
+		{
+			/*vx = -LimitX + gimmick->vx / 3;*/
+			x = gimmick->x - 5;
+			vx = -LimitX;
+		}
+		this->y = gimmick->y + 20;
 
 		break;
 	case STAR_STATE_SMOKE:
@@ -339,7 +378,7 @@ void Star::Shot()
 	
 	if (state == STAR_STATE_READY_TO_SHOT)
 	{
-		DebugOut(L"[INFO] shot đk k  \n");
+	
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		nx = gimmick->nx;
 		converging_level = 0;

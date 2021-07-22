@@ -51,6 +51,26 @@ void CGimmick::FilterCollision(
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
+void CGimmick::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT>* coObjects,
+	vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<Star*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+}
 
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
@@ -256,7 +276,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
 				this->SetState(GIMMICK_STATE_DIE);
-				StartUntouchable();
+			
 			}
 			if (dynamic_cast<Incline*>(e->obj)) {
 
@@ -442,7 +462,7 @@ void CGimmick::Render()
 			ani = GIMMICK_ANI_IDLE_LEFT;
 	}
 	int alpha = 255;
-	if (untouchable) alpha = 128;
+	
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
