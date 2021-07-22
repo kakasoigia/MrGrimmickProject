@@ -9,6 +9,10 @@
 }
 void CHud::Update(DWORD dt)
 {
+	float cx, cy;
+	
+	CGame::GetInstance()->GetCamPos(cx, cy);
+	SetPosition(cx, cy - CGame::GetInstance()->GetScreenHeight());
 	this->dt = dt;
 	//update figure
 	UpdateFigure();
@@ -35,10 +39,8 @@ void CHud::Render()
 
 void CHud::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x;
-	r = x + HUD_WIDTH;
-	t = y;
-	b = t - HUD_HEIGHT;
+	l = r = t = b = 0;
+	
 }
 
 void CHud::RenderScore()

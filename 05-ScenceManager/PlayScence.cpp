@@ -356,9 +356,14 @@ void CPlayScene::Update(DWORD dt)
 	// Update player
 	vector<LPGAMEOBJECT> coObjects;
 
+		// Update camera to follow mario
+	SetCamPos();
+	// update hud
+	hud->Update(dt);
 
 	quadtree->Retrieve(&coObjects, player);
 	player->Update(dt, &coObjects);
+
 	if (player == NULL) return;
 	// update star
 	if (star->state == STAR_STATE_READY_TO_SHOT || star->state == STAR_STATE_LOADING)
@@ -392,10 +397,6 @@ void CPlayScene::Update(DWORD dt)
 	CGame* game = CGame::GetInstance();
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	
-	// Update camera to follow mario
-	SetCamPos();
-
-	hud->Update(dt);
 
 
 }
@@ -495,7 +496,7 @@ void CPlayScene::SetCamPos() {
 	}
 	// Update camera to follow mario
 	CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
-	hud->SetPosition(cx, cy - game->GetScreenHeight());
+
 }
 
 void CPlayScene::Render()
