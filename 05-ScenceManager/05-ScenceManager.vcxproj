@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GimmickDieEffect.cpp" />
+    <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Incline.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Animations.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Fish.h" />
     <ClInclude Include="FloatBox.h" />
     <ClInclude Include="GimmickDieEffect.h" />
+    <ClInclude Include="Hud.h" />
     <ClInclude Include="Incline.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />

@@ -113,4 +113,5 @@ public:
 	void SetOnBridge(bool isOnBridge) { this->isOnBridge = isOnBridge; };
 	bool GetOnBridge() { return isOnBridge; };
 	void Fire();
+	void GetItem( int type);
 };

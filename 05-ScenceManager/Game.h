@@ -47,8 +47,37 @@ class CGame
 
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
-
+	
+	long score = 000;
+	int rest = 4;
+	int light = 1;
+	vector<int> item ;
 public:
+	long GetScore() { return score; };
+	int GetRest() { return rest; };
+	int GetLight() { return light; };
+	vector<int> GetItem() { return item; };
+
+	void SetScore(int score) { this->score = score; };
+	void SetLight(int light) { this->light = light; };
+	void SetRest(int score) { this->rest = rest; };
+	void SetItem(vector<int> item) { this->item = item; };
+
+	void IncScore(int score) 
+	{
+		this->score += score;
+		if (score > 99999999) score = 99999999;
+	};
+	void IncLight(int light) 
+	{
+		this->light += light; if (light > 4) light = 4;
+	};
+	void IncRest(int score) 
+	{ 
+		this->rest += rest;
+		if (rest > 99) rest = 99;
+	};
+
 	void InitKeyboard();
 	bool ObjectInCamera(CGameObject* object);
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }

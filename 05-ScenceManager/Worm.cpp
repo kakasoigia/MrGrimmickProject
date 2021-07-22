@@ -9,6 +9,12 @@ Worm::Worm()
 
 void Worm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == WORM_STATE_DIE)
+	{
+		left = top = right = bottom = 0;
+		return;
+	}
+		
 	left = x;
 	top = y;
 	right = x + WORM_BBOX_WIDTH;
@@ -101,7 +107,7 @@ void Worm::SetState(int state)
 	{
 	case WORM_STATE_DIE:
 		vx = 0;
-		vy = 0;
+		vy = WORM_DEFLECT_SPEED ;
 		break;
 	case WORM_STATE_WALKING:
 		if (nx < 0)

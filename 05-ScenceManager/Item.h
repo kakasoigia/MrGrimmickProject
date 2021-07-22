@@ -3,8 +3,8 @@
 #include "Gimmick.h"
 
 
-#define ITEM_BBOX_WIDTH 16
-#define ITEM_BBOX_HEIGHT 15
+#define ITEM_BBOX_WIDTH 15
+#define ITEM_BBOX_HEIGHT 14
 
 #define	ITEM_TYPE_MEDICINE_PINK 100
 #define	ITEM_TYPE_MEDICINE_ORANGE 200
@@ -14,6 +14,8 @@
 
 
 #define ITEM_STATE_IDLING 100
+#define ITEM_STATE_DISAPPEAR 200
+
 
 
 

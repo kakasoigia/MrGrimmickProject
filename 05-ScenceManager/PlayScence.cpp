@@ -12,6 +12,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 	CScene(id, filePath)
 {
+	
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
@@ -394,38 +395,9 @@ void CPlayScene::Update(DWORD dt)
 	// Update camera to follow mario
 	SetCamPos();
 
+	hud->Update(dt);
 
 
-
-
-	//code Tan
-	//for (size_t i = 1; i < objects.size(); i++)
-	//{
-	//	coObjects.push_back(objects[i]);
-	//}
-	//for (size_t i = 0; i < objects.size(); i++)
-	//{
-	//	objects[i]->Update(dt, &coObjects);
-	//}
-	//// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	//if (player == NULL) return; 
-	//SetCamPos();
-	////// Update camera to follow mario
-	////float cx, cy;
-	////player->GetPosition(cx, cy);
-	////if (cx < 760 + game->GetScreenWidth() / 2 )
-	////	cx -= game->GetScreenWidth() / 2;
-	////else if (cx < game->GetScreenWidth() / 2)
-	////{
-	////	cx = 0;
-	////}
-	////else
-	////{
-	////	cx = 760;
-	////}
-	////cy -= game->GetScreenHeight() / 2;
-
-	////CGame::GetInstance()->SetCamPos((int)cx, (int)0);
 }
 void CPlayScene::SetCamPos() {
 
@@ -523,6 +495,7 @@ void CPlayScene::SetCamPos() {
 	}
 	// Update camera to follow mario
 	CGame::GetInstance()->SetCamPos((int)cx, (int)cy);
+	hud->SetPosition(cx, cy - game->GetScreenHeight());
 }
 
 void CPlayScene::Render()
@@ -533,6 +506,7 @@ void CPlayScene::Render()
 	}
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+	hud->Render();
 }
 
 /*
@@ -577,7 +551,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			}
 		}
 		break;
-	case DIK_A: 
+	case DIK_M: 
 		gimmick->Reset();
 		break;
 	case DIK_V:

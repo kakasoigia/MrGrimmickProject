@@ -26,7 +26,7 @@
 #include "Thunder.h"
 #include "Quadtree.h"
 #include "Star.h"
-
+#include "Hud.h"
 #include "Incline.h"
 
 class CPlayScene: public CScene
@@ -36,7 +36,7 @@ protected:
 	CGimmick* player;					// A play scene has to have player, right? 
 	Star* star = nullptr;
 	vector<LPGAMEOBJECT> objects;
-
+	CHud* hud = new CHud();
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);

@@ -6,6 +6,9 @@
 #include "BoomBoss.h"
 #include "Worm.h"
 #include "PlayScence.h"
+#include "Slide.h"
+#include "Incline.h"
+#include "Thunder.h"
 Star::Star()
 {
 	SetState(STAR_STATE_DISAPPEAR);
@@ -41,8 +44,8 @@ void Star::FilterCollision(
 		}
 		if (dynamic_cast<CGimmick*>(c->obj))
 		{
-			ny = 0.0f;
-			nx = 0;
+			ny = 0.00001f;
+			nx = 0.00001;
 		}
 	}
 
@@ -176,7 +179,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CBrick*>(e->obj))
+			if (dynamic_cast<CBrick*>(e->obj) || dynamic_cast<Slide*>(e->obj) || dynamic_cast<Incline*>(e->obj))
 			{
 
 				// phương
@@ -185,7 +188,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					LimitY -= STAR_DECREASE_SPEED_Y;
 					vy = LimitY;
 				}
-				else if (e->ny > 0)
+				else if (e->ny < 0)
 				{
 					LimitY -= STAR_DECREASE_SPEED_Y;
 					vy = -LimitY;
@@ -227,6 +230,11 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				Worm* worm = dynamic_cast<Worm*>(e->obj);
 				worm->SetState(WORM_STATE_DIE);
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			else if (dynamic_cast<CThunder*>(e->obj))
+			{
+				
 				this->SetState(STAR_STATE_SMOKE);
 			}
 			// set time nổ khói 
@@ -280,6 +288,7 @@ void Star::Render()
 void Star::SetState(int state)
 {
 	CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	
 	CGameObject::SetState(state);
 	switch (state)
 	{
@@ -303,10 +312,7 @@ void Star::SetState(int state)
 			x = gimmick->x - 5;
 		}
 		this->y = gimmick->y + 25;
-		DebugOut(L"[INFO] y star = %d  \n",(int) this->y);
-		DebugOut(L"[INFO] y gimmick = %d  \n", (int)gimmick->y);
-		DebugOut(L"[INFO] x star = %d  \n", (int)this->y);
-		DebugOut(L"[INFO] x gimmick = %d  \n", (int)gimmick->x);
+
 		break;
 	case STAR_STATE_SMOKE:
 		StartSmoke();

@@ -42,7 +42,7 @@ void CGimmick::FilterCollision(
 		}
 	/*	if (dynamic_cast<Star*>(c->obj))
 		{
-			ny = 0.0f;
+			ny = 0.001f;
 		}*/
 	}
 
@@ -160,7 +160,15 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{  
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if(!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
-			if (dynamic_cast<BlackEnemy*>(e->obj)) // if e->obj is Goomba 
+			if (dynamic_cast<Item*>(e->obj))
+			{
+
+				Item* item = dynamic_cast<Item*>(e->obj);
+				GetItem(item->GetType());
+				item->SetState(ITEM_STATE_DISAPPEAR);
+
+			}
+			else	if (dynamic_cast<BlackEnemy*>(e->obj)) // if e->obj is Goomba 
 			{
 				BlackEnemy* blackenemy = dynamic_cast<BlackEnemy*>(e->obj);
 
@@ -195,7 +203,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					}
 				}*/
 			} // if Goomba
-			if (dynamic_cast<Rocket*>(e->obj))
+			else if (dynamic_cast<Rocket*>(e->obj))
 			{
 				if (untouchable == 0)
 				{
@@ -211,7 +219,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				
 				
 			}
-			if (dynamic_cast<SuspensionBridge*>(e->obj))
+			else if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
 
 				SuspensionBridge* bridge = dynamic_cast<SuspensionBridge*>(e->obj);
@@ -228,7 +236,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				/*this->x += bridge->dt * BRIDGE_MOVING_SPEED;*/
 
 			}
-			if (dynamic_cast<CThunder*>(e->obj))
+			else if (dynamic_cast<CThunder*>(e->obj))
 			{
 				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
 				SetState(GIMMICK_STATE_DIE);
@@ -322,6 +330,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					slideType = 1;
 				}
 			}
+		
 			else
 			{
 				isSlide = false;
@@ -352,7 +361,11 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGimmick::Render()
 {
 	int ani = -1;
-	if (jump == 1)
+	if (untouchable == 1)
+	{
+		ani = GIMMICK_ANI_COLLISION_RIGHT;
+	}
+	else if (jump == 1)
 	{
 		if (nx > 0)
 			ani = GIMMICK_ANI_JUMPING_RIGHT;
@@ -484,7 +497,7 @@ void CGimmick::KeyState(BYTE* state)
 void CGimmick::SetState(int state)
 {
 	CGameObject::SetState(state);
-
+	CGame* game = CGame::GetInstance();
 	switch (state)
 	{
 	case GIMMICK_STATE_WALKING_RIGHT:
@@ -504,6 +517,7 @@ void CGimmick::SetState(int state)
 		break;
 	case GIMMICK_STATE_DIE:
 		vy += GIMMICK_DIE_DEFLECT_SPEED;
+		if (game->GetRest() > 0) game->IncRest(-1);
 		break;
 	case GIMMICK_STATE_JUMP_HIGH_SPEED:
 		vy = GIMMICK_JUMP_HIGHT_SPEED_Y;
@@ -625,25 +639,68 @@ void CGimmick::Reset()
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }
-void CGimmick::Fire()
+//void CGimmick::Fire()
+//{
+//	// call star 
+//	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
+//	// - vấn đề : ném 5 con ..5 con có STT 12345
+//		//- Vì mỗi con đk ném ra có vận tốc khác nhau PHỤ THUỘC vào STT 12345
+//		// int count =0;
+//	for (UINT i = 0; i < objects.size(); i++)
+//	{
+//		// if count == 5 return ; 
+//		if (dynamic_cast<Star*>(objects[i]))
+//		{
+//			Star* star = dynamic_cast<Star*>(objects[i]);
+//			//if (star->GetIsUsed() == false)
+//			//{
+//			//	// get fired
+//			//	
+//			//	star->SetPosition(this->x, this->y + 5);
+//			//	star->nx = this->nx;
+//			//	star->SetState(STAR_STATE_FLYING);
+//			// xét cả V (theo count )  // chơi kiểu switch case ...case 1 -> set cứng vận tốc = a , .../ 2. chơi theo công thức
+//			// count ++ ;
+//			//	continue;
+//			//}
+//		}
+//		
+//	}
+//}
+void CGimmick::GetItem(int type)
 {
-	//// call star 
-	//vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
-	//for (UINT i = 0; i < objects.size(); i++)
-	//{
-	//	if (dynamic_cast<Star*>(objects[i]))
-	//	{
-	//		Star* star = dynamic_cast<Star*>(objects[i]);
-	//		if (star->GetIsUsed() == false)
-	//		{
-	//			// get fired
-	//			
-	//			star->SetPosition(this->x, this->y + 5);
-	//			star->nx = this->nx;
-	//			star->SetState(STAR_STATE_FLYING);
-	//			return;
-	//		}
-	//	}
-	//	
-	//}
+	CGame* game = CGame::GetInstance();
+	vector <int> itemlist = game->GetItem();
+	if (type == ITEM_TYPE_MEDICINE_PINK || type == ITEM_TYPE_MEDICINE_PINK_BOMB || type == ITEM_TYPE_MEDICINE_BLACK_BOMB)
+	{
+		//cộng điểm 
+		game->IncScore(720);
+		if (type == ITEM_TYPE_MEDICINE_PINK)
+		{
+			game->IncLight(1);
+		}
+		// neu khong co san trong itemlist thì thêm 
+		for each (int item in itemlist)
+		{
+			if (item == type)
+				return; // khoi them nua 
+		}
+		itemlist.push_back(type);
+		game->SetItem(itemlist);
+		DebugOut(L"[ERROR] Vô hud!\n");
+
+	}
+	else if (type == ITEM_TYPE_MEDICINE_ORANGE)
+	{
+		// tăng mạng
+		game->IncLight(2);
+		DebugOut(L"[ERROR] Vô tăng mạng!\n");
+	}
+	else if (type == ITEM_TYPE_FLOWER)
+	{
+		game->IncScore(50000);
+		game->IncRest(2);
+		DebugOut(L"[ERROR] Vô hoa!\n");
+	}
+	
 }
