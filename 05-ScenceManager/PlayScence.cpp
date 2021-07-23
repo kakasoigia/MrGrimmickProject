@@ -362,10 +362,8 @@ void CPlayScene::Update(DWORD dt)
 	// Update player
 	vector<LPGAMEOBJECT> coObjects;
 
-		// Update camera to follow mario
-	SetCamPos();
-	// update hud
-	hud->Update(dt);
+		
+
 
 	quadtree->Retrieve(&coObjects, player);
 	player->Update(dt, &coObjects);
@@ -374,7 +372,7 @@ void CPlayScene::Update(DWORD dt)
 	// update star
 	if (star->state == STAR_STATE_READY_TO_SHOT || star->state == STAR_STATE_LOADING)
 	{
-		star->SetPosition(player->x, player->y + 16);
+		star->SetPosition(player->x -2, player->y + 16);
 	}
 	// update fish
 	vector<LPGAMEOBJECT> temp_coObjects;
@@ -402,8 +400,10 @@ void CPlayScene::Update(DWORD dt)
 		quadtree->Clear();
 	CGame* game = CGame::GetInstance();
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	
-
+	// Update camera to follow mario
+	SetCamPos();
+	// update hud
+	hud->Update(dt);
 
 }
 void CPlayScene::SetCamPos() {

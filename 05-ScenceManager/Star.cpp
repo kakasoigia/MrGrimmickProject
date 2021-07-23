@@ -263,7 +263,6 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CThunder*>(e->obj))
 			{
-				
 				this->SetState(STAR_STATE_SMOKE);
 			}
 			// set time nổ khói 

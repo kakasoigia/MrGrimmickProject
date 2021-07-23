@@ -42,10 +42,10 @@ void CGimmick::FilterCollision(
 		if (c->t < min_ty && c->ny != 0) {
 			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
-	/*	if (dynamic_cast<Star*>(c->obj))
-		{
-			ny = 0.001f;
-		}*/
+		/*	if (dynamic_cast<Star*>(c->obj))
+			{
+				ny = 0.001f;
+			}*/
 	}
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
@@ -77,20 +77,57 @@ CGimmick::CGimmick(float x, float y) : CGameObject()
 	untouchable = 0;
 	SetState(GIMMICK_STATE_IDLE);
 
-	start_x = x; 
-	start_y = y; 
-	this->x = x; 
-	this->y = y; 
+	start_x = x;
+	start_y = y;
+	this->x = x;
+	this->y = y;
+}
+void CGimmick::FollowObject(LPGAMEOBJECT obj)
+{
+	vx = obj->GetVx();
+	//x = obj->GetX();
+	if (!dynamic_cast<SuspensionBridge*>(obj))
+	{
+		y = obj->GetY() + GIMMICK_BIG_BBOX_HEIGHT + 0.4f;
+	}
 }
 
-void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+
+void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (GetState() != GIMMICK_STATE_IDLE) {
+
+		isFollow = false;
+	}
+
+	if (isFollow) {
+
+		if (dynamic_cast<SuspensionBridge*>(obj))
+		{
+			SuspensionBridge* bridge = dynamic_cast<SuspensionBridge*>(obj);
+			if (bridge->isOpening)
+			{
+				isFollow = false;
+				isOnBridge = false;
+			}
+			else
+			{
+				FollowObject(obj);
+			}
+		}
+		else {
+			FollowObject(obj);
+		}
+	}
+	else {
+		obj = NULL;
+	}
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	if(!isOnTopBlackEnemy && !isIncline && state != GIMMICK_STATE_DIE)
-	vy -= GIMMICK_GRAVITY*dt;
+	if (!isOnTopBlackEnemy && !isIncline && state != GIMMICK_STATE_DIE)
+		vy -= GIMMICK_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -108,7 +145,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (maxjumping == 1)
 	{
 		if (GetTickCount() - time_maxjumping >= 200)
-		{     
+		{
 			maxjumping = 0;
 			time_maxjumping = 0;
 		}
@@ -121,10 +158,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// turn off collision when die 
 
 	//if (state!= GIMMICK_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
+	CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if ( GetTickCount() - untouchable_start > GIMMICK_UNTOUCHABLE_TIME)
+	if (GetTickCount() - untouchable_start > GIMMICK_UNTOUCHABLE_TIME)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
@@ -132,21 +169,21 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// set sẵn - false 
 
 	// No collision occured, proceed normally
-	if (coEvents.size()==0)
+	if (coEvents.size() == 0)
 	{
-		
+
 		SetOnTopBlackEnemy(false);
 		{
 			x += dx;
 			y += dy;
 		}
-		
+
 		isIncline = false;
 	}
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0; 
+		float rdx = 0;
 		float rdy = 0;
 
 		// TODO: This is a very ugly designed function!!!!
@@ -155,9 +192,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 		//if (rdx != 0 && rdx!=dx)
 		//	x += nx*abs(rdx); 
-		
+
 		// block every object first!
-	
+
 	/*	x += min_tx*dx + nx*0.4f;
 		y += min_ty*dy + ny*0.4f;
 
@@ -173,16 +210,16 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			}
 
-			
+
 		}
 
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{  
+		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if(!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
+			if (!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
 			if (dynamic_cast<Item*>(e->obj))
 			{
 
@@ -191,7 +228,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				item->SetState(ITEM_STATE_DISAPPEAR);
 
 			}
-			else	if (dynamic_cast<BlackEnemy*>(e->obj)) // if e->obj is Goomba 
+			if (dynamic_cast<BlackEnemy*>(e->obj)) // if e->obj is Goomba 
 			{
 				BlackEnemy* blackenemy = dynamic_cast<BlackEnemy*>(e->obj);
 
@@ -201,7 +238,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (blackenemy->GetState() != BLACKENEMY_STATE_DIE)
 					{
 						SetOnTopBlackEnemy(true);
-						x = blackenemy->x ;
+						x = blackenemy->x;
 						y = blackenemy->y - GIMMICK_BIG_BBOX_HEIGHT - 2;
 						vy = 0;
 
@@ -212,7 +249,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					SetOnTopBlackEnemy(false);
 					if (untouchable == 0) {
 						// còn light thì choáng..life =1 --> chết
-						if (CGame::GetInstance()->GetLight() ==1)
+						if (CGame::GetInstance()->GetLight() == 1)
 						{
 							this->SetState(GIMMICK_STATE_DIE);
 							CGame::GetInstance()->IncLight(-1);
@@ -223,9 +260,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 							CGame::GetInstance()->IncLight(-1);
 							StartUntouchable();
 						}
-					 
 
-						
+
+
 					}
 				}
 				/*else if (e->nx != 0)
@@ -252,31 +289,44 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					StartUntouchable();
 				}
-				
-				
+
+
 			}
-			else if (dynamic_cast<SuspensionBridge*>(e->obj))
+			if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
 
 				SuspensionBridge* bridge = dynamic_cast<SuspensionBridge*>(e->obj);
+				if (!bridge->isOpening)
+				{
+					isOnBridge = true;
+					isFollow = true;
+					obj = bridge;
+				}
 				if (bridge->GetState() != BRIDGE_STATE_MOVING && !bridge->GetIsOpening())
 				{
+					
 					bridge->SetState(BRIDGE_STATE_MOVING);
-					isOnBridge = true;
+
 					//DebugOut(L"[INFO] Vô đây hoài: \n");
 				}
-			/*	else
-				{
-					isOnBridge = false;
-				}*/
-				/*this->x += bridge->dt * BRIDGE_MOVING_SPEED;*/
+				/*	else
+					{
+						isOnBridge = false;
+					}*/
+					/*this->x += bridge->dt * BRIDGE_MOVING_SPEED;*/
 
 			}
-			else if (dynamic_cast<CThunder*>(e->obj))
+			else
 			{
-				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
+				isFollow = false;
+				isOnBridge = false;
+				obj = NULL;
+			}
+			if (dynamic_cast<CThunder*>(e->obj))
+			{
+				CThunder* thunder = dynamic_cast<CThunder*>(e->obj);
 				this->SetState(GIMMICK_STATE_DIE);
-			
+
 			}
 			if (dynamic_cast<Incline*>(e->obj)) {
 
@@ -349,9 +399,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else {
 				isIncline = false;
 			}
-			if (dynamic_cast<CPortal *>(e->obj))
+			if (dynamic_cast<CPortal*>(e->obj))
 			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CPortal* p = dynamic_cast<CPortal*>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			if (dynamic_cast<Slide*>(e->obj))
@@ -367,7 +417,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					slideType = 1;
 				}
 			}
-		
+
 			else
 			{
 				isSlide = false;
@@ -389,8 +439,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
-	// di chuyển theo cầu
-	if (isOnBridge && !jump) this->x += this->dt * BRIDGE_MOVING_SPEED;
+	//// di chuyển theo cầu
+	//if (isOnBridge && !jump) this->x += this->dt * BRIDGE_MOVING_SPEED;
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -462,7 +512,7 @@ void CGimmick::Render()
 			ani = GIMMICK_ANI_IDLE_LEFT;
 	}
 	int alpha = 255;
-	
+
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
@@ -549,12 +599,12 @@ void CGimmick::SetState(int state)
 	case GIMMICK_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		vy = GIMMICK_JUMP_SPEED_Y;
-		break; 
+		break;
 	case GIMMICK_STATE_IDLE:
 		vx = 0;
 		break;
 	case GIMMICK_STATE_DIE:
-		
+
 		this->isDeath = true;
 		this->vx = 0;
 		this->vy = 0;
@@ -665,7 +715,7 @@ void CGimmick::SetState(int state)
 
 }
 
-void CGimmick::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+void CGimmick::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state == GIMMICK_STATE_DIE) {
 		left = top = right = bottom = 0;
@@ -676,7 +726,7 @@ void CGimmick::GetBoundingBox(float &left, float &top, float &right, float &bott
 		right = x + GIMMICK_BIG_BBOX_WIDTH;
 		bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
 	}
-	
+
 }
 
 /*
@@ -722,20 +772,20 @@ void CGimmick::Reset()
 void CGimmick::createDieEffect() {
 	deltaTimeDie += 10;
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	animation_sets->Get(80)->at(0)->Render(positionX, positionY + GIMMICKDIEEFFECT_SPEED*deltaTimeDie);
-	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX, positionY + GIMMICKDIEEFFECT_SPEED * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED * deltaTimeDie, positionY);
-	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX, positionY + -GIMMICKDIEEFFECT_SPEED * deltaTimeDie);
-	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675*deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED * deltaTimeDie, positionY);
-	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY+ GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
+	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
 }
@@ -776,5 +826,5 @@ void CGimmick::GetItem(int type)
 		game->IncRest(2);
 		DebugOut(L"[ERROR] Vô hoa!\n");
 	}
-	
+
 }

@@ -63,6 +63,9 @@ public:
 	void SetRest(int score) { this->rest = rest; };
 	void SetItem(vector<int> item) { this->item = item; };
 
+	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
+	void GetCamPos(float& x, float& y) { x = cam_x;  y = cam_y; }
+
 	void IncScore(int score) 
 	{
 		this->score += score;
@@ -112,9 +115,6 @@ public:
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
-
-	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
-	void GetCamPos(float &x, float &y) {  x= cam_x  ;  y = cam_y  ; }
 
 	static CGame * GetInstance();
 

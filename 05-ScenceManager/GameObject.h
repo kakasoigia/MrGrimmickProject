@@ -92,7 +92,10 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
-
+	float GetVx() { return vx; }
+	float GetVy() { return vy; }
+	float GetX() { return x; }
+	float GetY() { return y; }
 
 
 	~CGameObject();

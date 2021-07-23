@@ -72,6 +72,8 @@ class CGimmick : public CGameObject
 	bool isOnTopBlackEnemy = false;
 	bool isOnBridge = false;
 public: 
+	bool isFollow = false;
+	CGameObject* obj = NULL;
 	//Incline
 	bool isIncline = false;				// check for sliding
 	int incline_size;						// size of slide
@@ -115,6 +117,7 @@ public:
 	void SetDoubleJumpStart() { doubleJump_start = GetTickCount(); }
 
 	DWORD GetDoubleJumpStart() { return doubleJump_start; }
+	void FollowObject(LPGAMEOBJECT obj);
 
 	void SetOnTopBlackEnemy(bool isOnTopBlackEnemy) { this->isOnTopBlackEnemy = isOnTopBlackEnemy; };
 	bool GetOnTopBlackEnemy() { return isOnTopBlackEnemy; };
@@ -123,4 +126,5 @@ public:
 	void Fire();
 	void GetItem( int type);
 	void createDieEffect();
+
 };

@@ -5,11 +5,6 @@
 #include "Utils.h"
 
 
-#define HUD_HEIGHT	32
-#define HUD_WIDTH	256
-#define HUD_ZONE_HEIGHT	32
-
-
 // sprite number
 #define HUD_SPRITE_PANEL	80710
 #define	HUD_SPRITE_NUMBER_0	80740
@@ -61,7 +56,6 @@ public:
 	void RenderLight();
 
 	void RenderItem();
-	LPSPRITE GetSprite();
-	LPSPRITE StringToSprite();
+
 };
 
