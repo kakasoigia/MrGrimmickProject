@@ -50,7 +50,7 @@ class CGame
 	
 	long score = 000;
 	int rest = 4;
-	int light = 1;
+	int light = 3;
 	vector<int> item ;
 
 	

@@ -370,7 +370,8 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++) {
 		if (dynamic_cast<CGimmick*>(objects[i]))
 			continue;
-		
+		if (dynamic_cast<NoCollisionObject*>(objects[i]))
+			continue;
 		quadtree->Insert(objects[i]);
 	}
 
@@ -403,7 +404,8 @@ void CPlayScene::Update(DWORD dt)
 			continue;
 		if (dynamic_cast<Star*>(objects[i]))
 			continue;
-		
+		if (dynamic_cast<NoCollisionObject*>(objects[i]))
+			continue;
 		vector<LPGAMEOBJECT> coObjectsUpdate;
 		quadtree->Retrieve(&coObjectsUpdate, objects[i]);
 		objects[i]->Update(dt, &coObjectsUpdate);
@@ -550,7 +552,7 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
-
+	star = NULL;
 	if (quadtree) {
 		delete quadtree;
 		quadtree = nullptr;

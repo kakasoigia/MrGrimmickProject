@@ -125,9 +125,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AniBrick.cpp" />
     <ClCompile Include="GimmickDieEffect.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Incline.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="MovingBrick.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Quadtree.cpp" />
@@ -145,6 +147,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NoCollisionObject.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="RenderImage.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Slide.cpp" />
     <ClCompile Include="Star.cpp" />
@@ -164,6 +167,7 @@
     <ClCompile Include="Worm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AniBrick.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BlackEnemy.h" />
     <ClInclude Include="BoomBoss.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="GimmickDieEffect.h" />
     <ClInclude Include="Hud.h" />
     <ClInclude Include="Incline.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Map.h" />
@@ -184,6 +189,7 @@
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="RenderImage.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Slide.h" />
     <ClInclude Include="Star.h" />
