@@ -11,8 +11,8 @@ ElectricBoom::ElectricBoom()
 void ElectricBoom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 		left = x;
-		top = y - 7;
-		right = x + ELECTRICBOOM_BBOX_WIDTH;
+		top = y - 10;
+		right = x + ELECTRICBOOM_BBOX_WIDTH-3;
 		bottom = y - ELECTRICBOOM_BBOX_HEIGHT;
 }
 void ElectricBoom::CalcPotentialCollisions(
@@ -44,7 +44,7 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 
 		
-		if (y - gimmick->y < 0)
+		if (this->y - gimmick->y < 0)
 		{
 			if (x - gimmick->x > 0.5f)
 			{

@@ -1,4 +1,4 @@
-
+﻿
 #include "Gimmick.h"
 #include "Window.h"
 #include "PlayScence.h"
@@ -10,10 +10,10 @@ Window::Window()
 
 void Window::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = 0;
-	top = 0;
-	right = 0;
-	bottom = 0;
+	left = x;
+	top = y;
+	right = x + WINDOW_BBOX_WIDTH;
+	bottom = y - WINDOW_BBOX_HEIGHT;
 }
 
 void Window::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -23,9 +23,14 @@ void Window::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	if (state == WINDOW_STATE_CLOSE)
 	{
+		DebugOut(L"[INFO] Vô đây nè: \n");
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300)
+		DebugOut(L"[INFO] Vô đây nè ba %d pre: \n",(int)this->x);
+		DebugOut(L"[INFO] Vô đây nè ba %d pre: \n", (int)gimmick->x);
+		if (abs(gimmick->x - this->x) < 20 && abs(gimmick->y - this->y) < 500)
 		{
+
+			DebugOut(L"[INFO] Vô đây nè ba: \n");
 			this->SetState(WINDOW_STATE_OPEN);
 			CallBoom();
 		}
@@ -119,19 +124,20 @@ void Window::SetState(int state)
 }
 void Window:: CallBoom()
 {
+	DebugOut(L"[INFO] Vô đây 2 \n");
 	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
 	for (UINT i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<BlackEnemy*>(objects[i]))
+		if (dynamic_cast<ElectricBoom*>(objects[i]))
 		{
-			BlackEnemy* boom = dynamic_cast<BlackEnemy*>(objects[i]);
+			ElectricBoom* boom = dynamic_cast<ElectricBoom*>(objects[i]);
 			/*if (boom->GetIsUsed() == false)*/
 			{
 				// call blackenemy
 
 				boom->SetPosition(this->x + WINDOW_BBOX_WIDTH/2 +5, this->y - WINDOW_BBOX_HEIGHT/2 - 5);
 				boom->nx = 1;
-				boom->SetState(BLACKENEMY_STATE_WALKING);
+				boom->SetState(ELECTRICBOOM_STATE_WALKING);
 				return;
 			}
 		}
