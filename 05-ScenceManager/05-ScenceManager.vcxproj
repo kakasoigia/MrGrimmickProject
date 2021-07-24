@@ -128,6 +128,7 @@
     <ClCompile Include="GimmickDieEffect.cpp" />
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Incline.cpp" />
+    <ClCompile Include="MovingBrick.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MovingBrick.h" />
     <ClInclude Include="NoCollisionObject.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Quadtree.h" />

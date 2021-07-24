@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "Scence.h"
 #include "Sprites.h"
-
+#include "MovingBrick.h"
 #include "Brick.h"
 #include "Gimmick.h"
 #include "Goomba.h"

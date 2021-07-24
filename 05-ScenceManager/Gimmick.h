@@ -59,6 +59,15 @@
 #define GIMMICK_UNTOUCHABLE_TIME 2000
 
 
+// die effect
+#define GIMMICKDIEEFFECT_SPEED 0.1f
+#define GIMMICKDIEEFFECT_SPEED_225 0.0924f
+#define GIMMICKDIEEFFECT_SPEED_450 0.0707f
+#define GIMMICKDIEEFFECT_SPEED_675 0.0383f
+
+#define GIMMICKDIEEFFECT_BBOX_WIDTH		16
+#define GIMMICKDIEEFFECT_BBOX_HEIGHT	16
+
 class CGimmick : public CGameObject
 {
 	int untouchable;
@@ -81,7 +90,7 @@ public:
 	int direct_go;						// trend of slide
 	int key_down = 0;
 
-	bool isDeath = false;
+
 
 	// silde
 	bool isSlide = false;
@@ -92,6 +101,7 @@ public:
 	//set gimmick die
 	float positionX, positionY;
 	float deltaTimeDie = 0;
+	bool isDeath = false;
 
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

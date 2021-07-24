@@ -14,6 +14,7 @@
 100	textures\treasures.png	60	188	252
 120	textures\item2.png	60	188	252
 110	textures\HUD2.png	255	13	17
+14	textures\1a.png		60	188	252
 #ID	TRTileSet	TCTileSet	TRMap	TCMap	TotalTiles	Matrix_Path
 [MAP]
 500	7	11	24	64	69	map\map1a_map.txt
@@ -165,8 +166,8 @@
 60107	1	188	17	204	40
 
 #====moving-brick====
-40010	137	103	153	119	40
-40011	154	103	170	119	40
+#40010	137	103	153	119	40
+#40011	154	103	170	119	40
 
 #flower
 70000	1	1	23	44	100
@@ -407,7 +408,8 @@
 80724	9	76	59	92	110
 #4hp
 80725	73	15	123	31	110
-
+# =============== Moving brick ===============
+40011	193	120	225	136	14
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #Gimmick
@@ -458,7 +460,7 @@
 408	40008	100
 
 #moving-brick
-410	40010	100
+##410	40010	100
 411	40011	100
 
 #====black-eneny-electric
@@ -606,7 +608,9 @@
 406	406
 407	407
 408	408
-
+#moving-brick
+#40	410
+411	411
 #=======PHUC=============
 #medicine
 #pink medicine
@@ -627,9 +631,7 @@
 #flower
 70	700
 
-#moving-brick
-40	410
-41	411
+
 #die
 80	108
 #star
@@ -914,7 +916,12 @@
 52	752	32	65
 52	768	32	65
 
-
+# Moving brick						
+# id	x	y	ani	min	max	type
+17	192	256	411	192	256	1
+17	368	304	411	368	432	1
+17	488	256	411	256	304	0
+17	312	256	411	256	304	0
 #medicine-orange
 13	417	96	61
 #medicine-pink
@@ -933,7 +940,7 @@
 #star
 21	150	200	90
 # Gimmick
-0	70	200	1
+0	192	300	1
 #die
 #23	70	96	80
 # Test flower

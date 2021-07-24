@@ -43,8 +43,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define	OBJECT_TYPE_MEDICINE_PINK_BOMB 14
 #define	OBJECT_TYPE_MEDICINE_BLACK_BOMB 15
 #define OBJECT_TYPE_FLOWER 16
-
-//#define OBJECT_TYPE_CANNON_SECOND 17
+#define OBJECT_TYPE_MOVING_BRICK 17
 
 #define OBJECT_TYPE_BULLET 20
 
@@ -204,7 +203,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
-
+	case OBJECT_TYPE_MOVING_BRICK:
+	{
+		int min = atof(tokens[4].c_str());
+		int max = atof(tokens[5].c_str());
+		int type = atof(tokens[6].c_str());
+		obj = new CMovingBrick(min, max, type);
+		break;
+	}
 	case OBJECT_TYPE_GRIMMICK_DIE: 
 		if (dieEffect != NULL)
 		{

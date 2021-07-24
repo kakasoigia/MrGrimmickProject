@@ -12,7 +12,7 @@
 #include "SuspensionBridge.h"
 #include "Star.h"
 #include "Incline.h"
-
+#include "MovingBrick.h"
 #include "GimmickDieEffect.h"
 
 void CGimmick::FilterCollision(
@@ -321,6 +321,19 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isFollow = false;
 				isOnBridge = false;
 				obj = NULL;
+			}
+			if (dynamic_cast<CMovingBrick*>(e->obj)) {
+
+				CMovingBrick* mb = dynamic_cast<CMovingBrick*>(e->obj);
+
+				if (e->t > 0 && e->t <= 1)
+
+					if (e->ny > 0) {
+
+						isFollow = true;
+						obj = mb;
+					}
+
 			}
 			if (dynamic_cast<CThunder*>(e->obj))
 			{
