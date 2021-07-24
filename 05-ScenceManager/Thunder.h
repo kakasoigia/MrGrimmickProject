@@ -1,8 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define THUNDER_BBOX_WIDTH  2
-#define THUNDER_BBOX_HEIGHT 2
+#define THUNDER_BBOX_WIDTH  16
+#define THUNDER_BBOX_HEIGHT 16
 
 class CThunder : public CGameObject
 {

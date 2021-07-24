@@ -568,7 +568,16 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	CGimmick *gimmick = ((CPlayScene*)scence)->GetPlayer();
 	Star* star = ((CPlayScene*)scence)->GetStar();
-	if (gimmick->GetState() == GIMMICK_STATE_DIE) return;
+
+	//delete code
+	if (KeyCode == DIK_M) {
+		gimmick->Reset();
+		gimmick->deltaTimeDie = 0;
+		CGame::GetInstance()->SetLight(4);
+	}
+
+	if (gimmick->state == GIMMICK_STATE_DIE) return;
+
 	switch (KeyCode)
 	{
 	case DIK_S:

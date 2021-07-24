@@ -33,7 +33,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == CANNON_STATE_GREEN)
 	{
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300) this->SetState(CANNON_STATE_RED);
+		if (abs(gimmick->x - this->x) < 140 && (gimmick->y - this->y) < 300) this->SetState(CANNON_STATE_RED);
 	}
 
 	if (getTimeFire == -1)
@@ -62,6 +62,7 @@ void Cannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			getTimeFire = GetTickCount();
 		}
+		else if(GetTickCount() - getTimeFire > 500 && state == CANNON_STATE_RED) SetState(CANNON_STATE_GREEN);
 	}
 
 
