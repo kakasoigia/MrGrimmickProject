@@ -70,6 +70,8 @@
 
 class CGimmick : public CGameObject
 {
+
+
 	int untouchable;
 	DWORD untouchable_start;
 

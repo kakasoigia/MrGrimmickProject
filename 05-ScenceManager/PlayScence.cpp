@@ -255,13 +255,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	case OBJECT_TYPE_PORTAL:
-		{	
-			float r = atof(tokens[4].c_str());
-			float b = atof(tokens[5].c_str());
-			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
-		}
-		break;
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		int scene_id = atoi(tokens[6].c_str());
+		float oldX = atof(tokens[7].c_str());
+		float oldY = atof(tokens[8].c_str());
+		obj = new CPortal(x, y, r, b, scene_id, oldX, oldY);
+	}
+	break;
 	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
 
 	default:
@@ -368,8 +370,7 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++) {
 		if (dynamic_cast<CGimmick*>(objects[i]))
 			continue;
-		if (dynamic_cast<CPortal*>(objects[i]))
-			continue;
+		
 		quadtree->Insert(objects[i]);
 	}
 

@@ -75,13 +75,24 @@ void CGimmick::CalcPotentialCollisions(
 
 CGimmick::CGimmick(float x, float y) : CGameObject()
 {
+	CGame* game = CGame::GetInstance();
+
 	untouchable = 0;
 	SetState(GIMMICK_STATE_IDLE);
+	if (game->isSwitchScene)
+	{
+		this->x = game->playerX;
+		this->y = game->playerY;
+		game->isSwitchScene = false;
+	}
+	else
+	{
+		this->x = x;
+		this->y = y;
+	}
 
-	start_x = x;
-	start_y = y;
-	this->x = x;
-	this->y = y;
+
+
 }
 void CGimmick::FollowObject(LPGAMEOBJECT obj)
 {
@@ -427,8 +438,14 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			if (dynamic_cast<CPortal*>(e->obj))
 			{
-				CPortal* p = dynamic_cast<CPortal*>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				if (dynamic_cast<CPortal*>(e->obj)) {
+					CPortal* p = dynamic_cast<CPortal*>(e->obj);
+					CGame::GetInstance()->playerX = p->getOldX();
+					CGame::GetInstance()->playerY = p->getOldY();
+					CGame::GetInstance()->isSwitchScene = true;
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+					return;
+				}
 			}
 			if (dynamic_cast<Slide*>(e->obj))
 			{

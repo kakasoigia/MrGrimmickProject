@@ -52,7 +52,11 @@ class CGame
 	int rest = 4;
 	int light = 1;
 	vector<int> item ;
+
+	
 public:
+	float playerX = 0, playerY = 0;
+	bool isSwitchScene = false;
 	long GetScore() { return score; };
 	int GetRest() { return rest; };
 	int GetLight() { return light; };
