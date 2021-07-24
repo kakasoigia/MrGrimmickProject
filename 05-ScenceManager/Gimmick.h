@@ -121,4 +121,5 @@ public:
 	void Fire();
 	void GetItem( int type);
 	void createDieEffect();
+	void callDeclineLight();
 };

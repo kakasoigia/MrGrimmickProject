@@ -12,6 +12,7 @@
 #include "SuspensionBridge.h"
 #include "Star.h"
 #include "Incline.h"
+#include "Cannon.h"
 
 #include "GimmickDieEffect.h"
 
@@ -190,23 +191,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else
 				{
 					SetOnTopBlackEnemy(false);
-					if (untouchable == 0) {
-						// còn light thì choáng..life =1 --> chết
-						if (CGame::GetInstance()->GetLight() ==1)
-						{
-							this->SetState(GIMMICK_STATE_DIE);
-							CGame::GetInstance()->IncLight(-1);
-						}
-						else
-						{
-							// stun???
-							CGame::GetInstance()->IncLight(-1);
-							StartUntouchable();
-						}
-					 
-
-						
-					}
+					// còn light thì choáng..life =1 --> chết
+					callDeclineLight();
 				}
 				/*else if (e->nx != 0)
 				{
@@ -221,19 +207,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			} // if Goomba
 			else if (dynamic_cast<Rocket*>(e->obj))
 			{
-				if (untouchable == 0)
-				{
-					/*if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						SetState(GIMMICK_STATE_DIE);
-					}*/
-				}
-				else
-				{
-					StartUntouchable();
-				}
-				
-				
+				callDeclineLight();
 			}
 			else if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
@@ -254,9 +228,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (dynamic_cast<CThunder*>(e->obj))
 			{
-				CThunder *thunder = dynamic_cast<CThunder *>(e->obj);
 				this->SetState(GIMMICK_STATE_DIE);
-				StartUntouchable();
+			}
+			else if (dynamic_cast<Bullet*>(e->obj)) {
+				callDeclineLight();
 			}
 			if (dynamic_cast<Incline*>(e->obj)) {
 
@@ -334,6 +309,15 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
+
+			if (dynamic_cast<Cannon*>(e->obj))
+			{
+				Cannon* cannon = dynamic_cast<Cannon*>(e->obj);
+				if(vx>0)
+				cannon->x+=3;
+				else cannon->x-=3;
+			}
+
 			if (dynamic_cast<Slide*>(e->obj))
 			{
 				isSlide = true;
@@ -347,12 +331,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					slideType = 1;
 				}
 			}
-		
 			else
 			{
 				isSlide = false;
 			}
-
 		}
 		if (!isIncline && !isSlide) {
 
@@ -442,7 +424,6 @@ void CGimmick::Render()
 			ani = GIMMICK_ANI_IDLE_LEFT;
 	}
 	int alpha = 255;
-	if (untouchable) alpha = 128;
 
 	animation_set->at(ani)->Render(x, y, alpha);
 
@@ -534,7 +515,6 @@ void CGimmick::SetState(int state)
 		vx = 0;
 		break;
 	case GIMMICK_STATE_DIE:
-		
 		this->isDeath = true;
 		this->vx = 0;
 		this->vy = 0;
@@ -718,6 +698,23 @@ void CGimmick::createDieEffect() {
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie, positionY+ GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_450 * deltaTimeDie);
 	animation_sets->Get(80)->at(0)->Render(positionX + -GIMMICKDIEEFFECT_SPEED_675 * deltaTimeDie, positionY + GIMMICKDIEEFFECT_SPEED_225 * deltaTimeDie);
+}
+
+void CGimmick::callDeclineLight()
+{
+	if (untouchable == 0) {
+		if (CGame::GetInstance()->GetLight() == 1)
+		{
+			this->SetState(GIMMICK_STATE_DIE);
+			CGame::GetInstance()->IncLight(-1);
+		}
+		else
+		{
+			// stun???
+			CGame::GetInstance()->IncLight(-1);
+			StartUntouchable();
+		}
+	}
 }
 
 

@@ -132,9 +132,6 @@ void Bullet::SetState(int state)
 	case BULLET_STATE_DESTROY:
 		StartBooming();
 		break;
-	case BULLET_STATE_IDLING:
-
-		break;
 	case BULLET_STATE_FALLING:
 		if (nx < 0)
 		{
