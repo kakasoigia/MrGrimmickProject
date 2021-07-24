@@ -129,6 +129,7 @@
     <ClCompile Include="Hud.cpp" />
     <ClCompile Include="Incline.cpp" />
     <ClCompile Include="MovingBrick.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BlackEnemy.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="MovingBrick.h" />
     <ClInclude Include="NoCollisionObject.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rocket.h" />

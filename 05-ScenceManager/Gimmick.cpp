@@ -14,6 +14,7 @@
 #include "Incline.h"
 #include "MovingBrick.h"
 #include "GimmickDieEffect.h"
+#include "Pipe.h"
 
 void CGimmick::FilterCollision(
 	vector<LPCOLLISIONEVENT>& coEvents,
@@ -126,7 +127,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	if (!isOnTopBlackEnemy && !isIncline && state != GIMMICK_STATE_DIE)
+	if (!isOnTopBlackEnemy && !isIncline && state != GIMMICK_STATE_DIE && !isPiping)
 		vy -= GIMMICK_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -157,7 +158,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	// turn off collision when die 
 
-	//if (state!= GIMMICK_STATE_DIE)
+	
+	if (state!= GIMMICK_STATE_DIE)
 	CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
@@ -322,6 +324,17 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isOnBridge = false;
 				obj = NULL;
 			}
+			if (dynamic_cast<CPipes*>(e->obj)) {
+
+				CPipes* pipe = dynamic_cast<CPipes*>(e->obj);
+				isPiping = true;
+				x = pipe->x;
+				if (vy > 0) y += 0.1f;
+				else if (vy < 0)y -= 0.1f;
+			}
+			else {
+				isPiping = false;
+			}
 			if (dynamic_cast<CMovingBrick*>(e->obj)) {
 
 				CMovingBrick* mb = dynamic_cast<CMovingBrick*>(e->obj);
@@ -437,7 +450,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-		if (!isIncline && !isSlide) {
+		if (!isIncline && !isPiping && !isSlide) {
 
 			x += min_tx * dx + nx * 0.4f;
 			y += min_ty * dy + ny * 0.4f;
@@ -449,6 +462,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			x += dx;
 			if (isIncline || isSlide) {
 				y += min_ty * dy + ny * 0.4f;
+			}
+			else if (isPiping)
+			{
+				y += dy;
 			}
 		}
 	}

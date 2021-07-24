@@ -81,6 +81,10 @@ class CGimmick : public CGameObject
 	bool isOnTopBlackEnemy = false;
 	bool isOnBridge = false;
 public: 
+	// pipe
+	bool isPiping = false;		// checking gimmick is piping
+	float pipeVx, pipeVy;		// set speed when piping
+
 	bool isFollow = false;
 	CGameObject* obj = NULL;
 	//Incline

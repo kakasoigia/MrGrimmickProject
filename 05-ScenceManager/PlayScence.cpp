@@ -49,7 +49,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define OBJECT_TYPE_INCLINE	22
 
-#define OBJECT_TYPE_GRIMMICK_DIE 23
+#define OBJECT_TYPE_PIPES 23
 
 
 #define OBJECT_TYPE_NOCOLLISIONOBJECT 49
@@ -203,6 +203,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
+	case OBJECT_TYPE_PIPES:
+	{
+		int w = atof(tokens[4].c_str());
+		int h = atof(tokens[5].c_str());
+
+		obj = new CPipes(x, y, w, h);
+		break;
+	}
 	case OBJECT_TYPE_MOVING_BRICK:
 	{
 		int min = atof(tokens[4].c_str());
@@ -211,15 +219,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMovingBrick(min, max, type);
 		break;
 	}
-	case OBJECT_TYPE_GRIMMICK_DIE: 
-		if (dieEffect != NULL)
-		{
-			DebugOut(L"[ERROR] Have die already man!\n");
-			return;
-		}
-		obj = new CGimmickDieEffect();
-		this->dieEffect = (CGimmickDieEffect*)obj;
-		break;
+	//case OBJECT_TYPE_GRIMMICK_DIE: 
+	//	if (dieEffect != NULL)
+	//	{
+	//		DebugOut(L"[ERROR] Have die already man!\n");
+	//		return;
+	//	}
+	//	obj = new CGimmickDieEffect();
+	//	this->dieEffect = (CGimmickDieEffect*)obj;
+	//	break;
 
 
 	case OBJECT_TYPE_STAR: 
@@ -454,6 +462,7 @@ void CPlayScene::SetCamPos() {
 		}
 		break;
 	}
+
 	case 2:
 	{
 		if ((cx < game->GetScreenWidth() / 2))
@@ -462,18 +471,26 @@ void CPlayScene::SetCamPos() {
 		}
 		else
 		{
-			if (cx > 512 - (game->GetScreenWidth() / 2) && cy > 172)
+			if (cx > 512 - (game->GetScreenWidth() / 2) && cx < 1265 && cy>172)
 			{
 				cx = 247;
 			}
 			else
 			{
-				cx -= game->GetScreenWidth() / 2;
+				if (cx > 1265)
+				{
+					cx = 1265;
+				}
+				else
+					cx -= game->GetScreenWidth() / 2;
 			}
 		}
 		if (cy > 193)
 		{
-			cy = 384;
+			if (cy < 384)
+				cy = 384;
+			else
+				cy = 560;
 		}
 		else
 		{

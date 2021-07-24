@@ -30,7 +30,7 @@
 #include "Hud.h"
 #include "Incline.h"
 #include "Utils.h"
-
+#include "Pipe.h"
 
 #include "Portal.h"
 
