@@ -95,20 +95,16 @@ bool CGame::ObjectInCamera(CGameObject* object)
 	else if (dynamic_cast<ElectricBoom*>(object))
 	{
 		ElectricBoom* e = dynamic_cast<ElectricBoom*>(object);
-		if (e->GetState() == ELECTRICBOOM_STATE_DIE)
-
-			if (dynamic_cast<Worm*>(object))
-			{
-				Worm* e = dynamic_cast<Worm*>(object);
-				if (e->GetState() == WORM_STATE_DIE)
-
-					return true;
-			}
-		float l, t, r, b;
-		object->GetBoundingBox(l, t, r, b);
-		return !(r < cam_x - 16.0f || l > cam_x + screen_width + 16.0f || t < cam_y - screen_height - 16.0f || b > cam_y + 16.0f);
+		if (e->GetState() == ELECTRICBOOM_STATE_DIE); 
+		return true;
 	}
+	if (dynamic_cast<Worm*>(object))
+	{
+		Worm* e = dynamic_cast<Worm*>(object);
+		if (e->GetState() == WORM_STATE_DIE)
 
+			return true;
+	}
 	float l, t, r, b;
 	object->GetBoundingBox(l, t, r, b);
 	return !(r < cam_x - 16.0f || l > cam_x + screen_width + 16.0f || t < cam_y - screen_height - 16.0f || b > cam_y + 16.0f);

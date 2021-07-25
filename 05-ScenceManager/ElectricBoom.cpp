@@ -11,7 +11,7 @@ ElectricBoom::ElectricBoom()
 
 void ElectricBoom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == ELECTRICBOOM_STATE_DIE)
+	if (state == ELECTRICBOOM_STATE_DIE  || state == ELECTRICBOOM_STATE_DISAPPEAR)
 	{
 		left = top = right = bottom = 0;
 		return;
@@ -127,27 +127,19 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 
-
-
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
 		/*if (nx!=0) vx = 0;*/
 		if (ny != 0) vy = 0;
 
-		tempbacky = y;
-
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
-
-
 		}
 	}
-
 
 
 	// clean up collision events
@@ -156,6 +148,7 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void ElectricBoom::Render()
 {
+	if (state == ELECTRICBOOM_STATE_DISAPPEAR) return;
 	int ani = ELECTRICBOOM_ANI_WALK_RIGHT;
 	if (state == ELECTRICBOOM_STATE_WALKING)
 	{
@@ -183,7 +176,7 @@ void ElectricBoom::SetState(int state)
 	switch (state)
 	{
 	case ELECTRICBOOM_STATE_DIE:
-		DebugOut(L"[ERROR] DIE!\n");
+	
 		vy = 0.2f;
 		break;
 	case ELECTRICBOOM_STATE_WALKING:
@@ -197,40 +190,6 @@ void ElectricBoom::SetState(int state)
 			vx = -ELECTRICBOOM_WALKING_SPEED;
 			vy = ELECTRICBOOM_GRAVITY;
 		}
+		break;
 	}
 }
-//void ElectricBoom::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy)
-//{
-//
-//	min_tx = 1.0f;
-//	min_ty = 1.0f;
-//	int min_ix = -1;
-//	int min_iy = -1;
-//
-//	nx = 0.0f;
-//	ny = 0.0f;
-//
-//	coEventsResult.clear();
-//
-//	for (UINT i = 0; i < coEvents.size(); i++)
-//	{
-//		LPCOLLISIONEVENT c = coEvents[i];
-//
-//		if (c->t < min_tx && c->nx != 0) {
-//			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
-//		}
-//
-//		if (c->t < min_ty && c->ny != 0) {
-//			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
-//		}
-//
-//		if (dynamic_cast<CGimmick*>(c->obj))
-//		{
-//			ny = -0.01f;;
-//
-//		}
-//	}
-//
-//	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
-//	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
-//}

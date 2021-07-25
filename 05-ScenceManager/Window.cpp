@@ -23,19 +23,14 @@ void Window::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	if (state == WINDOW_STATE_CLOSE)
 	{
-		DebugOut(L"[INFO] Vô đây nè: \n");
+		
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		DebugOut(L"[INFO] Vô đây nè ba %d pre: \n",(int)this->x);
-		DebugOut(L"[INFO] Vô đây nè ba %d pre: \n", (int)gimmick->x);
-		if (abs(gimmick->x - this->x) < 20 && abs(gimmick->y - this->y) < 500)
+		
+		if (abs(gimmick->x - this->x) < 20 && abs(gimmick->y - this->y) < 500 )
 		{
 
-
-
-			DebugOut(L"[INFO] Vô đây nè ba: \n");
-
 			this->SetState(WINDOW_STATE_OPEN);
-			CallBoom();
+			
 		}
 			
 	}
@@ -122,23 +117,23 @@ void Window::SetState(int state)
 
 		break;
 	case WINDOW_STATE_OPEN:
+		CallBoom();
 		break;
 	}
 }
 void Window:: CallBoom()
 {
-
-
 	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
 	for (UINT i = 0; i < objects.size(); i++)
 	{
 		if (dynamic_cast<ElectricBoom*>(objects[i]))
 		{
+			
 			ElectricBoom* boom = dynamic_cast<ElectricBoom*>(objects[i]);
-			/*if (boom->GetIsUsed() == false)*/
+			if (boom->state == ELECTRICBOOM_STATE_DISAPPEAR)
 			{
 				// call blackenemy
-
+			
 				boom->SetPosition(this->x + WINDOW_BBOX_WIDTH/2 +5, this->y - WINDOW_BBOX_HEIGHT/2 - 5);
 				boom->nx = 1;
 				boom->SetState(ELECTRICBOOM_STATE_WALKING);

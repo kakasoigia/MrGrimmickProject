@@ -28,10 +28,12 @@ class Rocket :
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	DWORD booming_start = 0;
+	
 	//virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
 public:
 	Rocket();
 	void StartBooming() { booming_start = GetTickCount(); }
+	
 	virtual void SetState(int state);
 };
 

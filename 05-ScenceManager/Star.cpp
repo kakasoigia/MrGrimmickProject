@@ -244,13 +244,13 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// vo ham Hoa Khoi r ma k quay lai dem gio 
 			}
 			// chạm quái 
-			else if (dynamic_cast<BlackEnemy*>(e->obj))
+			 if (dynamic_cast<BlackEnemy*>(e->obj))
 			{
 				BlackEnemy* black = dynamic_cast<BlackEnemy*>(e->obj);
 				black->SetState(BLACKENEMY_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
 			}
-			else if (dynamic_cast<BoomBoss*>(e->obj))
+			 if (dynamic_cast<BoomBoss*>(e->obj))
 			{
 				BoomBoss* boomBoss = dynamic_cast<BoomBoss*>(e->obj);
 				if (boomBoss->live != 1)
@@ -267,20 +267,19 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				this->SetState(STAR_STATE_SMOKE);
 			}
-			else if (dynamic_cast<Worm*>(e->obj))
+			 if (dynamic_cast<Worm*>(e->obj))
 			{
 				Worm* worm = dynamic_cast<Worm*>(e->obj);
 				worm->SetState(WORM_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
 			}
-			else if (dynamic_cast<ElectricBoom*>(e->obj))
+			 if (dynamic_cast<ElectricBoom*>(e->obj))
 			{
 				ElectricBoom* electricBoom = dynamic_cast<ElectricBoom*>(e->obj);
 				electricBoom->SetState(ELECTRICBOOM_STATE_DIE);
-				DebugOut(L"[ERROR] vô ra!\n");
 				this->SetState(STAR_STATE_SMOKE);
 			}
-			else if (dynamic_cast<CThunder*>(e->obj))
+			 if (dynamic_cast<CThunder*>(e->obj))
 			{
 				this->SetState(STAR_STATE_SMOKE);
 			}

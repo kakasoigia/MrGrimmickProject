@@ -156,7 +156,7 @@ void Cannon::SetState(int state)
 	
 		break;
 	case CANNON_STATE_RED:
-		DebugOut(L"[INFO] cc tk hieu \n");
+		
 
 		break;
 	}

@@ -27,8 +27,9 @@ void Rocket::CalcPotentialCollisions(
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-		if (dynamic_cast<CGimmick*>(coObjects->at(i)))
+	
+		
+		if (dynamic_cast<Rocket*>(coObjects->at(i)))
 		{
 			continue;
 		}
@@ -40,6 +41,7 @@ void Rocket::CalcPotentialCollisions(
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
+
 void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -50,7 +52,7 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == ROCKET_STATE_IDLING)
 	{
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300) this->SetState(ROCKET_STATE_FALLING);
+		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 100) this->SetState(ROCKET_STATE_FALLING);
 	}
 
 

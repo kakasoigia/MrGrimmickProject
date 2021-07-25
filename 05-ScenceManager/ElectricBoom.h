@@ -22,8 +22,7 @@
 
 #define ELECTRICBOOM_ANI_WALK_RIGHT 1
 #define ELECTRICBOOM_ANI_WALK_LEFT 0
-#define ELECTRICBOOM_ANI_FLY_RIGHT 2
-#define ELECTRICBOOM_ANI_FLY_LEFT 3
+
 
 class ElectricBoom :
 	public CGameObject

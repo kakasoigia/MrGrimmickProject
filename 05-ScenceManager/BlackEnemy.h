@@ -49,30 +49,31 @@
 #define BLACKENEMY_TIME_FLYING 10000
 
 class BlackEnemy :
-	public CGameObject
+    public CGameObject
 {
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void Render();
-	void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
-	virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
-	DWORD time_state_walk = 0;
-	//DWORD time_state_jump = 0;
-	DWORD time_state_fly = 0;
+    virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+    virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+    virtual void Render();
+    void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
+    virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
+    DWORD time_state_walk = 0;
+    //DWORD time_state_jump = 0;
+    DWORD time_state_fly = 0;
+   
 public:
-	bool isIncline = false; // check for sliding
-	int incline_size; // size of slide
-	int direct_incline;
-	int direct_go = 1;
-	bool isFly = false;
-	int isFlying = 0;
+    bool isIncline = false; // check for sliding
+    int incline_size; // size of slide
+    int direct_incline;
+    int direct_go = 1;
+    bool isFly = false;
+    int isFlying = 0;
 
-	float incline_vx, incline_vy;
+    float incline_vx, incline_vy;
 
-	bool isSlide = false;
-	int slideType = 0;
-	BlackEnemy();
-	void StartJump() { time_state_walk = GetTickCount(); };
-	void StartFly() { time_state_fly = GetTickCount(); };
-	virtual void SetState(int state);
+    bool isSlide = false;
+    int slideType = 0;
+    BlackEnemy();
+    void StartJump() { time_state_walk = GetTickCount(); };
+    void StartFly() { time_state_fly = GetTickCount(); };
+    virtual void SetState(int state);
 };
