@@ -5,6 +5,7 @@
 #define BOOMBOSS_WALKING_TIME 1000
 #define BOOMBOSS_WALKING_SPEED 0.01f;
 #define BOOMBOSS_GRAVITY 0.0008f
+#define BOOMBOSS_BE_ATTACKED_SPEED 0.08f;
 #define BOOMBOSS_BBOX_WIDTH 32
 #define BOOMBOSS_BBOX_HEIGHT 44
 #define BOOMBOSS_BBOX_HEIGHT_DIE 39
@@ -39,4 +40,5 @@ public:
 	virtual void SetState(int state);
 	void Fire();
 	void StartAttacking() { attacking_start = GetTickCount(); }
+	void CreateItem();
 };

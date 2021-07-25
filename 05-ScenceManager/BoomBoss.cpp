@@ -1,4 +1,3 @@
-
 #include "BoomBoss.h"
 #include "BlackEnemy.h"
 #include "PlayScence.h"
@@ -65,8 +64,14 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (state == BOOMBOSS_STATE_BEING_ATTACKED)
 		{
-			y += 5;
-			SetState(BOOMBOSS_STATE_ATTACKING);
+			//y += 5;
+			if (x < 52)
+			{
+				x = 52;
+				SetState(BOOMBOSS_STATE_WALKING);
+			}
+
+			//SetState(BOOMBOSS_STATE_ATTACKING);
 		}
 		if (x > 82)
 		{
@@ -154,6 +159,7 @@ void BoomBoss::SetState(int state)
 	case BOOMBOSS_STATE_DIE:
 		vx = 0;
 		vy = 0.05f;
+		CreateItem();
 		break;
 	case BOOMBOSS_STATE_WALKING:
 		vx = BOOMBOSS_WALKING_SPEED;
@@ -161,6 +167,9 @@ void BoomBoss::SetState(int state)
 	case BOOMBOSS_STATE_ATTACKING:
 		attacking_start = GetTickCount();
 		vx = 0;
+		break;
+	case BOOMBOSS_STATE_BEING_ATTACKED:
+		vx = -BOOMBOSS_BE_ATTACKED_SPEED;
 		break;
 	}
 }
@@ -175,4 +184,15 @@ void BoomBoss::Fire()
 		ListBomb[i]->vy = 0.03f * (i + 1);
 		ListBomb[i]->SetState(BLACKENEMY_STATE_WALKING);
 	}
+}
+
+void BoomBoss::CreateItem()
+{
+	Item* item = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB);
+	CAnimationSets* ani = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = ani->Get(62);
+	item->SetAnimationSet(ani_set);
+	item->SetPosition(88, 79);
+
+	((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->addObject(item);
 }
