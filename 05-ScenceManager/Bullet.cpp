@@ -82,6 +82,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				if(state != BULLET_STATE_DESTROY)
 					SetState(BULLET_STATE_DESTROY);
+				this->vx = 0;
 			}
 
 			if (dynamic_cast<Incline*>(e->obj)) 

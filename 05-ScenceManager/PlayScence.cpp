@@ -58,9 +58,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_SLIDE_RIGHT 51
 #define OBJECT_TYPE_SLIDE_LEFT	52
 
-#define OBJECT_TYPE_FISH_RED 60
-#define OBJECT_TYPE_FISH_BLACK	61
-#define OBJECT_TYPE_FISH_YELLOW	62
+#define OBJECT_TYPE_FISH 60
+
 #define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
 
@@ -113,7 +112,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 
 	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+	DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	LPANIMATION ani = new CAnimation();
 
@@ -134,6 +133,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
 
+	DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 	int ani_set_id = atoi(tokens[0].c_str());
 
 	LPANIMATION_SET s = new CAnimationSet();
@@ -158,7 +158,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+	DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
@@ -239,9 +239,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Star();
 		this->star = (Star*)obj;
 		; break;
-	case OBJECT_TYPE_FISH_RED: obj = new Fish(FISH_TYPE_RED); break;
-	case OBJECT_TYPE_FISH_BLACK: obj = new Fish(FISH_TYPE_BLACK); break;
-	case OBJECT_TYPE_FISH_YELLOW: obj = new Fish(FISH_TYPE_YELLOW); break;
 	case OBJECT_TYPE_BULLET: obj = new Bullet(); break;
 	case OBJECT_TYPE_NOCOLLISIONOBJECT: obj = new NoCollisionObject(); break;
 
@@ -265,6 +262,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 	case OBJECT_TYPE_THUNDER: obj = new CThunder(); break;
+	case OBJECT_TYPE_FISH: obj = new Fish(); break;
 
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -278,7 +276,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	if (object_type == OBJECT_TYPE_FISH)
+	{
+		objectsNoColliMove.push_back(obj);
+	}
+	else
+	{
+		objects.push_back(obj);
+	}
 
 }
 
@@ -413,6 +418,10 @@ void CPlayScene::Update(DWORD dt)
 
 		/*}*/
 	}
+	for (size_t i = 0; i < objectsNoColliMove.size(); i++)
+	{
+		objectsNoColliMove[i]->Update(dt);
+	}
 	// Làm trống quadtree
 	if (quadtree)
 		quadtree->Clear();
@@ -539,7 +548,17 @@ void CPlayScene::Render()
 		this->map->Render();
 	}
 	for (int i = 0; i < objects.size(); i++)
+	{
 		objects[i]->Render();
+	}
+	for (size_t i = 0; i < objectsNoColliMove.size(); i++)
+	{
+		objectsNoColliMove[i]->Render();
+	}
+	for (size_t i = 0; i < objectsNoColliMove.size(); i++)
+	{
+		objectsNoColliMove[i]->Render();
+	}
 	hud->Render();
 }
 

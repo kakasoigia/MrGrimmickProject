@@ -428,9 +428,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<Cannon*>(e->obj))
 			{
 				Cannon* cannon = dynamic_cast<Cannon*>(e->obj);
-				if(vx>0)
-				cannon->x+=3;
-				else cannon->x-=3;
+				cannon->x += dx;
+				x += dx;
 			}
 
 			if (dynamic_cast<Slide*>(e->obj))
@@ -764,7 +763,7 @@ void CGimmick::GetBoundingBox(float& left, float& top, float& right, float& bott
 void CGimmick::Reset()
 {
 	SetState(GIMMICK_STATE_IDLE);
-	SetPosition(start_x, start_y);
+	SetPosition(80, 40);
 	SetSpeed(0, 0);
 }
 
