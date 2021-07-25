@@ -132,6 +132,7 @@ void CGimmick::FollowObject(LPGAMEOBJECT obj)
 
 void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	int ids = CGame::GetInstance()->GetCurrentScene()->GetId();
 	if (GetState() != GIMMICK_STATE_IDLE) {
 
 		isFollow = false;
@@ -277,9 +278,17 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			if (dynamic_cast<Item*>(e->obj))
 			{
-
 				Item* item = dynamic_cast<Item*>(e->obj);
 				GetItem(item->GetType());
+				if (ids == 3)
+				{
+					if (item->GetType() == ITEM_TYPE_MEDICINE_PINK_BOMB)
+					{
+						CGame::GetInstance()->SetCamPos(0, 170);
+						CGame::GetInstance()->SwitchScene(13);
+						return;
+					}
+				}
 				item->SetState(ITEM_STATE_DISAPPEAR);
 
 			}
