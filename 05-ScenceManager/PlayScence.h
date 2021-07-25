@@ -31,7 +31,7 @@
 #include "Incline.h"
 #include "Utils.h"
 #include "Pipe.h"
-
+#include "AniBrick.h"
 #include "Portal.h"
 
 #include "GimmickDieEffect.h"
@@ -43,6 +43,8 @@ protected:
 	Star* star = nullptr;
 	CGimmickDieEffect* dieEffect = nullptr;
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> objectsNoColliMove;
+
 	CHud* hud = new CHud();
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -65,6 +67,8 @@ public:
 
 
 	CGimmick* GetPlayer() { return player; }
+	Quadtree* GetQuadtree() { return quadtree; }
+	void addObject(LPGAMEOBJECT a) { objects.push_back(a); }
 	Star* GetStar() { return star; };
 	CGimmickDieEffect* GetDieEffect() { return dieEffect; }
 	//friend class CPlayScenceKeyHandler;

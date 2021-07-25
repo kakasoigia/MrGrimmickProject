@@ -18,12 +18,9 @@
 #include "GimmickDieEffect.h"
 #include "Pipe.h"
 
-void CGimmick::FilterCollision(
-	vector<LPCOLLISIONEVENT>& coEvents,
-	vector<LPCOLLISIONEVENT>& coEventsResult,
-	float& min_tx, float& min_ty,
-	float& nx, float& ny, float& rdx, float& rdy)
+void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy)
 {
+
 	min_tx = 1.0f;
 	min_ty = 1.0f;
 	int min_ix = -1;
@@ -33,6 +30,9 @@ void CGimmick::FilterCollision(
 	ny = 0.0f;
 
 	coEventsResult.clear();
+
+	bool check_rec = false;
+	bool check_brickbroken = false;
 
 	for (UINT i = 0; i < coEvents.size(); i++)
 	{
@@ -45,6 +45,7 @@ void CGimmick::FilterCollision(
 		if (c->t < min_ty && c->ny != 0) {
 			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
+
 			if (dynamic_cast<ElectricBoom*>(c->obj))
 			{
 				if (c->ny < 0)
@@ -60,6 +61,7 @@ void CGimmick::FilterCollision(
 				
 					ny = 0;
 			}
+
 	}
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
@@ -245,7 +247,18 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (!dynamic_cast<BlackEnemy*>(e->obj))  this->SetOnTopBlackEnemy(false);
+			if (dynamic_cast<BlackEnemy*>(e->obj)) {
+
+				BlackEnemy* be = dynamic_cast<BlackEnemy*>(e->obj);
+
+				if (e->t > 0 && e->t <= 1)
+
+					if (e->ny > 0) {
+						isFollow = true;
+						obj = be;
+					}
+
+			}
 			if (dynamic_cast<Item*>(e->obj))
 			{
 
@@ -461,9 +474,8 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<Cannon*>(e->obj))
 			{
 				Cannon* cannon = dynamic_cast<Cannon*>(e->obj);
-				if(vx>0)
-				cannon->x+=3;
-				else cannon->x-=3;
+				cannon->x += dx;
+				x += dx;
 			}
 
 			if (dynamic_cast<Slide*>(e->obj))
@@ -805,7 +817,7 @@ void CGimmick::GetBoundingBox(float& left, float& top, float& right, float& bott
 void CGimmick::Reset()
 {
 	SetState(GIMMICK_STATE_IDLE);
-	SetPosition(start_x, start_y);
+	SetPosition(80, 40);
 	SetSpeed(0, 0);
 	CGame:: GetInstance()->SetLight(4);
 }

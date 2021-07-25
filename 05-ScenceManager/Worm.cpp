@@ -4,7 +4,7 @@ Worm::Worm()
 {
 	nx = 1;
 	SetState(WORM_STATE_WALKING);
-	
+
 }
 
 void Worm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -12,13 +12,14 @@ void Worm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	if (state == WORM_STATE_DIE)
 	{
 		left = top = right = bottom = 0;
-		return;
 	}
-		
-	left = x;
-	top = y;
-	right = x + WORM_BBOX_WIDTH;
-	bottom = y - WORM_BBOX_HEIGHT;
+	else
+	{
+		left = x;
+		top = y;
+		right = x + WORM_BBOX_WIDTH;
+		bottom = y - WORM_BBOX_HEIGHT;
+	}
 }
 
 void Worm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -44,18 +45,20 @@ void Worm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		x += dx;
 		y += dy;
-
-		if (back)
+		if (state != WORM_STATE_DIE)
 		{
-			if (tempbacky - y >= 0.5f)
+			if (back)
 			{
-				y += 5;
-				if (vx < 0)
-					x += 12;
-				else
-					x -= 12;
-				vx = -vx;
-				nx = -nx;
+				if (tempbacky - y >= 0.5f)
+				{
+					y += 5;
+					if (vx < 0)
+						x += 12;
+					else
+						x -= 12;
+					vx = -vx;
+					nx = -nx;
+				}
 			}
 		}
 	}
@@ -93,7 +96,7 @@ void Worm::Render()
 		else
 			ani = WORM_ANI_WALK_LEFT;
 	}
-	
+
 
 	animation_set->at(ani)->Render(x, y);
 
@@ -107,7 +110,7 @@ void Worm::SetState(int state)
 	{
 	case WORM_STATE_DIE:
 		vx = 0;
-		vy = WORM_DEFLECT_SPEED ;
+		vy = 0.02f;
 		break;
 	case WORM_STATE_WALKING:
 		if (nx < 0)

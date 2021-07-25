@@ -4,7 +4,7 @@
 //#include "Rocket.h"
 #define GIMMICK_JUMP_HIGHT_SPEED_Y 0.1
 #define GIMMICK_WALKING_SPEED 0.08f 
-#define GIMMICK_JUMP_SPEED_Y 0.6f
+#define GIMMICK_JUMP_SPEED_Y 0.4f
 #define GIMMICK_DOUBLE_JUMP_SPEED 0.245f
 #define GIMMICK_JUMP_DEFLECT_SPEED 0.2f
 #define GIMMICK_GRAVITY 0.0008f
@@ -113,7 +113,11 @@ public:
 	CGimmick(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
-	void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
+	virtual void FilterCollision(
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx, float& min_ty,
+		float& nx, float& ny, float& rdx, float& rdy);
 	void SetState(int state);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void CalcPotentialCollisions(

@@ -1,21 +1,44 @@
 
 #include "BoomBoss.h"
+#include "BlackEnemy.h"
+#include "PlayScence.h"
+#include "Utils.h"
 BoomBoss::BoomBoss()
 {
 	SetState(BOOMBOSS_STATE_WALKING);
 	nx = 1;
+	for (int i = 0; i < 6; i++) {
+
+		BlackEnemy* bomb = new BlackEnemy();
+
+		CAnimationSets* ani = CAnimationSets::GetInstance();
+		LPANIMATION_SET ani_set = ani->Get(3);
+		bomb->SetAnimationSet(ani_set);
+		ListBomb.push_back(bomb);
+
+		((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->addObject(bomb);
+	}
 }
 
 void BoomBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + BOOMBOSS_BBOX_WIDTH;
 
 	if (state == BOOMBOSS_STATE_DIE)
-		bottom = y - BOOMBOSS_BBOX_HEIGHT_DIE;
+	{
+		left = top = right = bottom = 0;
+	}
 	else
-		bottom = y - BOOMBOSS_BBOX_HEIGHT;
+	{
+		left = x;
+		top = y;
+		right = x + BOOMBOSS_BBOX_WIDTH;
+		if (state == BOOMBOSS_STATE_ATTACKING)
+		{
+			bottom = y - 46;
+		}
+		else
+			bottom = y - BOOMBOSS_BBOX_HEIGHT;
+	}
 }
 
 void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -29,6 +52,32 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	coEvents.clear();
 
+	if (attacking_start != 0)
+	{
+		if (GetTickCount() - attacking_start > 4000)
+		{
+			SetState(BOOMBOSS_STATE_BEING_ATTACKED);
+			Fire();
+			attacking_start = 0;
+		}
+	}
+	else
+	{
+		if (state == BOOMBOSS_STATE_BEING_ATTACKED)
+		{
+			y += 5;
+			SetState(BOOMBOSS_STATE_ATTACKING);
+		}
+		if (x > 82)
+		{
+			x = 82;
+			y += 5;
+			SetState(BOOMBOSS_STATE_ATTACKING);
+			vx = 0;
+		}
+	}
+
+
 
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
@@ -39,7 +88,6 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-
 		x += dx;
 		y += dy;
 
@@ -52,7 +100,7 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float rdx = 0;
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
+		/*back = true;*/
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
@@ -60,18 +108,13 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (ny != 0) vy = 0;
 
 		// Collision logic with other objects
-		//
+	   //
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (e->nx != 0 && ny == 0)
-			{
-				this->vx = -this->vx;
-				this->nx = -this->nx;
-
-			}
 		}
+		/*tempbacky = y;*/
 	}
 
 	// clean up collision events
@@ -83,20 +126,24 @@ void BoomBoss::Render()
 	int ani = BOOMBOSS_ANI_WALKING;
 	if (state == BOOMBOSS_STATE_WALKING)
 	{
-			ani = BOOMBOSS_ANI_WALKING;
+		ani = BOOMBOSS_ANI_WALKING;
 	}
 	else if (state == BOOMBOSS_STATE_BEING_ATTACKED)
 	{
-			ani = BOOMBOSS_ANI_BEING_ATTACKED;
+		ani = BOOMBOSS_ANI_BEING_ATTACKED;
 	}
 	else if (state == BOOMBOSS_STATE_ATTACKING)
 	{
 		ani = BOOMBOSS_ANI_ATTACKING;
 	}
+	else if (state == BOOMBOSS_STATE_DIE)
+	{
+		ani = 3;
+	}
 
 	animation_set->at(ani)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void BoomBoss::SetState(int state)
@@ -105,18 +152,27 @@ void BoomBoss::SetState(int state)
 	switch (state)
 	{
 	case BOOMBOSS_STATE_DIE:
-		y += BOOMBOSS_BBOX_HEIGHT - BOOMBOSS_BBOX_HEIGHT_DIE + 1;
 		vx = 0;
-		vy = 0;
+		vy = 0.05f;
 		break;
 	case BOOMBOSS_STATE_WALKING:
-		if (nx < 0)
-		{
-			vx = -BOOMBOSS_WALKING_SPEED;
-		}
-		else
-		{
-			vx = BOOMBOSS_WALKING_SPEED;
-		}
+		vx = BOOMBOSS_WALKING_SPEED;
+		break;
+	case BOOMBOSS_STATE_ATTACKING:
+		attacking_start = GetTickCount();
+		vx = 0;
+		break;
+	}
+}
+
+void BoomBoss::Fire()
+{
+	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
+	int count = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		ListBomb[i]->SetPosition(x + 25 + i * 17, y + i * 3);
+		ListBomb[i]->vy = 0.03f * (i + 1);
+		ListBomb[i]->SetState(BLACKENEMY_STATE_WALKING);
 	}
 }
