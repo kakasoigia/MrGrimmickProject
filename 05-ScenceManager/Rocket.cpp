@@ -1,5 +1,6 @@
 ﻿
 #include "Rocket.h"
+#include <algorithm>
 Rocket::Rocket()
 {
 	SetState(ROCKET_STATE_IDLING);
@@ -19,7 +20,26 @@ void Rocket::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	right = x + ROCKET_BBOX_WIDTH;
 	bottom = y - ROCKET_BBOX_HEIGHT;
 }
+void Rocket::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT>* coObjects,
+	vector<LPCOLLISIONEVENT>& coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+		
+		if (dynamic_cast<CGimmick*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
+	}
 
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+}
 void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
@@ -73,15 +93,15 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		/*if (nx!=0) vx = 0;*/
 		if (ny != 0) vy = 0;
-
+		SetState(ROCKET_STATE_BOOM);
 		// Collision logic with other objects
 		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-			// chạy hiệu ứng nổ
-			SetState(ROCKET_STATE_BOOM);
-		}
+		//for (UINT i = 0; i < coEventsResult.size(); i++)
+		//{
+		//	LPCOLLISIONEVENT e = coEventsResult[i];
+		//	// chạy hiệu ứng nổ
+		//	
+		//}
 	}
 
 	// clean up collision events

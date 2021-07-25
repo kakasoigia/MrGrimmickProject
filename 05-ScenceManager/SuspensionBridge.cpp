@@ -42,12 +42,13 @@ void SuspensionBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isOpening = true;
 		time_count_moving = 0;
 		vx = 0;
+		SetState(BRIDGE_STATE_IDLING_OPEN);
 		StartOpening();
 		// ngừng chuyển động GImmick
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		gimmick->SetOnBridge(false);
 	}
-	if (isOpening)
+	/*if (isOpening)
 	{
 		if (GetTickCount() - time_count_opening > BRIDGE_TIME_OPENING && state != BRIDGE_STATE_IDLING_OPEN)
 		{
@@ -55,7 +56,7 @@ void SuspensionBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			time_count_opening = 0;
 			SetState(BRIDGE_STATE_IDLING_OPEN);
 		}
-	}
+	}*/
 	//for (UINT i = 0; i < coObjects->size(); i++)
 	//{
 	//	LPGAMEOBJECT obj = coObjects->at(i);

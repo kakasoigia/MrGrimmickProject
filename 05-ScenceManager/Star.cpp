@@ -11,6 +11,7 @@
 #include "Incline.h"
 #include "Thunder.h"
 #include "Item.h"
+#include "ElectricBoom.h"
 Star::Star()
 {
 	SetState(STAR_STATE_DISAPPEAR);
@@ -259,6 +260,13 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				Worm* worm = dynamic_cast<Worm*>(e->obj);
 				worm->SetState(WORM_STATE_DIE);
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			else if (dynamic_cast<ElectricBoom*>(e->obj))
+			{
+				ElectricBoom* electricBoom = dynamic_cast<ElectricBoom*>(e->obj);
+				electricBoom->SetState(ELECTRICBOOM_STATE_DIE);
+				DebugOut(L"[ERROR] vô ra!\n");
 				this->SetState(STAR_STATE_SMOKE);
 			}
 			else if (dynamic_cast<CThunder*>(e->obj))

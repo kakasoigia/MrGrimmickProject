@@ -14,10 +14,21 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state != ITEM_STATE_DISAPPEAR)
 	{
+		
+
 		left = x;
 		top = y;
 		right = x + ITEM_BBOX_WIDTH;
-		bottom = y - ITEM_BBOX_HEIGHT;
+		if (Type == ITEM_TYPE_FLOWER)
+		{
+			bottom = x - 30;
+		}
+		else
+		{
+			
+			bottom = y - ITEM_BBOX_HEIGHT;
+		}
+		
 	}
 	else
 	{

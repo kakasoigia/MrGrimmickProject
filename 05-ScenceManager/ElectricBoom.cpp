@@ -2,6 +2,7 @@
 #include "ElectricBoom.h"
 #include "PlayScence.h"
 #include <algorithm>
+#include "Portal.h"
 ElectricBoom::ElectricBoom()
 {
 	SetState(ELECTRICBOOM_STATE_DISAPPEAR);
@@ -10,6 +11,12 @@ ElectricBoom::ElectricBoom()
 
 void ElectricBoom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (state == ELECTRICBOOM_STATE_DIE)
+	{
+		left = top = right = bottom = 0;
+		return;
+	}
+
 		left = x;
 		top = y - 10;
 		right = x + ELECTRICBOOM_BBOX_WIDTH-3;
@@ -23,6 +30,14 @@ void ElectricBoom::CalcPotentialCollisions(
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 		if (dynamic_cast<ElectricBoom*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		if (dynamic_cast<CPortal*>(coObjects->at(i)))
+		{
+			continue;
+		}
+		if (dynamic_cast<CGimmick*>(coObjects->at(i)))
 		{
 			continue;
 		}
@@ -42,15 +57,12 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (isFollowGimmick)
 	{
-
-		
-		if (this->y - gimmick->y < 0)
+		if (this->y +10  > gimmick->y)
 		{
 			if (x - gimmick->x > 0.5f)
 			{
 				nx = -1;
 				vx = -ELECTRICBOOM_WALKING_SPEED;
-
 			}
 			else if (x - gimmick->x < 0.5f)
 			{
@@ -59,8 +71,12 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-
-	
+	if (this->x < 633 /*&&	back = true;*/)
+	{
+		this->nx = 1;
+		this->vx = -vx;
+		x = 637;
+	}
 	// Simple fall down
 	vy -= ELECTRICBOOM_GRAVITY * dt;
 
@@ -81,8 +97,9 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		x += dx;
 		y += dy;
+		isFollowGimmick = false;
 
-		if (back)
+		/*if ((back == true) && nx == -1 && state != ELECTRICBOOM_STATE_DIE)
 		{
 			if (tempbacky - y >= 0.4f)
 			{
@@ -96,20 +113,20 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				nx = -nx;
 				isFollowGimmick = false;
 			}
-		}
-
+		}*/
+		
 
 	}
 	else
 	{
-
+		isFollowGimmick = true;
 		// land ...fly
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		back = true;
+	
 
 
 		x += min_tx * dx + nx * 0.4f;
@@ -126,12 +143,8 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			//if (e->nx != 0 && ny == 0)
-			//{
-			//	this->vx = -this->vx;
-			//	this->nx = -this->nx;
+			
 
-			//}
 		}
 	}
 
@@ -151,13 +164,13 @@ void ElectricBoom::Render()
 		else
 			ani = ELECTRICBOOM_ANI_WALK_LEFT;
 	}
-	else if (state == ELECTRICBOOM_STATE_FLYING)
+	/*else if (state == ELECTRICBOOM_STATE_FLYING)
 	{
 		if (nx > 0)
 			ani = ELECTRICBOOM_ANI_FLY_RIGHT;
 		else
 			ani = ELECTRICBOOM_ANI_FLY_LEFT;
-	}
+	}*/
 
 	animation_set->at(ani)->Render(x, y);
 
@@ -170,8 +183,8 @@ void ElectricBoom::SetState(int state)
 	switch (state)
 	{
 	case ELECTRICBOOM_STATE_DIE:
-		vx = 0;
-		vy = 0;
+		DebugOut(L"[ERROR] DIE!\n" );
+		vy = 0.2f;
 		break;
 	case ELECTRICBOOM_STATE_WALKING:
 		if (nx > 0)

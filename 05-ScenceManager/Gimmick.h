@@ -82,6 +82,7 @@ class CGimmick : public CGameObject
 	bool isMaxJumping = false;
 	bool isOnTopBlackEnemy = false;
 	bool isOnBridge = false;
+	bool isHitRocket = false;
 public: 
 	// pipe
 	bool isPiping = false;		// checking gimmick is piping

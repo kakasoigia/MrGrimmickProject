@@ -83,6 +83,18 @@ int CGame::IsKeyDown(int KeyCode)
 
 bool CGame::ObjectInCamera(CGameObject* object)
 {
+	if (dynamic_cast<BlackEnemy*>(object))
+	{
+		BlackEnemy* e = dynamic_cast<BlackEnemy*>(object);
+		if (e->GetState() == BLACKENEMY_STATE_DIE)
+			return true;
+	}
+	else if (dynamic_cast<ElectricBoom*>(object))
+	{
+		ElectricBoom* e = dynamic_cast<ElectricBoom*>(object);
+		if (e->GetState() == ELECTRICBOOM_STATE_DIE)
+			return true;
+	}
 	float l, t, r, b;
 	object->GetBoundingBox(l, t, r, b);
 	return !(r < cam_x - 16.0f || l > cam_x + screen_width + 16.0f || t < cam_y - screen_height - 16.0f || b > cam_y + 16.0f);
