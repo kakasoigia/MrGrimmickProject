@@ -14,7 +14,7 @@ void Rocket::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		left = top = right = bottom = 0;
 		return;
 	}
-		
+
 	left = x;
 	top = y;
 	right = x + ROCKET_BBOX_WIDTH;
@@ -27,7 +27,7 @@ void Rocket::CalcPotentialCollisions(
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-		
+
 		if (dynamic_cast<CGimmick*>(coObjects->at(i)))
 		{
 			continue;
@@ -44,22 +44,22 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	if (state == ROCKET_STATE_FALLING )
-	vy -= ROCKET_GRAVITY * dt;
+	if (state == ROCKET_STATE_FALLING)
+		vy -= ROCKET_GRAVITY * dt;
 	// nếu gimmick tới gần thì rớt 
 	if (state == ROCKET_STATE_IDLING)
 	{
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		if (abs(gimmick->x - this->x) < 20 && (gimmick->y - this->y) < 300) this->SetState(ROCKET_STATE_FALLING);
 	}
-	
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 	// thời gian hiện animation nổ
-	if (GetTickCount() - booming_start > ROCKET_BOOMING_TIME && state== ROCKET_STATE_BOOM)
+	if (GetTickCount() - booming_start > ROCKET_BOOMING_TIME && state == ROCKET_STATE_BOOM)
 	{
 		SetState(ROCKET_STATE_DISAPPEAR);
 		booming_start = 0;
@@ -88,10 +88,10 @@ void Rocket::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-	/*	x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;*/
+		/*	x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;*/
 
-		/*if (nx!=0) vx = 0;*/
+			/*if (nx!=0) vx = 0;*/
 		if (ny != 0) vy = 0;
 		SetState(ROCKET_STATE_BOOM);
 		// Collision logic with other objects

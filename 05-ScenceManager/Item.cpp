@@ -14,7 +14,7 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state != ITEM_STATE_DISAPPEAR)
 	{
-		
+
 
 		left = x;
 		top = y;
@@ -25,10 +25,10 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		}
 		else
 		{
-			
+
 			bottom = y - ITEM_BBOX_HEIGHT;
 		}
-		
+
 	}
 	else
 	{
@@ -39,7 +39,7 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
-	
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -119,8 +119,8 @@ void Item::Render()
 			}
 		}
 	}*/
-	if (state !=ITEM_STATE_DISAPPEAR)
-	animation_set->at(0)->Render(x, y);
+	if (state != ITEM_STATE_DISAPPEAR)
+		animation_set->at(0)->Render(x, y);
 
 	//RenderBoundingBox();
 }

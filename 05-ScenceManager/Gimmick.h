@@ -76,14 +76,14 @@ class CGimmick : public CGameObject
 	DWORD untouchable_start;
 
 	float start_x;			// initial position of Mario at scene
-	float start_y; 
+	float start_y;
 	int jump = 0;
 	int maxjumping = 0;
 	bool isMaxJumping = false;
 	bool isOnTopBlackEnemy = false;
 	bool isOnBridge = false;
 	bool isHitRocket = false;
-public: 
+public:
 	// pipe
 	bool isPiping = false;		// checking gimmick is piping
 	float pipeVx, pipeVy;		// set speed when piping
@@ -111,7 +111,7 @@ public:
 	bool isDeath = false;
 
 	CGimmick(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	virtual void FilterCollision(
 		vector<LPCOLLISIONEVENT>& coEvents,
@@ -129,7 +129,7 @@ public:
 	int Jumping() { return jump; };
 	void SetJumping(int jump) { this->jump = jump; };
 	int GetJumping() { return jump; };
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	DWORD time_maxjumping = 0;
 	DWORD time_stun = 0;
 	DWORD doubleJump_start = 0; // Check for double jump
@@ -145,7 +145,7 @@ public:
 	void SetOnBridge(bool isOnBridge) { this->isOnBridge = isOnBridge; };
 	bool GetOnBridge() { return isOnBridge; };
 	void Fire();
-	void GetItem( int type);
+	void GetItem(int type);
 	void createDieEffect();
 	void callDeclineLight();
 };

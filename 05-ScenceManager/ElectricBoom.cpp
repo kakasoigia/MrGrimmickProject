@@ -17,10 +17,10 @@ void ElectricBoom::GetBoundingBox(float& left, float& top, float& right, float& 
 		return;
 	}
 
-		left = x;
-		top = y - 10;
-		right = x + ELECTRICBOOM_BBOX_WIDTH-3;
-		bottom = y - ELECTRICBOOM_BBOX_HEIGHT;
+	left = x;
+	top = y - 10;
+	right = x + ELECTRICBOOM_BBOX_WIDTH - 3;
+	bottom = y - ELECTRICBOOM_BBOX_HEIGHT;
 }
 void ElectricBoom::CalcPotentialCollisions(
 	vector<LPGAMEOBJECT>* coObjects,
@@ -57,7 +57,7 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (isFollowGimmick)
 	{
-		if (this->y +10  > gimmick->y)
+		if (this->y + 10 > gimmick->y)
 		{
 			if (x - gimmick->x > 0.5f)
 			{
@@ -114,7 +114,7 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isFollowGimmick = false;
 			}
 		}*/
-		
+
 
 	}
 	else
@@ -126,7 +126,7 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-	
+
 
 
 		x += min_tx * dx + nx * 0.4f;
@@ -143,12 +143,12 @@ void ElectricBoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			
+
 
 		}
 	}
 
-	
+
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -183,7 +183,7 @@ void ElectricBoom::SetState(int state)
 	switch (state)
 	{
 	case ELECTRICBOOM_STATE_DIE:
-		DebugOut(L"[ERROR] DIE!\n" );
+		DebugOut(L"[ERROR] DIE!\n");
 		vy = 0.2f;
 		break;
 	case ELECTRICBOOM_STATE_WALKING:

@@ -109,7 +109,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 
 	if (state == STAR_STATE_DISAPPEAR) return;
-	
+
 
 	if (state == STAR_STATE_SMOKE)
 	{
@@ -120,7 +120,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			return;
 		}
 	}
-	
+
 	//if (state == STAR_STATE_READY_TO_SHOT || state == STAR_STATE_LOADING)
 	//{
 	//	DebugOut(L"[INFO] qua ải xét state \n");
@@ -143,7 +143,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (converging_level > 50)
 		{
-			
+
 			/*converging_level = 0;*/
 			SetState(STAR_STATE_READY_TO_SHOT);
 			time_increase_converging = 0;
@@ -151,7 +151,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 		{
 			converging_level++;
-			
+
 			time_increase_converging = GetTickCount();
 		}
 
@@ -184,8 +184,8 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			x += dx;
 			y += dy;
 		}
-	
-	
+
+
 
 	}
 	else
@@ -300,7 +300,7 @@ void Star::Render()
 	int ani = STAR_ANI_BIG_STAR;
 	if (state == STAR_STATE_FLYING || state == STAR_STATE_READY_TO_SHOT)
 	{
-	// ??
+		// ??
 		ani = STAR_ANI_BIG_STAR;
 		animation_set->at(ani)->Render(x, y);
 	}
@@ -313,7 +313,7 @@ void Star::Render()
 	{
 		/*CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		gimmick->GetPosition(this->x, this->y);
-		
+
 		this->x -=  2;
 		this->y +=  25;*/
 		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_MID_X0 - converging_level * STAR_SMALL_MID_X0 / 50 + 5, this->y + STAR_SMALL_MID_Y0 - converging_level * STAR_SMALL_MID_Y0 / 50 - 7, alpha);
@@ -327,7 +327,7 @@ void Star::Render()
 		DebugOut(L"[INFO] vị trí render y %d\n", (int)y);*/
 		return;
 	}
-	
+
 
 	RenderBoundingBox();
 }
@@ -335,7 +335,7 @@ void Star::Render()
 void Star::SetState(int state)
 {
 	CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-	
+
 	CGameObject::SetState(state);
 	switch (state)
 	{
@@ -354,8 +354,8 @@ void Star::SetState(int state)
 		{
 			vy = LimitY;
 		}
-		
-		 /*+ gimmick ->vy*/;
+
+		/*+ gimmick ->vy*/;
 		if (nx > 0)
 		{
 			x = gimmick->x + 5;
@@ -373,7 +373,7 @@ void Star::SetState(int state)
 		break;
 	case STAR_STATE_SMOKE:
 		StartSmoke();
-	
+
 		break;
 	case STAR_STATE_READY_TO_SHOT:
 		break;
@@ -393,10 +393,10 @@ void Star::GetReady()
 }
 void Star::Shot()
 {
-	
+
 	if (state == STAR_STATE_READY_TO_SHOT)
 	{
-	
+
 		CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 		nx = gimmick->nx;
 		converging_level = 0;

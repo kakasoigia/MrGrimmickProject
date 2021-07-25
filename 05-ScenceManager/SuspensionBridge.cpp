@@ -17,10 +17,10 @@ void SuspensionBridge::GetBoundingBox(float& left, float& top, float& right, flo
 		left = top = right = bottom = 0;
 		return;
 	}
-		
+
 	// boudingbox của lồng nằm dưới lồng
 	left = x;
-	top = y- BRIDGE_BBOX_HEIGHT+4; // trừ hao cái thành cầu
+	top = y - BRIDGE_BBOX_HEIGHT + 4; // trừ hao cái thành cầu
 	right = x + BRIDGE_BBOX_WIDTH;
 	bottom = y - BRIDGE_BBOX_HEIGHT - BRIDGE_BBOX_HEIGHT;
 }
@@ -29,15 +29,15 @@ void SuspensionBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 	// Simple fall down
-	
-			x += dx;
-			y += dy;
+
+	x += dx;
+	y += dy;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-	
-	if (GetTickCount() - time_count_moving > BRIDGE_TIME_MOVING && state != BRIDGE_STATE_IDLING && !isOpening )
+
+	if (GetTickCount() - time_count_moving > BRIDGE_TIME_MOVING && state != BRIDGE_STATE_IDLING && !isOpening)
 	{
 		isOpening = true;
 		time_count_moving = 0;
@@ -52,7 +52,7 @@ void SuspensionBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (GetTickCount() - time_count_opening > BRIDGE_TIME_OPENING && state != BRIDGE_STATE_IDLING_OPEN)
 		{
-			
+
 			time_count_opening = 0;
 			SetState(BRIDGE_STATE_IDLING_OPEN);
 		}
@@ -117,7 +117,7 @@ void SuspensionBridge::Render()
 	}
 	else if (state == BRIDGE_STATE_IDLING)
 	{
-			ani = BRIDGE_ANI_CLOSING;
+		ani = BRIDGE_ANI_CLOSING;
 	}
 	else if (state == BRIDGE_STATE_IDLING_OPEN)
 	{

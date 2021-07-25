@@ -5,10 +5,10 @@
 
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath):
+CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
-	
+
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
@@ -101,7 +101,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -113,7 +113,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 
 	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
 
-	DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+	DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 
 	LPANIMATION ani = new CAnimation();
 
@@ -121,7 +121,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i+1].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -139,12 +139,12 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	LPANIMATION_SET s = new CAnimationSet();
 
-	CAnimations *animations = CAnimations::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
 
 	for (int i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
-		
+
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
@@ -153,7 +153,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 }
 
 /*
-	Parse a line in section [OBJECTS] 
+	Parse a line in section [OBJECTS]
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
@@ -169,20 +169,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
-	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
-	CGameObject *obj = NULL;
+	CGameObject* obj = NULL;
 
 	switch (object_type)
 	{
 	case OBJECT_TYPE_GRIMMICK:
-		if (player!=NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CGimmick(x,y);
-		player = (CGimmick*)obj;  
+		obj = new CGimmick(x, y);
+		player = (CGimmick*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -231,7 +231,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//	break;
 
 
-	case OBJECT_TYPE_STAR: 
+	case OBJECT_TYPE_STAR:
 		if (star != NULL)
 		{
 			DebugOut(L"[ERROR] Have star already man!\n");
@@ -272,7 +272,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	// General object setup
 	if (object_type != OBJECT_TYPE_GRIMMICK)
-	obj->SetPosition(x, y);
+		obj->SetPosition(x, y);
 
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
@@ -315,7 +315,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -326,27 +326,31 @@ void CPlayScene::Load()
 
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[MAP]") { section = SCENE_SECTION_MAP; continue; }
-		if (line == "[SPRITES]") { 
-			section = SCENE_SECTION_SPRITES; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
 		// data section
 		//
 		switch (section)
-		{ 
-			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
-			case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
-			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
 	}
 
@@ -385,7 +389,7 @@ void CPlayScene::Update(DWORD dt)
 	// Update player
 	vector<LPGAMEOBJECT> coObjects;
 
-		
+
 
 
 	quadtree->Retrieve(&coObjects, player);
@@ -395,7 +399,7 @@ void CPlayScene::Update(DWORD dt)
 	// update star
 	if (star->state == STAR_STATE_READY_TO_SHOT || star->state == STAR_STATE_LOADING)
 	{
-		star->SetPosition(player->x -2, player->y + 16);
+		star->SetPosition(player->x - 2, player->y + 16);
 	}
 	// update fish
 	vector<LPGAMEOBJECT> temp_coObjects;
@@ -586,13 +590,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
-	CGimmick *gimmick = ((CPlayScene*)scence)->GetPlayer();
+	CGimmick* gimmick = ((CPlayScene*)scence)->GetPlayer();
 	Star* star = ((CPlayScene*)scence)->GetStar();
-		if ( KeyCode ==DIK_M)
-			gimmick->Reset();
-			gimmick->deltaTimeDie = 0;
-			
-			if (gimmick->GetState() == GIMMICK_STATE_DIE) return;
+	if (KeyCode == DIK_M)
+		gimmick->Reset();
+	gimmick->deltaTimeDie = 0;
+
+	if (gimmick->GetState() == GIMMICK_STATE_DIE) return;
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -609,7 +613,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			}
 		}
 		break;
-	
+
 	case DIK_V:
 		if (star != nullptr) {
 			star->GetReady();
@@ -638,7 +642,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 
 }
 
-void CPlayScenceKeyHandler::KeyState(BYTE *states)
+void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	//CGame *game = CGame::GetInstance();
 	//CGimmick* grimmick = ((CPlayScene*)scence)->GetPlayer();

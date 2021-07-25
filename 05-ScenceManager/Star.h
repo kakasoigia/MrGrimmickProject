@@ -38,21 +38,21 @@
 #define STAR_SMALL_RIGHT2_X0			20
 #define STAR_SMALL_RIGHT2_Y0			-25
 
-class Star:
+class Star :
 	public CGameObject
 {
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	
+
 	virtual void Render();
-	
-	float LimitY ;
-	float LimitX ;
+
+	float LimitY;
+	float LimitX;
 	float v_start = 0.1f;
 	int converging_level = 0;
 	DWORD smoke_start = 0;
 	DWORD time_increase_converging = 0;
-	
-	 void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
+
+	void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
 public:
 	Star();
 	virtual void SetState(int state);

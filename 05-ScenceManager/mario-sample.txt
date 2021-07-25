@@ -1,6 +1,6 @@
 [SETTINGS]
 
-start	2
+start	3
 
 #scene list
 [SCENES]

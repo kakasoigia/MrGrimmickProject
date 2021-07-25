@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "Gimmick.h"
 #include "PlayScence.h"
-#include "ElectricBoom.h"
+
 #include "Goomba.h"
 #include "Portal.h"
 #include "BlackEnemy.h"
@@ -46,6 +46,7 @@ void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLL
 			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
 
+
 			if (dynamic_cast<ElectricBoom*>(c->obj))
 			{
 				if (c->ny < 0)
@@ -62,6 +63,12 @@ void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLL
 					ny = 0;
 			}
 
+
+		/*	if (dynamic_cast<Star*>(c->obj))
+			{
+				ny = 0.001f;
+			}*/
+
 	}
 
 	if (min_ix >= 0) coEventsResult.push_back(coEvents[min_ix]);
@@ -77,7 +84,6 @@ void CGimmick::CalcPotentialCollisions(
 		{
 			continue;
 		}
-
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 		if (e->t > 0 && e->t <= 1.0f)
@@ -106,8 +112,9 @@ CGimmick::CGimmick(float x, float y) : CGameObject()
 		this->x = x;
 		this->y = y;
 	}
-	start_x = x;
-	start_y = y;
+
+
+
 }
 void CGimmick::FollowObject(LPGAMEOBJECT obj)
 {
@@ -300,31 +307,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}*/
 			} // if Goomba
-			 if (dynamic_cast<Rocket*>(e->obj))
+			else if (dynamic_cast<Rocket*>(e->obj))
 			{
-				isHitRocket = true;
 				callDeclineLight();
-			}
-			 else
-			 {
-				 isHitRocket = false;
-			 }
-			 if (dynamic_cast<ElectricBoom*>(e->obj))
-			{
-				ElectricBoom* electricBoom = dynamic_cast<ElectricBoom*>(e->obj);
-				callDeclineLight();
-				if (e->t > 0 && e->t <= 1)
-
-					if (e->ny > 0) {
-						isFollow = true;
-						obj = electricBoom;
-					}
-			}
-			else
-			{
-				isFollow = false;
-				
-				obj = NULL;
 			}
 			if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
@@ -496,17 +481,13 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isSlide = false;
 			}
 		}
-		if (!isIncline && !isPiping && !isSlide) 
-		{
-			if (!isHitRocket)
-			{
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
+		if (!isIncline && !isPiping && !isSlide) {
 
-				if (nx != 0) vx = 0;
-				if (ny != 0) vy = 0;
-			}
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
 
+			if (nx != 0) vx = 0;
+			if (ny != 0) vy = 0;
 		}
 		else {
 			x += dx;
@@ -530,11 +511,7 @@ void CGimmick::Render()
 	int ani = -1;
 	if (untouchable == 1)
 	{
-		if (nx > 0)
-			ani = GIMMICK_ANI_COLLISION_RIGHT;
-		else
-			ani = GIMMICK_ANI_COLLISION_LEFT;
-		
+		ani = GIMMICK_ANI_COLLISION_RIGHT;
 	}
 	else if (jump == 1)
 	{
@@ -819,7 +796,6 @@ void CGimmick::Reset()
 	SetState(GIMMICK_STATE_IDLE);
 	SetPosition(80, 40);
 	SetSpeed(0, 0);
-	CGame:: GetInstance()->SetLight(4);
 }
 
 //void CGimmick::Fire()
@@ -875,8 +851,7 @@ void CGimmick::createDieEffect() {
 
 void CGimmick::callDeclineLight()
 {
-	if (untouchable == 0) 
-	{
+	if (untouchable == 0) {
 		if (CGame::GetInstance()->GetLight() == 1)
 		{
 			this->SetState(GIMMICK_STATE_DIE);
@@ -912,20 +887,20 @@ void CGimmick::GetItem(int type)
 		}
 		itemlist.push_back(type);
 		game->SetItem(itemlist);
-		
+		DebugOut(L"[ERROR] Vô hud!\n");
 
 	}
 	else if (type == ITEM_TYPE_MEDICINE_ORANGE)
 	{
 		// tăng mạng
 		game->IncLight(2);
-		
+		DebugOut(L"[ERROR] Vô tăng mạng!\n");
 	}
 	else if (type == ITEM_TYPE_FLOWER)
 	{
 		game->IncScore(50000);
 		game->IncRest(2);
-
+		DebugOut(L"[ERROR] Vô hoa!\n");
 	}
 
 }
