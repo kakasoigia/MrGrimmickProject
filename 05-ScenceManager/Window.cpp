@@ -30,7 +30,6 @@ void Window::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (abs(gimmick->x - this->x) < 20 && abs(gimmick->y - this->y) < 500)
 		{
 
-			DebugOut(L"[INFO] Vô đây nè ba: \n");
 			this->SetState(WINDOW_STATE_OPEN);
 			CallBoom();
 		}
@@ -124,7 +123,6 @@ void Window::SetState(int state)
 }
 void Window:: CallBoom()
 {
-	DebugOut(L"[INFO] Vô đây 2 \n");
 	vector<LPGAMEOBJECT> objects = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->get_objects();
 	for (UINT i = 0; i < objects.size(); i++)
 	{

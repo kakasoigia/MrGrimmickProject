@@ -44,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define	OBJECT_TYPE_MEDICINE_BLACK_BOMB 15
 #define OBJECT_TYPE_FLOWER 16
 #define OBJECT_TYPE_MOVING_BRICK 17
+#define OBJECT_TYPE_ANI_BRICK 18
 
 #define OBJECT_TYPE_BULLET 20
 
@@ -133,7 +134,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
 
-	DebugOut(L"--> %s\n", ToWSTR(line).c_str());
+	//DebugOut(L"--> %s\n", ToWSTR(line).c_str());
 	int ani_set_id = atoi(tokens[0].c_str());
 
 	LPANIMATION_SET s = new CAnimationSet();
@@ -158,7 +159,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
-	DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
@@ -185,7 +186,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	
+	case OBJECT_TYPE_ANI_BRICK: obj = new CAniBrick(1); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_BLACKENEMY: obj = new BlackEnemy(); break;
 	case OBJECT_TYPE_WORM: obj = new Worm(); break;
@@ -515,7 +516,7 @@ void CPlayScene::SetCamPos() {
 	}
 	case 3:
 	{
-		if (cx < game->GetScreenWidth() / 2)
+		if (cx < 248)
 		{
 			cx = 0;
 		}

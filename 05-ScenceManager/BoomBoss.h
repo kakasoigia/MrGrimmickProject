@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "Gimmick.h"
+#include "BlackEnemy.h"
 
 #define BOOMBOSS_WALKING_TIME 1000
 #define BOOMBOSS_WALKING_SPEED 0.01f;
@@ -28,10 +28,12 @@ class BoomBoss :
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	DWORD attacking_start = 0;
-	//virtual void FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy);
+
 public:
+	int live = 3;
 	BoomBoss();
+	vector<BlackEnemy*> ListBomb;
+	DWORD attacking_start = 0;
 	float tempbacky;
 	bool back = false;
 	virtual void SetState(int state);
