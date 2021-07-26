@@ -55,7 +55,7 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (GetTickCount() - attacking_start > 3000)
 		{
-			SetState(BOOMBOSS_STATE_BEING_ATTACKED);
+			
 			Fire();
 			attacking_start = 0;
 		}
@@ -70,12 +70,11 @@ void BoomBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				x = 52;
 				SetState(BOOMBOSS_STATE_WALKING);
 			}
-
 			//SetState(BOOMBOSS_STATE_ATTACKING);
 		}
 		if (x > 82)
 		{
-			x = 82;
+			x = 83;
 			y += 5;
 			SetState(BOOMBOSS_STATE_ATTACKING);
 			vx = 0;

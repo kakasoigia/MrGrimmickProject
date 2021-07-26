@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 //#include "Rocket.h"
+#define GIMMICK_STATE_HOLD_JUMP	10000
 #define GIMMICK_JUMP_HIGHT_SPEED_Y 0.1
 #define GIMMICK_WALKING_SPEED 0.08f 
 #define GIMMICK_JUMP_SPEED_Y 0.4f
@@ -50,6 +51,7 @@
 #define GIMMICK_ANI_COLLISION_LEFT 7
 
 
+
 #define GIMMICK_BIG_BBOX_WIDTH  16
 #define GIMMICK_BIG_BBOX_HEIGHT 19
 
@@ -71,7 +73,7 @@
 class CGimmick : public CGameObject
 {
 
-
+	
 	int untouchable;
 	DWORD untouchable_start;
 
@@ -83,7 +85,14 @@ class CGimmick : public CGameObject
 	bool isOnTopBlackEnemy = false;
 	bool isOnBridge = false;
 	bool isHitRocket = false;
+	bool isHitElectricBoom = false;
+	bool isHitBlackEneny = false;
+	
 public:
+	int holdJump = 0;
+	int startJump = 1;
+	bool isPush = false;
+	bool isOnTopCannon = false;
 	// pipe
 	bool isPiping = false;		// checking gimmick is piping
 	float pipeVx, pipeVy;		// set speed when piping
@@ -104,7 +113,7 @@ public:
 	int isDirSlide = 0;
 	int slideType = 0;
 	float incline_vx, incline_vy;
-
+	bool isHitByYellowBoss = false;
 	//set gimmick die
 	float positionX, positionY;
 	float deltaTimeDie = 0;

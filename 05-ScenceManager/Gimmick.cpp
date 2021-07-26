@@ -17,7 +17,9 @@
 #include "ElectricBoom.h"
 #include "GimmickDieEffect.h"
 #include "Pipe.h"
-
+#include "GreenTurtle.h"
+#include "HeightCannon.h"
+#include "GreenBoss.h"	
 void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy)
 {
 
@@ -47,21 +49,21 @@ void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLL
 		}
 
 
-			/*if (dynamic_cast<ElectricBoom*>(c->obj))
-			{
-				if (c->ny < 0)
-					ny = 0;
-			}
-			if (dynamic_cast<BlackEnemy*>(c->obj))
+		/*	if (dynamic_cast<ElectricBoom*>(c->obj))
 			{
 				if (c->ny < 0)
 					ny = 0;
 			}*/
-			if (dynamic_cast<Rocket*>(c->obj))
-			{
-				
-					ny = 0;
-			}
+		if (dynamic_cast<BlackEnemy*>(c->obj))
+		{
+			if (c->ny < 0)
+				ny = 0;
+		}
+		if (dynamic_cast<Rocket*>(c->obj))
+		{
+
+			ny = 0;
+		}
 
 
 		/*	if (dynamic_cast<Star*>(c->obj))
@@ -126,7 +128,7 @@ void CGimmick::FollowObject(LPGAMEOBJECT obj)
 	{
 		y = obj->GetY() + GIMMICK_BIG_BBOX_HEIGHT + 0.4f;
 	}
-	
+
 }
 
 
@@ -166,13 +168,23 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	if ( !isIncline && state != GIMMICK_STATE_DIE && !isPiping && !isFollow )
+	if (holdJump != 1 && !isIncline && state != GIMMICK_STATE_DIE && !isPiping && !isFollow)
 		vy -= GIMMICK_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
+	if (holdJump == 1)
+	{
+		if (abs(y - startJump) <= 50)
+			SetState(GIMMICK_STATE_HOLD_JUMP);
+		else
+		{
+			holdJump = 0;
+			startJump = -1;
+		}
+	}
 	if (jump == true && doubleJump_start != 0)
 	{
 		if (GetTickCount() - doubleJump_start > 100)
@@ -197,9 +209,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	// turn off collision when die 
 
-	
-	if (state!= GIMMICK_STATE_DIE)
-	CalcPotentialCollisions(coObjects, coEvents);
+
+	if (state != GIMMICK_STATE_DIE)
+		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > GIMMICK_UNTOUCHABLE_TIME)
@@ -213,10 +225,10 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (coEvents.size() == 0 && !isFollow)
 	{
 
-		
-			x += dx;
-			y += dy;
-		
+
+		x += dx;
+		y += dy;
+
 
 		isIncline = false;
 	}
@@ -241,32 +253,68 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx!=0) vx = 0;
 		if (ny!=0) vy = 0;*/
 
-		if (ny != 0 && nx == 0)
-		{
-			if (GetJumping() == 1)
-			{
-				jump = 0;
-				doubleJump_start = 0;
-
-			}
-
-
-		}
 
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
+
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (e->ny != 0)
+			{
+
+				if (e->ny != 0)
+				{
+					holdJump = 0;
+					jump = 0;
+				}
+			}
+			if (dynamic_cast<HeightCannon*>(e->obj))
+			{
+				HeightCannon* heightCannon = dynamic_cast<HeightCannon*>(e->obj);
+				if (e->ny > 0)
+				{
+					this->isPush = false;
+					isOnTopCannon = true;
+				}
+				else {
+					isOnTopCannon = false;
+					if (e->nx > 0)
+					{
+						heightCannon->vx = -0.01f;
+						this->isPush = true;
+					}
+				}
+
+			}
+			else {
+				this->isPush = false;
+			}
+
+			if (dynamic_cast<GreenBoss*>(e->obj))
+			{
+				callDeclineLight();
+			}
+			if (dynamic_cast<GreenTurtle*>(e->obj))
+			{
+				GreenTurtle* greenTurtle = dynamic_cast<GreenTurtle*>(e->obj);
+				if (greenTurtle->state != GREEN_TURTLE_STATE_DIE)
+				{
+					callDeclineLight();
+				}
+				else {
+
+				}
+			}
 			if (dynamic_cast<BlackEnemy*>(e->obj))
 			{
 				BlackEnemy* be = dynamic_cast<BlackEnemy*>(e->obj);
 				if (e->t > 0 && e->t <= 1)
 				{
-					if (e->ny > 0) 
+					if (e->ny > 0)
 					{
-					
+
 						isFollow = true;
 						obj = be;
 					}
@@ -275,6 +323,11 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						callDeclineLight();
 					}
 				}
+				isHitBlackEneny = true;
+			}
+			else
+			{
+				isHitBlackEneny = false;
 			}
 			if (dynamic_cast<Item*>(e->obj))
 			{
@@ -292,11 +345,16 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				item->SetState(ITEM_STATE_DISAPPEAR);
 
 			}
-			
-			else if (dynamic_cast<Rocket*>(e->obj))
+
+			 if (dynamic_cast<Rocket*>(e->obj))
 			{
-				callDeclineLight();
+				if (e->t > 0 && e->t <= 1)
+					callDeclineLight();
 			}
+			 else
+			 {
+
+			 }
 			if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
 				SuspensionBridge* bridge = dynamic_cast<SuspensionBridge*>(e->obj);
@@ -308,20 +366,20 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (bridge->GetState() != BRIDGE_STATE_MOVING && !bridge->GetIsOpening())
 				{
-					
+
 					bridge->SetState(BRIDGE_STATE_MOVING);
 
 					//DebugOut(L"[INFO] Vô đây hoài: \n");
 				}
 				else
 				{
-					
+
 					isOnBridge = false;
-					
+
 				}
-			
+
 			}
-		
+
 			if (dynamic_cast<CPipes*>(e->obj)) {
 
 				CPipes* pipe = dynamic_cast<CPipes*>(e->obj);
@@ -346,23 +404,47 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 			}
-			if (dynamic_cast<ElectricBoom*>(e->obj)) 
+			if (dynamic_cast<ElectricBoom*>(e->obj))
 			{
 
-				
+
 				if (e->t > 0 && e->t <= 1)
 				{
-						callDeclineLight();
+					callDeclineLight();
 				}
+				isHitElectricBoom = true;
 
 			}
+			else
+			{
+				isHitElectricBoom = false;
+			}
+
+			if (dynamic_cast<YellowBoss*>(e->obj))
+			{
+
+				YellowBoss* yellowBoss = dynamic_cast<YellowBoss*>(e->obj);
+				if (e->t > 0 && e->t <= 1)
+				{
+					callDeclineLight();
+				}
+				isHitByYellowBoss = true;
+				this->y = yellowBoss->y ;
+
+			}
+			else
+			{
+				isHitByYellowBoss = false;
+			}
+
 			if (dynamic_cast<CThunder*>(e->obj))
 			{
 				CThunder* thunder = dynamic_cast<CThunder*>(e->obj);
 				this->SetState(GIMMICK_STATE_DIE);
 			}
 			else if (dynamic_cast<Bullet*>(e->obj)) {
-				callDeclineLight();
+				if (e->t > 0 && e->t <= 1)
+					callDeclineLight();
 			}
 			if (dynamic_cast<Incline*>(e->obj)) {
 
@@ -447,12 +529,27 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 
-			if (dynamic_cast<Cannon*>(e->obj))
-			{
-				Cannon* cannon = dynamic_cast<Cannon*>(e->obj);
-				cannon->x += dx;
-				x += dx;
+			if (dynamic_cast<Cannon*>(e->obj)) {
+
+				Cannon* be = dynamic_cast<Cannon*>(e->obj);
+				if (e->ny != 0) {
+
+				}
+				else {
+					if (e->t > 0 && e->t <= 1) {
+						if (e->nx < 0)
+						{
+							be->x = x + 18;
+						}
+						else
+						{
+							be->x = x - 18;
+						}
+					}
+				}
+
 			}
+
 
 			if (dynamic_cast<Slide*>(e->obj))
 			{
@@ -472,9 +569,9 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isSlide = false;
 			}
 		}
-		if (!isIncline && !isPiping && !isSlide) 
+		if (!isIncline && !isPiping && !isSlide )
 		{
-			if (!isHitRocket)
+			if (!isHitRocket && !isHitElectricBoom && !isHitByYellowBoss)
 			{
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
@@ -482,7 +579,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (nx != 0) vx = 0;
 				if (ny != 0) vy = 0;
 			}
-			
+
 		}
 		else {
 			x += dx;
@@ -499,6 +596,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//if (isOnBridge && !jump) this->x += this->dt * BRIDGE_MOVING_SPEED;
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
 }
 
 void CGimmick::Render()
@@ -655,8 +753,8 @@ void CGimmick::SetState(int state)
 		nx = -1;
 		break;
 	case GIMMICK_STATE_JUMP:
-		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		vy = GIMMICK_JUMP_SPEED_Y;
+		jump = 1;
 		break;
 	case GIMMICK_STATE_IDLE:
 		vx = 0;
@@ -770,19 +868,20 @@ void CGimmick::SetState(int state)
 		break;
 	}
 
+
 }
 
 void CGimmick::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GIMMICK_STATE_DIE) {
-		left = top = right = bottom = 0;
-	}
-	else {
-		left = x;
-		top = y;
-		right = x + GIMMICK_BIG_BBOX_WIDTH;
-		bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
-	}
+
+	left = x;
+	top = y;
+	right = x + GIMMICK_BIG_BBOX_WIDTH;
+	if (untouchable == 1)
+	{
+		bottom = y - 25;
+	}else
+	bottom = y - GIMMICK_BIG_BBOX_HEIGHT;
 
 }
 
@@ -888,7 +987,7 @@ void CGimmick::GetItem(int type)
 		}
 		itemlist.push_back(type);
 		game->SetItem(itemlist);
-	
+
 
 	}
 	else if (type == ITEM_TYPE_MEDICINE_ORANGE)
@@ -896,13 +995,19 @@ void CGimmick::GetItem(int type)
 		// tăng mạng
 		game->IncLight(2);
 		game->IncScore(480);
-		
+
 	}
 	else if (type == ITEM_TYPE_FLOWER)
 	{
 		game->IncScore(50000);
 		game->IncRest(2);
-	
+
+	}
+	else if (type == ITEM_TYPE_HOURGLASS)
+	{
+		game->IncScore(50300);
+		
+
 	}
 
 }

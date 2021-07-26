@@ -21,10 +21,13 @@ void Item::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 		right = x + ITEM_BBOX_WIDTH;
 		if (Type == ITEM_TYPE_FLOWER)
 		{
-			bottom = x - 30;
+			bottom = y - 30;
 		}
-		else
+		else if (Type == ITEM_TYPE_HOURGLASS)
 		{
+			bottom = y - 20;
+		}
+		else {
 
 			bottom = y - ITEM_BBOX_HEIGHT;
 		}

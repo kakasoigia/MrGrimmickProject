@@ -63,9 +63,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define OBJECT_TYPE_THUNDER 63
 #define OBJECT_TYPE_STAR	21
-
-
-
+#define	OBJECT_TYPE_HOURGLASS	1234
+#define	OBJECT_TYPE_YELLOW_BOSS	1235
+#define OBJECT_TYPE_GREEN_TURTLE 71
+#define OBJECT_TYPE_HEIGHT_CANNON 72
+#define OBJECT_TYPE_GREEN_BOSS 73
 #define MAX_SCENE_LINE 1024
 
 
@@ -204,6 +206,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MEDICINE_PINK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_PINK_BOMB); break;
 	case OBJECT_TYPE_MEDICINE_BLACK_BOMB: obj = new Item(ITEM_TYPE_MEDICINE_BLACK_BOMB); break;
 	case OBJECT_TYPE_FLOWER: obj = new Item(ITEM_TYPE_FLOWER); break;
+	case OBJECT_TYPE_HOURGLASS: obj = new Item(ITEM_TYPE_HOURGLASS); break;
+	case OBJECT_TYPE_YELLOW_BOSS: obj = new YellowBoss(); break;
+	case OBJECT_TYPE_GREEN_TURTLE: obj = new GreenTurtle(); break;
+	case OBJECT_TYPE_HEIGHT_CANNON: obj = new HeightCannon(); break;
+	case OBJECT_TYPE_GREEN_BOSS: obj = new GreenBoss(); break;
 	case OBJECT_TYPE_PIPES:
 	{
 		int w = atof(tokens[4].c_str());
@@ -373,6 +380,10 @@ void CPlayScene::Load()
 	{
 		quadtree = new Quadtree(1, 0.0f, 192.0f, 1024.0f, 0.0f);
 	}
+	else if (ids == 4)
+	{
+		quadtree = new Quadtree(1, 0.0f, 960.0f, 2048.0f, 0.0f);
+	}
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -538,6 +549,69 @@ void CPlayScene::SetCamPos() {
 		cy = 192;
 		break;
 	}
+	
+	case 4:
+	{
+	
+		if (cy < 192)
+		{
+			cy = 192;
+			if (cx + game->GetScreenWidth() / 2 > 1536)
+			{
+				cx = 1536 - game->GetScreenWidth();
+			}
+			else if (cx - game->GetScreenWidth() / 2 < 1024)
+			{
+				cx = 1024;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		else if (cy > 192 && cy < 192 + game->GetScreenHeight() - 30)
+		{
+			cy = 192 + game->GetScreenHeight() - 30;
+			if (cx < game->GetScreenWidth() / 2)
+			{
+				cx = 0;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		else if (cy > 192 + game->GetScreenHeight() - 30 && cy < 192 + game->GetScreenHeight() * 2 - 60)
+		{
+			cy = 192 + game->GetScreenHeight() * 2 - 60;
+			if (cx < game->GetScreenWidth() / 2)
+			{
+				cx = 0;
+			}
+			else if (cx + game->GetScreenWidth() / 2 > 2048)
+			{
+				cx = 2048 - game->GetScreenWidth();
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		else if (cy > 192 + game->GetScreenHeight() - 60 * 2 && cy < 192 + game->GetScreenHeight() * 3 - 90)
+		{
+			cy = 192 + game->GetScreenHeight() * 3 - 90;
+			if (cx < game->GetScreenWidth() / 2)
+			{
+				cx = 0;
+			}
+			else
+			{
+				cx -= game->GetScreenWidth() / 2;
+			}
+		}
+		break;
+	}
+	
 	default:
 		break;
 	}
@@ -600,18 +674,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (gimmick->GetState() == GIMMICK_STATE_DIE) return;
 	switch (KeyCode)
 	{
+
 	case DIK_S:
 		if (gimmick->GetJumping() == 0)
 		{
-			gimmick->SetState(GIMMICK_STATE_JUMP);
-			gimmick->SetJumping(1);
-
-			if (gimmick->GetDoubleJumpStart() == 0)
-			{
-				//gimmick->SetState(MARIO_STATE_JUMP_HIGH_SPEED);
-				gimmick->SetDoubleJumpStart();
-
-			}
+			gimmick->startJump = gimmick->y;
+				gimmick->SetState(GIMMICK_STATE_JUMP);
+				gimmick->holdJump = 1;
 		}
 		break;
 
@@ -619,6 +688,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (star != nullptr) {
 			star->GetReady();
 		}
+		break;
+	case DIK_L:
+		CGame::GetInstance()->SetLight(4);
 		break;
 	}
 }
@@ -634,7 +706,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
-		gimmick->ResetDoubleJumpStart();
+		gimmick->holdJump = 0;
 		break;
 	case DIK_V:
 		star->Shot();

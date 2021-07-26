@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "Thunder.h"
 #include "Incline.h"
-
+#include "Star.h"
 Bullet::Bullet()
 {
 	SetState(BULLET_STATE_DISAPPEAR);
@@ -84,7 +84,14 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					SetState(BULLET_STATE_DESTROY);
 				this->vx = 0;
 			}
-
+			if (dynamic_cast<Star*>(e->obj))
+			{
+				if (state != BULLET_STATE_DESTROY)
+					SetState(BULLET_STATE_DESTROY);
+				this->vx = 0;
+				Star* star = dynamic_cast<Star*>(e->obj);
+				star->SetState(STAR_STATE_SMOKE);
+			}
 			if (dynamic_cast<Incline*>(e->obj)) 
 			{
 				Incline* incline = dynamic_cast<Incline*>(e->obj);

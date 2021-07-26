@@ -105,6 +105,20 @@ bool CGame::ObjectInCamera(CGameObject* object)
 
 			return true;
 	}
+	if (dynamic_cast<YellowBoss*>(object))
+	{
+		YellowBoss* e = dynamic_cast<YellowBoss*>(object);
+		if (e->GetState() == YELLOWBOSS_STATE_DIE)
+
+			return true;
+	}
+	if (dynamic_cast<GreenBoss*>(object))
+	{
+		GreenBoss* e = dynamic_cast<GreenBoss*>(object);
+		if (e->GetState() == GREEN_BOSS_STATE_DIE)
+
+			return true;
+	}
 	float l, t, r, b;
 	object->GetBoundingBox(l, t, r, b);
 	return !(r < cam_x - 16.0f || l > cam_x + screen_width + 16.0f || t < cam_y - screen_height - 16.0f || b > cam_y + 16.0f);

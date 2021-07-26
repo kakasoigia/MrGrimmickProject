@@ -33,8 +33,11 @@
 #include "Pipe.h"
 #include "AniBrick.h"
 #include "Portal.h"
-
+#include "YellowBoss.h"
 #include "GimmickDieEffect.h"
+#include "HeightCannon.h"
+#include "GreenBoss.h"
+#include "GreenTurtle.h"
 class CPlayScene: public CScene
 {
 protected: 

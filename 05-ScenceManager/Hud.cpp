@@ -12,7 +12,7 @@ void CHud::Update(DWORD dt)
 	float cx, cy;
 	
 	CGame::GetInstance()->GetCamPos(cx, cy);
-	SetPosition(cx, cy - CGame::GetInstance()->GetScreenHeight()+5);
+	SetPosition(cx+5, cy - CGame::GetInstance()->GetScreenHeight()+5);
 	this->dt = dt;
 	//update figure
 	UpdateFigure();

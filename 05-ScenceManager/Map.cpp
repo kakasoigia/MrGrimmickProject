@@ -55,6 +55,15 @@ void Map::Render()
 				Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, 192 - r * TILE_HEIGHT, 255); //(x,y,alpha)
 			}
 	}
+	else if (ids == 4)
+	{
+		for (int r = 0; r < TotalRowsOfMap; r++)
+			for (int c = 0; c < TotalColumnsOfMap; c++)
+			{
+				Tiles[TileMap[r][c] - 1]->Draw(c * TILE_WIDTH, 960 - r * TILE_HEIGHT, 255); //(x,y,alpha)
+				
+			}
+	}
 }
 
 void Map::ExtractTileFromTileSet()

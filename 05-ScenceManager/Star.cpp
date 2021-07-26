@@ -12,6 +12,8 @@
 #include "Thunder.h"
 #include "Item.h"
 #include "ElectricBoom.h"
+#include "YellowBoss.h"
+#include "GreenBoss.h"
 Star::Star()
 {
 	SetState(STAR_STATE_DISAPPEAR);
@@ -141,7 +143,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if ((GetTickCount() - time_increase_converging > STAR_INC_CONVERG_TIME) && state == STAR_STATE_LOADING)
 	{
 
-		if (converging_level > 50)
+		if (converging_level > CONVERGING_TOTAL)
 		{
 
 			/*converging_level = 0;*/
@@ -244,45 +246,83 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// vo ham Hoa Khoi r ma k quay lai dem gio 
 			}
 			// chạm quái 
-			 if (dynamic_cast<BlackEnemy*>(e->obj))
+			if (dynamic_cast<BlackEnemy*>(e->obj))
 			{
 				BlackEnemy* black = dynamic_cast<BlackEnemy*>(e->obj);
 				black->SetState(BLACKENEMY_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
 				CGame::GetInstance()->IncScore(120);
 			}
-			 else if (dynamic_cast<BoomBoss*>(e->obj))
-			 {
-				 BoomBoss* boomBoss = dynamic_cast<BoomBoss*>(e->obj);
-				 if (boomBoss->live != 1)
-				 {
-					 boomBoss->SetState(BOOMBOSS_STATE_BEING_ATTACKED);
-					 //boomBoss->x -= 15;
-					 //boomBoss->y += 5;
-					 boomBoss->attacking_start = 0;
-					 boomBoss->live--;
-				 }
-				 else
-				 {
-					 boomBoss->SetState(BOOMBOSS_STATE_DIE);
-				 }
-				 this->SetState(STAR_STATE_SMOKE);
-			 }
-			 if (dynamic_cast<Worm*>(e->obj))
+			if (dynamic_cast<BoomBoss*>(e->obj))
+			{
+				BoomBoss* boomBoss = dynamic_cast<BoomBoss*>(e->obj);
+				if (boomBoss->live > 1)
+				{
+					boomBoss->SetState(BOOMBOSS_STATE_BEING_ATTACKED);
+					//boomBoss->x -= 15;
+					//boomBoss->y += 5;
+					boomBoss->attacking_start = 0;
+					boomBoss->x = 82;
+					boomBoss->live--;
+				}
+				else
+				{
+					boomBoss->SetState(BOOMBOSS_STATE_DIE);
+				}
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			if (dynamic_cast<YellowBoss*>(e->obj))
+			{
+				CGimmick* gimmick = ((CPlayScene*)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+				YellowBoss* yellowBoss = dynamic_cast<YellowBoss*>(e->obj);
+				if (abs(gimmick->x - yellowBoss->x) < 70)
+				{
+					if (yellowBoss->live > 1)
+					{
+						// stand near not die
+						{
+							
+							yellowBoss->attacking_start = 0;
+							yellowBoss->live--;
+							CGame::GetInstance()->IncScore(100);
+							yellowBoss->SetState(YELLOWBOSS_STATE_BEING_ATTACKED);
+						}
+					}
+					else
+					{
+						yellowBoss->SetState(YELLOWBOSS_STATE_DIE);
+					}
+				}
+				
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			if (dynamic_cast<Worm*>(e->obj))
 			{
 				Worm* worm = dynamic_cast<Worm*>(e->obj);
 				worm->SetState(WORM_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
 				CGame::GetInstance()->IncScore(90);
 			}
-			 if (dynamic_cast<ElectricBoom*>(e->obj))
+			if (dynamic_cast<GreenTurtle*>(e->obj))
+			{
+				GreenTurtle* greenTurtle = dynamic_cast<GreenTurtle*>(e->obj);
+				greenTurtle->isDie = true;
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			if (dynamic_cast<GreenBoss*>(e->obj))
+			{
+				GreenBoss* greenBoss = dynamic_cast<GreenBoss*>(e->obj);
+				greenBoss->live--;
+				this->SetState(STAR_STATE_SMOKE);
+			}
+			if (dynamic_cast<ElectricBoom*>(e->obj))
 			{
 				ElectricBoom* electricBoom = dynamic_cast<ElectricBoom*>(e->obj);
-				
+
 				this->SetState(STAR_STATE_SMOKE);
-		
+
 			}
-			 if (dynamic_cast<CThunder*>(e->obj))
+			if (dynamic_cast<CThunder*>(e->obj))
 			{
 				this->SetState(STAR_STATE_SMOKE);
 			}
@@ -318,11 +358,12 @@ void Star::Render()
 
 		this->x -=  2;
 		this->y +=  25;*/
-		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_MID_X0 - converging_level * STAR_SMALL_MID_X0 / 50 + 5, this->y + STAR_SMALL_MID_Y0 - converging_level * STAR_SMALL_MID_Y0 / 50 - 7, alpha);
-		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_LEFT1_X0 - converging_level * STAR_SMALL_LEFT1_X0 / 50 + 5, this->y + STAR_SMALL_LEFT1_Y0 - converging_level * STAR_SMALL_LEFT1_Y0 / 50 - 7, alpha);
-		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_LEFT2_X0 - converging_level * STAR_SMALL_LEFT2_X0 / 50 + 5, this->y + STAR_SMALL_LEFT2_Y0 - converging_level * STAR_SMALL_LEFT2_Y0 / 50 - 7, alpha);
-		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_RIGHT1_X0 - converging_level * STAR_SMALL_RIGHT1_X0 / 50 + 5, this->y + STAR_SMALL_RIGHT1_Y0 - converging_level * STAR_SMALL_RIGHT1_Y0 / 50 - 7, alpha);
-		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_RIGHT2_X0 - converging_level * STAR_SMALL_RIGHT2_X0 / 50 + 5, this->y + STAR_SMALL_RIGHT2_Y0 - converging_level * STAR_SMALL_RIGHT2_Y0 / 50 - 7, alpha);
+		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_MID_X0 - converging_level * STAR_SMALL_MID_X0 / CONVERGING_TOTAL + 5, this->y + STAR_SMALL_MID_Y0 - converging_level * STAR_SMALL_MID_Y0 / CONVERGING_TOTAL - 7, alpha);
+		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_LEFT1_X0 - converging_level * STAR_SMALL_LEFT1_X0 / CONVERGING_TOTAL + 5, this->y + STAR_SMALL_LEFT1_Y0 - converging_level * STAR_SMALL_LEFT1_Y0 / CONVERGING_TOTAL - 7, alpha);
+		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_LEFT2_X0 - converging_level * STAR_SMALL_LEFT2_X0 / CONVERGING_TOTAL + 5, this->y + STAR_SMALL_LEFT2_Y0 - converging_level * STAR_SMALL_LEFT2_Y0 / CONVERGING_TOTAL - 7, alpha);
+		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_RIGHT1_X0 - converging_level * STAR_SMALL_RIGHT1_X0 / CONVERGING_TOTAL + 5, this->y + STAR_SMALL_RIGHT1_Y0 - converging_level * STAR_SMALL_RIGHT1_Y0 / CONVERGING_TOTAL - 7, alpha);
+		animation_set->at(STAR_ANI_SMALL_STAR)->Render(this->x + STAR_SMALL_RIGHT2_X0 - converging_level * STAR_SMALL_RIGHT2_X0 / CONVERGING_TOTAL + 5, this->y + STAR_SMALL_RIGHT2_Y0 - converging_level * STAR_SMALL_RIGHT2_Y0 / CONVERGING_TOTAL - 7, alpha);
+		
 		/*DebugOut(L"[INFO] vị trí  x %d\n", (int)gimmick->x);
 		DebugOut(L"[INFO] vị trí  y %d\n", (int)gimmick->y);
 		DebugOut(L"[INFO] vị trí render x %d\n", (int)x);
