@@ -249,6 +249,7 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				BlackEnemy* black = dynamic_cast<BlackEnemy*>(e->obj);
 				black->SetState(BLACKENEMY_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
+				CGame::GetInstance()->IncScore(120);
 			}
 			 else if (dynamic_cast<BoomBoss*>(e->obj))
 			 {
@@ -272,12 +273,14 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				Worm* worm = dynamic_cast<Worm*>(e->obj);
 				worm->SetState(WORM_STATE_DIE);
 				this->SetState(STAR_STATE_SMOKE);
+				CGame::GetInstance()->IncScore(90);
 			}
 			 if (dynamic_cast<ElectricBoom*>(e->obj))
 			{
 				ElectricBoom* electricBoom = dynamic_cast<ElectricBoom*>(e->obj);
-				electricBoom->SetState(ELECTRICBOOM_STATE_DIE);
+				
 				this->SetState(STAR_STATE_SMOKE);
+		
 			}
 			 if (dynamic_cast<CThunder*>(e->obj))
 			{

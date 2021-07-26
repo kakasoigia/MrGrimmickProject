@@ -878,6 +878,7 @@ void CGimmick::GetItem(int type)
 		if (type == ITEM_TYPE_MEDICINE_PINK)
 		{
 			game->IncLight(1);
+			game->IncScore(140);
 		}
 		// neu khong co san trong itemlist thì thêm 
 		for each (int item in itemlist)
@@ -887,20 +888,21 @@ void CGimmick::GetItem(int type)
 		}
 		itemlist.push_back(type);
 		game->SetItem(itemlist);
-		DebugOut(L"[ERROR] Vô hud!\n");
+	
 
 	}
 	else if (type == ITEM_TYPE_MEDICINE_ORANGE)
 	{
 		// tăng mạng
 		game->IncLight(2);
-		DebugOut(L"[ERROR] Vô tăng mạng!\n");
+		game->IncScore(480);
+		
 	}
 	else if (type == ITEM_TYPE_FLOWER)
 	{
 		game->IncScore(50000);
 		game->IncRest(2);
-		DebugOut(L"[ERROR] Vô hoa!\n");
+	
 	}
 
 }

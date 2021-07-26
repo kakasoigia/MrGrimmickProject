@@ -159,6 +159,7 @@ void BoomBoss::SetState(int state)
 	case BOOMBOSS_STATE_DIE:
 		vx = 0;
 		vy = 0.05f;
+		CGame::GetInstance()->IncScore(500);
 		CreateItem();
 		break;
 	case BOOMBOSS_STATE_WALKING:
