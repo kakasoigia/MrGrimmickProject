@@ -272,10 +272,13 @@ void CStartScenceKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->SwitchScene(1);
 		break;
 	case DIK_2:
-		CGame::GetInstance()->SwitchScene(1);
+		CGame::GetInstance()->SwitchScene(2);
 		break;
 	case DIK_3:
-		CGame::GetInstance()->SwitchScene(1);
+		CGame::GetInstance()->SwitchScene(3);
+		break;
+	case DIK_4:
+		CGame::GetInstance()->SwitchScene(4);
 		break;
 	case DIK_O:
 		CGame::GetInstance()->SwitchScene(12);

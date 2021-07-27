@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "Gimmick.h"
 #include "PlayScence.h"
-
+#include "Boat.h"
 #include "Goomba.h"
 #include "Portal.h"
 #include "BlackEnemy.h"
@@ -20,6 +20,7 @@
 #include "GreenTurtle.h"
 #include "HeightCannon.h"
 #include "GreenBoss.h"	
+#include "Boat.h"
 void CGimmick::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPCOLLISIONEVENT>& coEventsResult, float& min_tx, float& min_ty, float& nx, float& ny, float& rdx, float& rdy)
 {
 
@@ -124,7 +125,7 @@ void CGimmick::FollowObject(LPGAMEOBJECT obj)
 {
 	vx = obj->GetVx();
 
-	if (!dynamic_cast<SuspensionBridge*>(obj))
+	if (!dynamic_cast<SuspensionBridge*>(obj) || dynamic_cast<CBoat*>(obj))
 	{
 		y = obj->GetY() + GIMMICK_BIG_BBOX_HEIGHT + 0.4f;
 	}
@@ -303,9 +304,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					callDeclineLight();
 				}
-				else {
-
-				}
+				
 			}
 			if (dynamic_cast<BlackEnemy*>(e->obj))
 			{
@@ -348,12 +347,27 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			 if (dynamic_cast<Rocket*>(e->obj))
 			{
-				if (e->t > 0 && e->t <= 1)
-					callDeclineLight();
+				 if (e->t > 0 && e->t <= 1)
+				 {
+					 y += 10;
+					 callDeclineLight();
+				}
+					
+				
 			}
 			 else
 			 {
 
+			 }
+			 if (dynamic_cast<CBoat*>(e->obj)) {
+
+				 CBoat* mb = dynamic_cast<CBoat*>(e->obj);
+				 if (e->t > 0 && e->t <= 1)
+				 {
+					 mb->moving = true;
+					 isFollow = true;
+					 obj = mb;
+				 }
 			 }
 			if (dynamic_cast<SuspensionBridge*>(e->obj))
 			{
@@ -413,7 +427,7 @@ void CGimmick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					callDeclineLight();
 				}
 				isHitElectricBoom = true;
-
+				
 			}
 			else
 			{

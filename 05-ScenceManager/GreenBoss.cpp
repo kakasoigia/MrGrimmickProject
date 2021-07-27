@@ -163,7 +163,7 @@ void GreenBoss::SetState(int state)
 	switch (state)
 	{
 	case GREEN_BOSS_STATE_DIE:
-		vy = -0.02f;
+		vy = -0.2f;
 		vx = 0;
 		break;
 	case GREEN_BOSS_STATE_JUMP:

@@ -68,6 +68,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_GREEN_TURTLE 71
 #define OBJECT_TYPE_HEIGHT_CANNON 72
 #define OBJECT_TYPE_GREEN_BOSS 73
+#define OBJECT_TYPE_BOAT 55555
 #define MAX_SCENE_LINE 1024
 
 
@@ -210,7 +211,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_YELLOW_BOSS: obj = new YellowBoss(); break;
 	case OBJECT_TYPE_GREEN_TURTLE: obj = new GreenTurtle(); break;
 	case OBJECT_TYPE_HEIGHT_CANNON: obj = new HeightCannon(); break;
-	case OBJECT_TYPE_GREEN_BOSS: obj = new GreenBoss(); break;
+	case OBJECT_TYPE_GREEN_BOSS: obj = new GreenBoss(); break; 
+	case OBJECT_TYPE_BOAT: obj = new CBoat(); break;
 	case OBJECT_TYPE_PIPES:
 	{
 		int w = atof(tokens[4].c_str());
@@ -691,6 +693,21 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_L:
 		CGame::GetInstance()->SetLight(4);
+		break;
+	case DIK_G:
+		gimmick->SetPosition(1764, 281);
+		break;
+	case DIK_H:
+		gimmick->SetPosition(1312,163);
+		break;
+	case DIK_J:
+		gimmick->SetPosition(1200,433);
+		break;
+	case DIK_K:
+		gimmick->SetPosition(1725,473);
+		break;
+	case DIK_I:
+		gimmick->SetPosition(250, 144);
 		break;
 	}
 }

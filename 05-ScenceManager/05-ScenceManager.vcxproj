@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AniBrick.cpp" />
+    <ClCompile Include="Boat.cpp" />
     <ClCompile Include="GimmickDieEffect.cpp" />
     <ClCompile Include="GreenBoss.cpp" />
     <ClCompile Include="GreenTurtle.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="AniBrick.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="BlackEnemy.h" />
+    <ClInclude Include="Boat.h" />
     <ClInclude Include="BoomBoss.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bullet.h" />

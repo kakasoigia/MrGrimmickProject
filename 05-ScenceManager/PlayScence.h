@@ -25,6 +25,7 @@
 #include "Fish.h"
 #include "Star.h"
 #include "Thunder.h"
+#include "Boat.h"
 #include "Quadtree.h"
 #include "Star.h"
 #include "Hud.h"

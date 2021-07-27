@@ -76,6 +76,7 @@ void Star::CalcPotentialCollisions(
 		{
 			continue;
 		}
+		
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 		if (e->t > 0 && e->t <= 1.0f)
@@ -326,6 +327,15 @@ void Star::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				this->SetState(STAR_STATE_SMOKE);
 			}
+			if (dynamic_cast<Rocket*>(e->obj))
+			{
+				if (e->t > 0 && e->t <= 1)
+				{
+					this->SetState(STAR_STATE_SMOKE);
+				}
+				
+			}
+			
 			// set time nổ khói 
 		}
 	}
